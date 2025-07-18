@@ -1,0 +1,168 @@
+{
+  "component_weights": {
+    "poisson": 0.3,
+    "h2h": 0.3,
+    "form": 0.25,
+    "home_advantage": 0.15
+  },
+  "low_scoring_draw_boost": 1.25,
+  "medium_scoring_draw_boost": 1.1,
+  "high_scoring_draw_boost": 0.95,
+  "low_scoring_threshold": 2.0,
+  "high_scoring_threshold": 3.0,
+  "exact_score_factors": {
+    "0-0": 1.1,
+    "1-1": 1.1,
+    "1-0": 1.05,
+    "0-1": 1.05,
+    "2-1": 1.0,
+    "1-2": 1.0,
+    "2-0": 1.0,
+    "0-2": 1.0,
+    "2-2": 0.95,
+    "3-0": 0.9,
+    "0-3": 0.9
+  },
+  "zero_inflation_factor": 1.2,
+  "one_inflation_factor": 1.1,
+  "home_advantage_base": 1.2,
+  "form_decay_rate": 0.1,
+  "h2h_recency_weight": 0.6,
+  "league_type_factors": {
+    "high_scoring": 1.2,
+    "low_scoring": 0.8,
+    "draw_prone": 1.3,
+    "home_advantage": 1.2
+  },
+  "last_updated": "2025-04-01T10:34:53.754471",
+  "validation_metrics": {
+    "outcome_accuracy": 0.575,
+    "over_under_accuracy": 0.825,
+    "exact_score_accuracy": 0.1,
+    "log_loss": 0.912289634617602,
+    "brier_score": 0.33368607699999997,
+    "timestamp": "2025-04-01T10:34:53.754452"
+  },
+  "learning_history": [
+    {
+      "timestamp": "2025-04-01T10:21:50.479378",
+      "metrics": {
+        "outcome_accuracy": 0.55,
+        "over_under_accuracy": 0.825,
+        "exact_score_accuracy": 0.1,
+        "log_loss": 0.8074344178432314,
+        "brier_score": 0.3005786465,
+        "timestamp": "2025-04-01T10:21:50.479366"
+      },
+      "analyzed_matches": 40
+    },
+    {
+      "timestamp": "2025-04-01T10:21:55.751718",
+      "metrics": {
+        "outcome_accuracy": 0.55,
+        "over_under_accuracy": 0.825,
+        "exact_score_accuracy": 0.1,
+        "log_loss": 0.8074344178432314,
+        "brier_score": 0.3005786465,
+        "timestamp": "2025-04-01T10:21:55.751704"
+      },
+      "analyzed_matches": 40
+    },
+    {
+      "timestamp": "2025-04-01T10:24:44.109975",
+      "metrics": {
+        "outcome_accuracy": 0.55,
+        "over_under_accuracy": 0.825,
+        "exact_score_accuracy": 0.1,
+        "log_loss": 0.8074344178432314,
+        "brier_score": 0.3005786465,
+        "timestamp": "2025-04-01T10:24:44.109961"
+      },
+      "analyzed_matches": 40
+    },
+    {
+      "timestamp": "2025-04-01T10:24:49.776192",
+      "metrics": {
+        "outcome_accuracy": 0.55,
+        "over_under_accuracy": 0.825,
+        "exact_score_accuracy": 0.1,
+        "log_loss": 0.8074344178432314,
+        "brier_score": 0.3005786465,
+        "timestamp": "2025-04-01T10:24:49.776180"
+      },
+      "analyzed_matches": 40
+    },
+    {
+      "timestamp": "2025-04-01T10:29:37.718937",
+      "metrics": {
+        "outcome_accuracy": 0.55,
+        "over_under_accuracy": 0.825,
+        "exact_score_accuracy": 0.1,
+        "log_loss": 0.8074344178432314,
+        "brier_score": 0.3005786465,
+        "timestamp": "2025-04-01T10:29:37.718924"
+      },
+      "analyzed_matches": 40
+    },
+    {
+      "timestamp": "2025-04-01T10:29:41.956148",
+      "metrics": {
+        "outcome_accuracy": 0.55,
+        "over_under_accuracy": 0.825,
+        "exact_score_accuracy": 0.1,
+        "log_loss": 0.8074344178432314,
+        "brier_score": 0.3005786465,
+        "timestamp": "2025-04-01T10:29:41.956139"
+      },
+      "analyzed_matches": 40
+    },
+    {
+      "timestamp": "2025-04-01T10:33:35.676030",
+      "metrics": {
+        "outcome_accuracy": 0.575,
+        "over_under_accuracy": 0.825,
+        "exact_score_accuracy": 0.1,
+        "log_loss": 0.912289634617602,
+        "brier_score": 0.33368607699999997,
+        "timestamp": "2025-04-01T10:33:35.676019"
+      },
+      "analyzed_matches": 40
+    },
+    {
+      "timestamp": "2025-04-01T10:33:40.799114",
+      "metrics": {
+        "outcome_accuracy": 0.575,
+        "over_under_accuracy": 0.825,
+        "exact_score_accuracy": 0.1,
+        "log_loss": 0.912289634617602,
+        "brier_score": 0.33368607699999997,
+        "timestamp": "2025-04-01T10:33:40.799083"
+      },
+      "analyzed_matches": 40
+    },
+    {
+      "timestamp": "2025-04-01T10:34:49.594597",
+      "metrics": {
+        "outcome_accuracy": 0.575,
+        "over_under_accuracy": 0.825,
+        "exact_score_accuracy": 0.1,
+        "log_loss": 0.912289634617602,
+        "brier_score": 0.33368607699999997,
+        "timestamp": "2025-04-01T10:34:49.594586"
+      },
+      "analyzed_matches": 40
+    },
+    {
+      "timestamp": "2025-04-01T10:34:53.754463",
+      "metrics": {
+        "outcome_accuracy": 0.575,
+        "over_under_accuracy": 0.825,
+        "exact_score_accuracy": 0.1,
+        "log_loss": 0.912289634617602,
+        "brier_score": 0.33368607699999997,
+        "timestamp": "2025-04-01T10:34:53.754452"
+      },
+      "analyzed_matches": 40
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60">
+  <rect width="60" height="60" fill="#f0f0f0" rx="8"/>
+  <circle cx="30" cy="25" r="12" fill="#999"/>
+  <path d="M 15,45 Q 30,35 45,45" fill="#999"/>
+  <text x="30" y="52" text-anchor="middle" font-family="Arial" font-size="8" fill="#666">TEAM</text>
+</svg>

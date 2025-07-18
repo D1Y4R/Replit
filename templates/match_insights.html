@@ -1,0 +1,459 @@
+{% extends "base.html" %}
+
+{% block title %}Maç İçgörüleri - Football Portal{% endblock %}
+
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="/static/css/match-insights.css">
+<style>
+    /* Koyu tema için özel stiller */
+    .insights-card {
+        background-color: #212529 !important;
+        color: #f8f9fa !important;
+        border: 1px solid #343a40 !important;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3) !important;
+    }
+    
+    .insights-text {
+        color: #d9d9d9 !important;
+        font-weight: 400;
+    }
+    
+    .key-insight-item {
+        color: #f8f9fa !important;
+        border-left: 3px solid #0d6efd;
+        padding-left: 10px;
+        margin-bottom: 10px;
+        background-color: #343a40 !important;
+    }
+    
+    /* Geliştirilmiş Yükleme göstergesi */
+    .loading-indicator {
+        text-align: center;
+        margin: 40px 0;
+        padding: 30px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .spinner {
+        border: 6px solid rgba(255, 255, 255, 0.1);
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        border-left-color: #0d6efd;
+        animation: spin 1s linear infinite;
+        display: inline-block;
+        margin-bottom: 15px;
+        box-shadow: 0 0 15px rgba(13, 110, 253, 0.3);
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    
+    /* Dark Mode için Kartlar */
+    .card, .card-body, .list-group-item {
+        background-color: #212529 !important;
+        border: 1px solid #343a40 !important;
+    }
+    
+    .card-header {
+        background-color: #0d6efd !important;
+        color: white !important;
+        border-bottom: none !important;
+    }
+    
+    .card-header h1, .card-header h2, .card-header h3, 
+    .card-header h4, .card-header h5, .card-header h6, 
+    .card-header p, .card-header span {
+        color: white !important;
+    }
+    
+    .card p, .card div, .card span, .card li, 
+    .list-group-item p, .list-group-item div, 
+    .list-group-item span, .list-group-item li {
+        color: #d9d9d9 !important;
+    }
+    
+    /* Tahmin kartları için koyu tema */
+    .probability-box {
+        background-color: #343a40 !important;
+        color: #f8f9fa !important;
+        border: 1px solid #495057 !important;
+    }
+    
+    .table, .table-sm {
+        color: #d9d9d9 !important;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h3 class="mb-0">
+                            <span id="home-team">{{ home_team }}</span> 
+                            <small>vs</small> 
+                            <span id="away-team">{{ away_team }}</span>
+                            <small class="text-light ml-2">({{ match_date }})</small>
+                        </h3>
+                        <div>
+                            <button type="button" class="btn btn-sm btn-info" onclick="window.showTeamStats('{{ home_team_id }}', '{{ away_team_id }}', '{{ home_team }}', '{{ away_team }}')">
+                                <i class="fas fa-chart-bar"></i> Takım İstatistikleri
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <!-- Yükleme Göstergesi -->
+                    <div class="loading-indicator" id="loading-indicator" style="display: {% if popup %}none{% else %}block{% endif %};">
+                        <div class="spinner"></div>
+                        <p class="mt-2">Maç içgörüleri oluşturuluyor...</p>
+                    </div>
+                    
+                    <!-- İçerik yüklendikten sonra gösterilecek -->
+                    <div id="content-container" style="display: {% if popup %}block{% else %}none{% endif %}">
+                    
+                    {% if error %}
+                        <div class="alert alert-danger">
+                            {{ error }}
+                        </div>
+                    {% else %}
+                        <!-- Özet Bölümü -->
+                        <div class="mb-4">
+                            <h4 class="border-bottom pb-2">Maç Analizi</h4>
+                            <p class="lead insights-text" id="match-summary">{{ summary }}</p>
+                        </div>
+                        
+                        <!-- Temel Tahminler -->
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                                <div class="card h-100 insights-card">
+                                    <div class="card-header bg-light">
+                                        <h5 class="mb-0">1X2 Tahmini</h5>
+                                    </div>
+                                    <div class="card-body text-center">
+                                        <div class="row">
+                                            <div class="col">
+                                                <div class="probability-box">
+                                                    <strong>1</strong><br>
+                                                    <span class="badge bg-primary">{{ outcome_probs.home_win }}%</span>
+                                                </div>
+                                            </div>
+                                            <div class="col">
+                                                <div class="probability-box">
+                                                    <strong>X</strong><br>
+                                                    <span class="badge bg-primary">{{ outcome_probs.draw }}%</span>
+                                                </div>
+                                            </div>
+                                            <div class="col">
+                                                <div class="probability-box">
+                                                    <strong>2</strong><br>
+                                                    <span class="badge bg-primary">{{ outcome_probs.away_win }}%</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <div class="card h-100">
+                                    <div class="card-header bg-light">
+                                        <h5 class="mb-0">Beklenen Skor</h5>
+                                    </div>
+                                    <div class="card-body text-center">
+                                        <div class="score-prediction">
+                                            <span class="home-score">{{ expected_score.home }}</span>
+                                            <span class="score-divider">:</span>
+                                            <span class="away-score">{{ expected_score.away }}</span>
+                                        </div>
+                                        <div class="mt-2">
+                                            <span class="badge bg-secondary">Ortalama {{ expected_goals.total|round(1) }} gol</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <div class="card h-100">
+                                    <div class="card-header bg-light">
+                                        <h5 class="mb-0">İY/MS Tahmini</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <table class="table table-sm table-borderless mb-0">
+                                            <tr>
+                                                <td>En olası İY/MS:</td>
+                                                <td>
+                                                    <strong>{{ htft_highest }}</strong>
+                                                    <span class="badge bg-primary">{{ htft_highest_prob }}%</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>İlk Yarı:</td>
+                                                <td>
+                                                    {% if first_half is defined and first_half %}
+                                                        {% set home_prob = first_half["1"]|default(0) %}
+                                                        {% set draw_prob = first_half["X"]|default(0) %}
+                                                        {% set away_prob = first_half["2"]|default(0) %}
+                                                        
+                                                        {% if home_prob > draw_prob and home_prob > away_prob %}
+                                                            <span class="badge bg-success">1 ({{ home_prob }}%)</span>
+                                                        {% elif draw_prob > home_prob and draw_prob > away_prob %}
+                                                            <span class="badge bg-success">X ({{ draw_prob }}%)</span>
+                                                        {% elif away_prob > home_prob and away_prob > draw_prob %}
+                                                            <span class="badge bg-success">2 ({{ away_prob }}%)</span>
+                                                        {% else %}
+                                                            <span class="badge bg-secondary">Belirsiz</span>
+                                                        {% endif %}
+                                                    {% else %}
+                                                        <span class="badge bg-secondary">Veri yok</span>
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Maç Sonu:</td>
+                                                <td>
+                                                    {% if full_time is defined and full_time %}
+                                                        {% set home_prob = full_time["1"]|default(0) %}
+                                                        {% set draw_prob = full_time["X"]|default(0) %}
+                                                        {% set away_prob = full_time["2"]|default(0) %}
+                                                        
+                                                        {% if home_prob > draw_prob and home_prob > away_prob %}
+                                                            <span class="badge bg-success">1 ({{ home_prob }}%)</span>
+                                                        {% elif draw_prob > home_prob and draw_prob > away_prob %}
+                                                            <span class="badge bg-success">X ({{ draw_prob }}%)</span>
+                                                        {% elif away_prob > home_prob and away_prob > draw_prob %}
+                                                            <span class="badge bg-success">2 ({{ away_prob }}%)</span>
+                                                        {% else %}
+                                                            <span class="badge bg-secondary">Belirsiz</span>
+                                                        {% endif %}
+                                                    {% else %}
+                                                        <span class="badge bg-secondary">Veri yok</span>
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Anahtar İçgörüler -->
+                        <div class="mb-4">
+                            <h4 class="border-bottom pb-2">Anahtar İçgörüler</h4>
+                            <div class="key-insights">
+                                <ul class="list-group">
+                                    {% if key_insights is defined and key_insights %}
+                                    {% for insight in key_insights %}
+                                        <li class="list-group-item">
+                                            <i class="fas fa-chart-line text-primary mr-2"></i>
+                                            {{ insight }}
+                                        </li>
+                                    {% endfor %}
+                                    {% else %}
+                                    <li class="list-group-item">
+                                        <i class="fas fa-info-circle text-info mr-2"></i>
+                                        İçgörü verileri henüz mevcut değil.
+                                    </li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <!-- Form Analizi -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header bg-light">
+                                        <h5 class="mb-0">{{ home_team }} Form Analizi</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="form-stats mb-3">
+                                            <div class="d-flex justify-content-between">
+                                                <span><strong>Son {{ home_form.get('matches', 5) }} maç:</strong></span>
+                                                <span>
+                                                    <span class="badge bg-success">{{ home_form.get('wins', 0) }}G</span>
+                                                    <span class="badge bg-secondary">{{ home_form.get('draws', 0) }}B</span>
+                                                    <span class="badge bg-danger">{{ home_form.get('losses', 0) }}M</span>
+                                                </span>
+                                            </div>
+                                            
+                                            <div class="progress mt-2">
+                                                {% set form_score = home_form.get('form_score', 0.5) * 100 %}
+                                                <div class="progress-bar 
+                                                    {% if form_score >= 70 %}bg-success
+                                                    {% elif form_score >= 40 %}bg-warning
+                                                    {% else %}bg-danger{% endif %}" 
+                                                    role="progressbar" 
+                                                    style="width: {{ form_score }}%"
+                                                    aria-valuenow="{{ form_score }}" 
+                                                    aria-valuemin="0" 
+                                                    aria-valuemax="100">
+                                                    {{ form_score|round }}%
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p>{{ home_form.get('form_text', 'Form verisi bulunamadı.') }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header bg-light">
+                                        <h5 class="mb-0">{{ away_team }} Form Analizi</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="form-stats mb-3">
+                                            <div class="d-flex justify-content-between">
+                                                <span><strong>Son {{ away_form.get('matches', 5) }} maç:</strong></span>
+                                                <span>
+                                                    <span class="badge bg-success">{{ away_form.get('wins', 0) }}G</span>
+                                                    <span class="badge bg-secondary">{{ away_form.get('draws', 0) }}B</span>
+                                                    <span class="badge bg-danger">{{ away_form.get('losses', 0) }}M</span>
+                                                </span>
+                                            </div>
+                                            
+                                            <div class="progress mt-2">
+                                                {% set form_score = away_form.get('form_score', 0.5) * 100 %}
+                                                <div class="progress-bar 
+                                                    {% if form_score >= 70 %}bg-success
+                                                    {% elif form_score >= 40 %}bg-warning
+                                                    {% else %}bg-danger{% endif %}" 
+                                                    role="progressbar" 
+                                                    style="width: {{ form_score }}%"
+                                                    aria-valuenow="{{ form_score }}" 
+                                                    aria-valuemin="0" 
+                                                    aria-valuemax="100">
+                                                    {{ form_score|round }}%
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p>{{ away_form.get('form_text', 'Form verisi bulunamadı.') }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- H2H Analizi -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-header bg-light">
+                                        <h5 class="mb-0">H2H Analizi</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        {% if h2h is defined and h2h and h2h.get('total_matches', 0) > 0 %}
+                                            <div class="row">
+                                                <div class="col-md-7">
+                                                    <p>{{ h2h.get('h2h_text', 'İki takım arasındaki maç verisi bulunamadı.') }}</p>
+                                                </div>
+                                                <div class="col-md-5">
+                                                    <div class="h2h-stats">
+                                                        <div class="d-flex justify-content-between">
+                                                            <div class="text-center" style="width: 30%">
+                                                                <strong>{{ home_team }}</strong><br>
+                                                                <span class="badge bg-primary">{{ h2h.get('home_wins', 0) }}</span>
+                                                            </div>
+                                                            <div class="text-center" style="width: 30%">
+                                                                <strong>Beraberlik</strong><br>
+                                                                <span class="badge bg-secondary">{{ h2h.get('draws', 0) }}</span>
+                                                            </div>
+                                                            <div class="text-center" style="width: 30%">
+                                                                <strong>{{ away_team }}</strong><br>
+                                                                <span class="badge bg-primary">{{ h2h.get('away_wins', 0) }}</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="text-center mt-3">
+                                                            <span class="badge bg-info">Ortalama {{ h2h.get('avg_goals', 0)|round(1) }} gol/maç</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% else %}
+                                            <p>İki takım arasında önceki karşılaşmalarla ilgili yeterli veri bulunmuyor.</p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Sonuç ve Tahmin -->
+                        <div class="mb-3">
+                            <div class="card">
+                                <div class="card-header bg-primary text-white">
+                                    <h5 class="mb-0">Sonuç</h5>
+                                </div>
+                                <div class="card-body">
+                                    <p class="lead mb-0">
+                                        {{ insights.get('conclusion', 'Sonuç bilgisi oluşturulamadı.') if insights is defined and insights else 'Maç sonucu tahmini için yeterli veri bulunamadı.' }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Detaylı İstatistikler ve Tahmin Butonu -->
+                        <div class="d-flex justify-content-between">
+                            <button type="button" class="btn btn-outline-primary" onclick="window.showTeamStats('{{ home_team_id }}', '{{ away_team_id }}', '{{ home_team }}', '{{ away_team }}')">
+                                <i class="fas fa-chart-bar"></i> Takım İstatistikleri
+                            </button>
+                            
+                            <a href="{{ url_for('predict_match', home_team_id=home_team_id, away_team_id=away_team_id) }}" class="btn btn-primary">
+                                <i class="fas fa-chart-line"></i> Detaylı Tahmin Görüntüle
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.score-prediction {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #f8f9fa !important;
+}
+.score-divider {
+    margin: 0 0.5rem;
+}
+.probability-box {
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    background-color: #343a40 !important;
+    color: #f8f9fa !important;
+    border: 1px solid #495057 !important;
+}
+.key-insights .list-group-item {
+    border-left: 4px solid #0d6efd;
+    background-color: #212529 !important;
+    color: #f8f9fa !important;
+}
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // İçgörüler yüklendikten sonra loglamak için
+        console.log("İçgörüler yüklendi");
+        
+        // JavaScript dosyalarının yüklendiğinden emin ol
+        if (typeof window.showTeamStats !== 'function') {
+            // team_stats.js dosyasını yükle
+            var script = document.createElement('script');
+            script.src = '/static/js/team_stats.js';
+            document.head.appendChild(script);
+            console.log("Takım istatistikleri JavaScript dosyası yüklendi");
+        }
+    });
+</script>
+{% endblock %}

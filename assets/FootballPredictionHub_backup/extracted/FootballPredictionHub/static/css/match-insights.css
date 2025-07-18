@@ -1,0 +1,191 @@
+/**
+ * Match Insights CSS
+ * Maç içgörü sayfası için özel stil tanımlamaları
+ */
+
+.insights-card {
+    background-color: #212529 !important;
+    color: #f8f9fa !important;
+    margin-bottom: 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    border: 1px solid #343a40;
+}
+
+.insights-text {
+    color: #d9d9d9 !important;
+    font-weight: 400;
+    line-height: 1.6;
+}
+
+.key-insight-item {
+    color: #f8f9fa !important;
+    border-left: 4px solid #0d6efd;
+    padding-left: 15px;
+    margin-bottom: 12px;
+    background-color: #343a40 !important;
+    padding: 12px 15px;
+    border-radius: 0 4px 4px 0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* İyileştirilmiş Yükleme göstergesi */
+.loading-indicator {
+    text-align: center;
+    margin: 50px 0;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.spinner {
+    border: 6px solid rgba(0, 0, 0, 0.1);
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    border-left-color: #007bff;
+    animation: spin 1s linear infinite;
+    display: inline-block;
+    margin-bottom: 20px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Dark mode kartlar için stil güncellemeleri */
+.card-body {
+    background-color: #212529 !important;
+}
+
+.card, .list-group-item {
+    background-color: #212529 !important;
+    border: 1px solid #343a40 !important;
+}
+
+.card-header {
+    background-color: #0d6efd !important;
+    color: white !important;
+    border-bottom: 0;
+    padding: 1rem 1.25rem;
+}
+
+.card-header h1, .card-header h2, .card-header h3, 
+.card-header h4, .card-header h5, .card-header h6, 
+.card-header p, .card-header span {
+    color: white !important;
+    margin-bottom: 0;
+}
+
+.card p, .card div, .card span, .card li {
+    color: #d9d9d9 !important;
+}
+
+.list-group-item {
+    background-color: #343a40 !important;
+    border-color: #495057 !important;
+}
+
+.list-group-item p, .list-group-item div, 
+.list-group-item span, .list-group-item li {
+    color: #d9d9d9 !important;
+}
+
+/* İyileştirilmiş İçerik Stilleri - Dark Mode */
+.probability-box {
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #343a40;
+    margin-bottom: 10px;
+    text-align: center;
+    border: 1px solid #495057;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.score-prediction {
+    font-size: 2rem;
+    font-weight: bold;
+    text-align: center;
+    margin: 15px 0;
+    color: #ffffff;
+    text-shadow: 0 0 10px rgba(13, 110, 253, 0.5);
+}
+
+.home-score, .away-score {
+    display: inline-block;
+    width: 45px;
+    text-align: center;
+}
+
+.score-divider {
+    display: inline-block;
+    margin: 0 10px;
+}
+
+/* Responsive ayarlar */
+@media (max-width: 768px) {
+    .score-prediction {
+        font-size: 1.5rem;
+    }
+    
+    .home-score, .away-score {
+        width: 30px;
+    }
+    
+    .spinner {
+        width: 50px;
+        height: 50px;
+        border-width: 4px;
+    }
+}
+
+/* Özel Modal Stilleri - Dark Mode */
+.insights-modal .modal-content {
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #212529;
+    border: 1px solid #343a40;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+}
+
+.insights-modal .modal-header {
+    background-color: #0d6efd;
+    color: white;
+    border-bottom: 0;
+}
+
+.insights-modal .modal-title {
+    color: white !important;
+    font-weight: 600;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.insights-modal .modal-body {
+    background-color: #212529;
+    padding: 1.5rem;
+    color: #f8f9fa;
+}
+
+.insights-modal .btn-close {
+    color: white;
+    opacity: 1;
+    filter: brightness(0) invert(1);
+}
+
+/* Spinner animasyonu için iyileştirme */
+.spinner {
+    border: 6px solid rgba(255, 255, 255, 0.1);
+    border-left-color: #0d6efd;
+    box-shadow: 0 0 15px rgba(13, 110, 253, 0.3);
+}
+
+/* Yükleme metni için iyileştirme */
+.loading-indicator p {
+    color: #adb5bd !important;
+    margin-top: 15px;
+    font-weight: 500;
+}

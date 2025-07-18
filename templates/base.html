@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="tr" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Futbol Skorları & Fikstür</title>
+    <link rel="stylesheet" href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/widget-style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/widgetCountries.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/widgetLeague.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/match-actions.css') }}">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/favicon.png') }}">
+    <!-- Tahmin Modalı CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/prediction-modal.css') }}">
+
+    <!-- jQuery ve Widget JS dosyaları -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{{ url_for('static', filename='js/jquery.widgetCountries.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jquery.widgetLeague.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/team-halfTime-stats.js') }}"></script>
+{% if 'index' in request.path %}
+    <script src="{{ url_for('static', filename='js/team_history.js') }}" defer></script>
+    {% endif %}
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/"><i class="fas fa-futbol"></i> Futbol Portalı</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/"><i class="fas fa-home"></i> Ana Sayfa</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/leagues"><i class="fas fa-trophy"></i> Ligler</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/predictions">
+                                <i class="fas fa-chart-line"></i> Tahminler
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/cache-table">
+                                <i class="fas fa-table"></i> Önbellek Tablosu
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/model-validation">
+                                <i class="fas fa-check-circle"></i> Model Doğrulama
+                            </a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <button class="btn btn-outline-light btn-sm" data-bs-toggle="modal" data-bs-target="#apiKeyModal">
+                                <i class="fas fa-key"></i> API Ayarları
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- API Key Modal -->
+    <div class="modal fade" id="apiKeyModal" tabindex="-1" aria-labelledby="apiKeyModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="apiKeyModalLabel">
+                        <i class="fas fa-key me-2"></i>API Ayarları
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>APIFootball.com</strong> hesabından aldığınız API anahtarınızı buraya girin.
+                        <br><small>API anahtarı olmadan maç verileri yüklenemez.</small>
+                    </div>
+                    
+                    <form id="apiKeyForm">
+                        <div class="mb-3">
+                            <label for="apiKey" class="form-label">API Anahtarı:</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-key"></i></span>
+                                <input type="password" class="form-control" id="apiKey" placeholder="API anahtarınızı buraya girin..." required>
+                                <button class="btn btn-outline-secondary" type="button" id="toggleApiKey">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            <div class="form-text">
+                                API anahtarı güvenli şekilde tarayıcınızda saklanacaktır.
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="saveApiKey" checked>
+                                <label class="form-check-label" for="saveApiKey">
+                                    API anahtarını kaydet (tarayıcı yerel depolama)
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div id="apiKeyStatus" class="mt-3"></div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-2"></i>İptal
+                    </button>
+                    <button type="button" class="btn btn-primary" id="saveApiKeyBtn">
+                        <i class="fas fa-save me-2"></i>Kaydet ve Uygula
+                    </button>
+                    <button type="button" class="btn btn-warning" id="testApiKeyBtn">
+                        <i class="fas fa-test-tube me-2"></i>Test Et
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer mt-5 py-3 bg-dark">
+        <div class="container text-center">
+            <span class="text-muted">© 2024 Futbol Portalı</span>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <!-- Custom JavaScript -->
+    <script src="{{ url_for('static', filename='js/halftime-fulltime-predictor.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/custom.js') }}"></script>
+    <!-- Prediction Popup Template -->
+    <script src="{{ url_for('static', filename='js/prediction-popup-template-v2.js') }}"></script>
+    <!-- Tahmin İşleyici JS -->
+    <script src="{{ url_for('static', filename='js/prediction-handler.js') }}"></script>
+    <!-- Takım İstatistikleri Popup JS -->
+    <script src="{{ url_for('static', filename='js/team_stats.js') }}"></script>
+    
+    <!-- API Key Management JavaScript -->
+    <script>
+        // API Key management functions
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load saved API key on page load
+            loadSavedApiKey();
+            
+            // Check current API status when modal opens
+            document.getElementById('apiKeyModal').addEventListener('show.bs.modal', function () {
+                checkCurrentApiStatus();
+            });
+            
+            // Toggle API key visibility
+            document.getElementById('toggleApiKey').addEventListener('click', function() {
+                const apiKeyInput = document.getElementById('apiKey');
+                const toggleBtn = this;
+                
+                if (apiKeyInput.type === 'password') {
+                    apiKeyInput.type = 'text';
+                    toggleBtn.innerHTML = '<i class="fas fa-eye-slash"></i>';
+                } else {
+                    apiKeyInput.type = 'password';
+                    toggleBtn.innerHTML = '<i class="fas fa-eye"></i>';
+                }
+            });
+            
+            // Save API key
+            document.getElementById('saveApiKeyBtn').addEventListener('click', function() {
+                const apiKey = document.getElementById('apiKey').value.trim();
+                const saveToStorage = document.getElementById('saveApiKey').checked;
+                
+                if (!apiKey) {
+                    showApiKeyStatus('danger', 'Lütfen geçerli bir API anahtarı girin.');
+                    return;
+                }
+                
+                // Save to server
+                saveApiKeyToServer(apiKey, saveToStorage);
+            });
+            
+            // Test API key
+            document.getElementById('testApiKeyBtn').addEventListener('click', function() {
+                const apiKey = document.getElementById('apiKey').value.trim();
+                
+                if (!apiKey) {
+                    showApiKeyStatus('danger', 'Test etmek için API anahtarı girin.');
+                    return;
+                }
+                
+                testApiKey(apiKey);
+            });
+        });
+        
+        function loadSavedApiKey() {
+            const savedApiKey = localStorage.getItem('footballApiKey');
+            if (savedApiKey) {
+                document.getElementById('apiKey').value = savedApiKey;
+                showApiKeyStatus('success', 'Kayıtlı API anahtarı yüklendi.');
+            }
+        }
+        
+        function saveApiKeyToServer(apiKey, saveToStorage) {
+            const saveBtn = document.getElementById('saveApiKeyBtn');
+            const originalText = saveBtn.innerHTML;
+            
+            saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Kaydediliyor...';
+            saveBtn.disabled = true;
+            
+            fetch('/api/save-api-key', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    api_key: apiKey,
+                    save_to_storage: saveToStorage
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    if (saveToStorage) {
+                        localStorage.setItem('footballApiKey', apiKey);
+                    }
+                    showApiKeyStatus('success', 'API anahtarı başarıyla kaydedildi! Sayfa yeniden yükleniyor...');
+                    
+                    // Close modal and reload page after 2 seconds to get fresh data
+                    setTimeout(() => {
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('apiKeyModal'));
+                        modal.hide();
+                        // Force complete page reload to fetch new fixture data with updated API key
+                        window.location.href = window.location.href.split('?')[0] + '?date=' + new Date().toISOString().split('T')[0] + '&_t=' + Date.now();
+                    }, 2000);
+                } else {
+                    showApiKeyStatus('danger', data.message || 'API anahtarı kaydedilemedi.');
+                }
+            })
+            .catch(error => {
+                console.error('Error saving API key:', error);
+                showApiKeyStatus('danger', 'Bir hata oluştu. Lütfen tekrar deneyin.');
+            })
+            .finally(() => {
+                saveBtn.innerHTML = originalText;
+                saveBtn.disabled = false;
+            });
+        }
+        
+        function testApiKey(apiKey) {
+            const testBtn = document.getElementById('testApiKeyBtn');
+            const originalText = testBtn.innerHTML;
+            
+            testBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Test ediliyor...';
+            testBtn.disabled = true;
+            
+            fetch('/api/test-api-key', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    api_key: apiKey
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showApiKeyStatus('success', `API anahtarı geçerli! Plan: ${data.plan || 'Bilinmiyor'}`);
+                } else {
+                    showApiKeyStatus('danger', data.message || 'API anahtarı geçersiz.');
+                }
+            })
+            .catch(error => {
+                console.error('Error testing API key:', error);
+                showApiKeyStatus('danger', 'Test edilirken hata oluştu.');
+            })
+            .finally(() => {
+                testBtn.innerHTML = originalText;
+                testBtn.disabled = false;
+            });
+        }
+        
+        function showApiKeyStatus(type, message) {
+            const statusDiv = document.getElementById('apiKeyStatus');
+            statusDiv.innerHTML = `
+                <div class="alert alert-${type}" role="alert">
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'danger' ? 'exclamation-triangle' : 'info-circle'} me-2"></i>
+                    ${message}
+                </div>
+            `;
+        }
+        
+        function checkCurrentApiStatus() {
+            fetch('/api/get-current-api-status')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const status = data.api_key_valid ? 'success' : 'warning';
+                        const keyType = data.has_custom_key ? 'özel' : 'varsayılan';
+                        const message = `Mevcut API anahtarı (${keyType}): ${data.message}`;
+                        showApiKeyStatus(status, message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error checking API status:', error);
+                });
+        }
+    </script>
+    
+    <!-- İçgörüler özelliği kaldırıldı -->
+    {% block scripts %}{% endblock %}
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

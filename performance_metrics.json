@@ -1,0 +1,197 @@
+{
+  "models": {
+    "poisson": {
+      "overall": {
+        "predictions": 2,
+        "correct": 2,
+        "accuracy": 100.0
+      },
+      "by_league": {
+        "Bundesliga": {
+          "predictions": 2,
+          "correct": 0,
+          "accuracy": 0.0
+        }
+      },
+      "by_match_type": {
+        "slight_favorite": {
+          "predictions": 2,
+          "correct": 0,
+          "accuracy": 0.0
+        }
+      },
+      "by_prediction_type": {
+        "match_result": {
+          "predictions": 0,
+          "correct": 0,
+          "accuracy": 0.0
+        },
+        "btts": {
+          "predictions": 0,
+          "correct": 0,
+          "accuracy": 0.0
+        },
+        "over_under": {
+          "predictions": 0,
+          "correct": 0,
+          "accuracy": 0.0
+        }
+      }
+    },
+    "dixon_coles": {
+      "overall": {
+        "predictions": 2,
+        "correct": 2,
+        "accuracy": 100.0
+      },
+      "by_league": {
+        "Serie A": {
+          "predictions": 2,
+          "correct": 0,
+          "accuracy": 0.0
+        }
+      },
+      "by_match_type": {
+        "balanced": {
+          "predictions": 2,
+          "correct": 0,
+          "accuracy": 0.0
+        }
+      },
+      "by_prediction_type": {
+        "match_result": {
+          "predictions": 0,
+          "correct": 0,
+          "accuracy": 0.0
+        },
+        "btts": {
+          "predictions": 0,
+          "correct": 0,
+          "accuracy": 0.0
+        },
+        "over_under": {
+          "predictions": 0,
+          "correct": 0,
+          "accuracy": 0.0
+        }
+      }
+    },
+    "xgboost": {
+      "overall": {
+        "predictions": 2,
+        "correct": 2,
+        "accuracy": 100.0
+      },
+      "by_league": {
+        "Premier League": {
+          "predictions": 2,
+          "correct": 0,
+          "accuracy": 0.0
+        }
+      },
+      "by_match_type": {
+        "favorite": {
+          "predictions": 2,
+          "correct": 0,
+          "accuracy": 0.0
+        }
+      },
+      "by_prediction_type": {
+        "match_result": {
+          "predictions": 0,
+          "correct": 0,
+          "accuracy": 0.0
+        },
+        "btts": {
+          "predictions": 0,
+          "correct": 0,
+          "accuracy": 0.0
+        },
+        "over_under": {
+          "predictions": 0,
+          "correct": 0,
+          "accuracy": 0.0
+        }
+      }
+    },
+    "monte_carlo": {
+      "overall": {
+        "predictions": 0,
+        "correct": 0,
+        "accuracy": 0.0
+      },
+      "by_league": {},
+      "by_match_type": {},
+      "by_prediction_type": {
+        "match_result": {
+          "predictions": 0,
+          "correct": 0,
+          "accuracy": 0.0
+        },
+        "btts": {
+          "predictions": 0,
+          "correct": 0,
+          "accuracy": 0.0
+        },
+        "over_under": {
+          "predictions": 0,
+          "correct": 0,
+          "accuracy": 0.0
+        }
+      }
+    },
+    "crf": {
+      "overall": {
+        "predictions": 0,
+        "correct": 0,
+        "accuracy": 0.0
+      },
+      "by_league": {},
+      "by_match_type": {},
+      "by_prediction_type": {
+        "match_result": {
+          "predictions": 0,
+          "correct": 0,
+          "accuracy": 0.0
+        },
+        "btts": {
+          "predictions": 0,
+          "correct": 0,
+          "accuracy": 0.0
+        },
+        "over_under": {
+          "predictions": 0,
+          "correct": 0,
+          "accuracy": 0.0
+        }
+      }
+    },
+    "neural_network": {
+      "overall": {
+        "predictions": 0,
+        "correct": 0,
+        "accuracy": 0.0
+      },
+      "by_league": {},
+      "by_match_type": {},
+      "by_prediction_type": {
+        "match_result": {
+          "predictions": 0,
+          "correct": 0,
+          "accuracy": 0.0
+        },
+        "btts": {
+          "predictions": 0,
+          "correct": 0,
+          "accuracy": 0.0
+        },
+        "over_under": {
+          "predictions": 0,
+          "correct": 0,
+          "accuracy": 0.0
+        }
+      }
+    }
+  },
+  "last_updated": "2025-07-18T12:54:54.458683"
+}

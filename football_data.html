@@ -1,0 +1,147 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+  <h1 class="my-4">Football Data API Demo</h1>
+  
+  <div class="row">
+    <div class="col-md-6">
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5>Today's Matches</h5>
+        </div>
+        <div class="card-body">
+          <div id="todayMatches" class="matches-container">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-6">
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5>Premier League Standings</h5>
+        </div>
+        <div class="card-body">
+          <div id="plStandings" class="standings-container">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Get today's date in YYYY-MM-DD format
+    const today = new Date().toISOString().split('T')[0];
+    
+    // Fetch today's matches
+    fetch(`/api/v4/matches?date=${today}`)
+      .then(response => response.json())
+      .then(data => {
+        const matchesDiv = document.getElementById('todayMatches');
+        matchesDiv.innerHTML = '';
+        
+        if (data.matches && data.matches.length > 0) {
+          const matchesList = document.createElement('ul');
+          matchesList.className = 'list-group';
+          
+          data.matches.forEach(match => {
+            const matchItem = document.createElement('li');
+            matchItem.className = 'list-group-item';
+            
+            const status = match.status === 'FINISHED' 
+              ? `<span class="badge bg-success">FT</span>` 
+              : match.status === 'IN_PLAY' || match.status === 'PAUSED'
+                ? `<span class="badge bg-danger">LIVE</span>`
+                : `<span class="badge bg-secondary">${match.status}</span>`;
+            
+            const score = match.score && match.score.fullTime 
+              ? `${match.score.fullTime.home ?? '-'} - ${match.score.fullTime.away ?? '-'}`
+              : 'vs';
+            
+            matchItem.innerHTML = `
+              <div class="d-flex justify-content-between align-items-center">
+                <div>${match.homeTeam.name}</div>
+                <div class="mx-2 fw-bold">${score}</div>
+                <div>${match.awayTeam.name}</div>
+                ${status}
+              </div>
+              <small class="text-muted">${match.competition?.name || ''}</small>
+            `;
+            
+            matchesList.appendChild(matchItem);
+          });
+          
+          matchesDiv.appendChild(matchesList);
+        } else {
+          matchesDiv.innerHTML = '<div class="alert alert-info">No matches found for today</div>';
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching matches:', error);
+        document.getElementById('todayMatches').innerHTML = '<div class="alert alert-danger">Error loading matches</div>';
+      });
+    
+    // Fetch Premier League standings
+    fetch('/api/v4/competitions/PL/standings')
+      .then(response => response.json())
+      .then(data => {
+        const standingsDiv = document.getElementById('plStandings');
+        standingsDiv.innerHTML = '';
+        
+        if (data.standings && data.standings.length > 0) {
+          const table = document.createElement('table');
+          table.className = 'table table-striped table-sm';
+          
+          table.innerHTML = `
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Team</th>
+                <th>P</th>
+                <th>W</th>
+                <th>D</th>
+                <th>L</th>
+                <th>Pts</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          `;
+          
+          const tbody = table.querySelector('tbody');
+          
+          data.standings[0].table.forEach(row => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+              <td>${row.position}</td>
+              <td>${row.team.name}</td>
+              <td>${row.playedGames}</td>
+              <td>${row.won}</td>
+              <td>${row.draw}</td>
+              <td>${row.lost}</td>
+              <td class="fw-bold">${row.points}</td>
+            `;
+            tbody.appendChild(tr);
+          });
+          
+          standingsDiv.appendChild(table);
+        } else {
+          standingsDiv.innerHTML = '<div class="alert alert-info">No standings data available</div>';
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching standings:', error);
+        document.getElementById('plStandings').innerHTML = '<div class="alert alert-danger">Error loading standings</div>';
+      });
+  });
+</script>
+{% endblock %}

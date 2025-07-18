@@ -1,0 +1,1905 @@
+{% extends 'base.html' %}
+
+{% block title %}Model Doğrulama ve Değerlendirme{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Model Doğrulama ve Değerlendirme</h1>
+    
+    <div class="row">
+        <!-- Sol Panel: Açıklamalar -->
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Model Doğrulama Hakkında</h5>
+                </div>
+                <div class="card-body">
+                    <p>Bu sayfa, futbol tahmin modellerinin doğruluğunu ve performansını değerlendirmek için kullanılır. İki temel yaklaşım sunulur:</p>
+                    
+                    <h6 class="mt-3">1. Çapraz Doğrulama (Cross-Validation)</h6>
+                    <p>Veri seti rastgele olarak k-parçaya bölünür. Her seferinde bir parça test verisi olarak, geri kalanlar eğitim verisi olarak kullanılır. Bu işlem k kez tekrarlanır.</p>
+                    
+                    <h6 class="mt-3">2. Geriye Dönük Test (Backtesting)</h6>
+                    <p>Belirli bir tarihten önceki veriler eğitim için, sonraki veriler test için kullanılır. Bu, gerçek senaryolara daha yakın bir değerlendirme sağlar.</p>
+                    
+                    <div class="alert alert-info mt-3">
+                        <strong>İpucu:</strong> Geriye dönük test, modelin gelecekteki maçlarda nasıl performans göstereceğine dair daha gerçekçi bir fikir verebilir.
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Sağ Panel: İşlemler ve Sonuçlar -->
+        <div class="col-md-8">
+            <!-- Sekme Başlıkları -->
+            <ul class="nav nav-tabs" id="validationTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="cross-validation-tab" data-bs-toggle="tab" data-bs-target="#cross-validation" type="button" role="tab" aria-controls="cross-validation" aria-selected="true">Çapraz Doğrulama</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="backtesting-tab" data-bs-toggle="tab" data-bs-target="#backtesting" type="button" role="tab" aria-controls="backtesting" aria-selected="false">Geriye Dönük Test</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="ensemble-tab" data-bs-toggle="tab" data-bs-target="#ensemble" type="button" role="tab" aria-controls="ensemble" aria-selected="false">Ensemble Modeller</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="hyperparameter-tab" data-bs-toggle="tab" data-bs-target="#hyperparameter" type="button" role="tab" aria-controls="hyperparameter" aria-selected="false">Hiperparametre</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="report-tab" data-bs-toggle="tab" data-bs-target="#report" type="button" role="tab" aria-controls="report" aria-selected="false">Değerlendirme Raporu</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="feature-importance-tab" data-bs-toggle="tab" data-bs-target="#feature-importance" type="button" role="tab" aria-controls="feature-importance" aria-selected="false">Özellik Önemi</button>
+                </li>
+            </ul>
+            
+            <!-- Sekme İçerikleri -->
+            <div class="tab-content" id="validationTabsContent">
+                <!-- Çapraz Doğrulama Sekmesi -->
+                <div class="tab-pane fade show active" id="cross-validation" role="tabpanel" aria-labelledby="cross-validation-tab">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Çapraz Doğrulama (Cross-Validation)</h5>
+                            
+                            <form id="cross-validation-form" class="mb-4">
+                                <div class="row mb-3">
+                                    <div class="col-md-4">
+                                        <label for="k-folds" class="form-label">K-Fold Sayısı</label>
+                                        <input type="number" class="form-control" id="k-folds" min="2" max="10" value="5" required>
+                                        <div class="form-text">K değeri 2 ile 10 arasında olmalıdır.</div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="max-days" class="form-label">Maksimum Gün</label>
+                                        <input type="number" class="form-control" id="max-days" min="30" max="365" value="180" required>
+                                        <div class="form-text">Kaç gün geriye dönük veri kullanılacağı</div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="random-state" class="form-label">Random State</label>
+                                        <input type="number" class="form-control" id="random-state" min="1" value="42" required>
+                                        <div class="form-text">Sonuçların tekrarlanabilirliği için rastgele tohum.</div>
+                                    </div>
+                                </div>
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="use-time-weights" checked>
+                                    <label class="form-check-label" for="use-time-weights">
+                                        Zaman Ağırlıklı (Daha yakın tarihlere daha fazla ağırlık ver)
+                                    </label>
+                                </div>
+                                <button type="button" class="btn btn-primary" id="run-cv-btn">
+                                    <i class="fas fa-play-circle"></i> Çapraz Doğrulama Başlat
+                                </button>
+                            </form>
+                            
+                            <div id="cv-results-spinner" class="text-center my-4 d-none">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Yükleniyor...</span>
+                                </div>
+                                <p class="mt-2">Çapraz doğrulama gerçekleştiriliyor, lütfen bekleyin...</p>
+                            </div>
+                            
+                            <div id="cv-results" class="d-none">
+                                <h6>Sonuçlar</h6>
+                                <div class="alert alert-info">
+                                    <div id="cv-status"></div>
+                                    <div id="cv-date"></div>
+                                </div>
+                                
+                                <h6>Performans Metrikleri</h6>
+                                <table class="table table-sm table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Metrik</th>
+                                            <th>Değer</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="cv-metrics-body">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Geriye Dönük Test Sekmesi -->
+                <div class="tab-pane fade" id="backtesting" role="tabpanel" aria-labelledby="backtesting-tab">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Geriye Dönük Test (Backtesting)</h5>
+                            
+                            <form id="backtesting-form" class="mb-4">
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="days-back" class="form-label">Gün Sayısı</label>
+                                        <input type="number" class="form-control" id="days-back" min="7" max="365" value="180" required>
+                                        <div class="form-text">Kaç gün öncesine kadar veri kullanılacağı (7-365). Daha fazla veri için daha yüksek değerler kullanın.</div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="test-ratio" class="form-label">Test Veri Oranı</label>
+                                        <input type="number" class="form-control" id="test-ratio" min="0.1" max="0.9" step="0.05" value="0.25" required>
+                                        <div class="form-text">Test verisi oranı (0.1-0.9). 0.25 değeri model eğitimi için %75, test için %25 veri kullanır.</div>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-primary" id="run-bt-btn">
+                                    <i class="fas fa-play-circle"></i> Geriye Dönük Test Başlat
+                                </button>
+                            </form>
+                            
+                            <div id="bt-results-spinner" class="text-center my-4 d-none">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Yükleniyor...</span>
+                                </div>
+                                <p class="mt-2">Geriye dönük test gerçekleştiriliyor, lütfen bekleyin...</p>
+                            </div>
+                            
+                            <div id="bt-results" class="d-none">
+                                <h6>Sonuçlar</h6>
+                                <div class="alert alert-info">
+                                    <div id="bt-status"></div>
+                                    <div id="bt-date"></div>
+                                    <div id="bt-data-info"></div>
+                                </div>
+                                
+                                <h6>Performans Metrikleri</h6>
+                                <table class="table table-sm table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Metrik</th>
+                                            <th>Değer</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="bt-metrics-body">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Ensemble Modeller Sekmesi -->
+                <div class="tab-pane fade" id="ensemble" role="tabpanel" aria-labelledby="ensemble-tab">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Gelişmiş Ensemble Modeller</h5>
+                            <p class="text-muted">Bu sekme, çeşitli ensemble teknikleri kullanarak model performansını artırmayı amaçlar.</p>
+                            
+                            <form id="ensemble-form" class="mb-4">
+                                <div class="row mb-3">
+                                    <div class="col-md-4">
+                                        <label for="ensemble-type" class="form-label">Ensemble Tipi</label>
+                                        <select class="form-select" id="ensemble-type" required>
+                                            <option value="stacking">Stacking (Meta-Öğrenme)</option>
+                                            <option value="voting">Voting (Ağırlıklı Oy)</option>
+                                            <option value="blending">Blending (Karıştırma)</option>
+                                        </select>
+                                        <div class="form-text">Kullanılacak ensemble tekniği</div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="ensemble-k-folds" class="form-label">K-Fold Sayısı</label>
+                                        <input type="number" class="form-control" id="ensemble-k-folds" min="2" max="10" value="5" required>
+                                        <div class="form-text">K değeri 2 ile 10 arasında olmalıdır.</div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="ensemble-random-state" class="form-label">Random State</label>
+                                        <input type="number" class="form-control" id="ensemble-random-state" min="1" value="42" required>
+                                        <div class="form-text">Sonuçların tekrarlanabilirliği için rastgele tohum.</div>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-primary" id="run-ensemble-btn">
+                                    <i class="fas fa-play-circle"></i> Ensemble Doğrulama Başlat
+                                </button>
+                            </form>
+                            
+                            <div id="ensemble-results-spinner" class="text-center my-4 d-none">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Yükleniyor...</span>
+                                </div>
+                                <p class="mt-2">Ensemble modeller ile çapraz doğrulama gerçekleştiriliyor, lütfen bekleyin...</p>
+                            </div>
+                            
+                            <div id="ensemble-results" class="d-none">
+                                <h6>Sonuçlar</h6>
+                                <div class="alert alert-info">
+                                    <div id="ensemble-status"></div>
+                                    <div id="ensemble-date"></div>
+                                    <div id="ensemble-type-info"></div>
+                                </div>
+                                
+                                <h6>Performans Metrikleri</h6>
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <table class="table table-sm table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>Metrik</th>
+                                                    <th>Değer</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="ensemble-metrics-body">
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="card">
+                                            <div class="card-header bg-info text-white">
+                                                <h6 class="mb-0">İyileştirme Oranları</h6>
+                                            </div>
+                                            <div class="card-body" id="ensemble-improvement">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <h6 class="mt-4">Fold Detayları</h6>
+                                <div class="accordion" id="ensemble-fold-details">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Hiperparametre Optimizasyonu Sekmesi -->
+                <div class="tab-pane fade" id="hyperparameter" role="tabpanel" aria-labelledby="hyperparameter-tab">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Hiperparametre Optimizasyonu</h5>
+                            <p class="text-muted">Bu sekme, model performansını artırmak için en uygun hiperparametreleri bulmayı amaçlar.</p>
+                            
+                            <form id="hyperparameter-form" class="mb-4">
+                                <div class="row mb-3">
+                                    <div class="col-md-4">
+                                        <label for="model-type" class="form-label">Model Tipi</label>
+                                        <select class="form-select" id="model-type" required>
+                                            <option value="rf">Random Forest</option>
+                                            <option value="gbm">Gradient Boosting</option>
+                                            <option value="xgb">XGBoost</option>
+                                            <option value="linear">Linear Regression</option>
+                                            <option value="elasticnet">Elastic Net</option>
+                                        </select>
+                                        <div class="form-text">Optimize edilecek model tipi</div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="cv-folds" class="form-label">CV Fold Sayısı</label>
+                                        <input type="number" class="form-control" id="cv-folds" min="2" max="10" value="5" required>
+                                        <div class="form-text">Çapraz doğrulama fold sayısı</div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="scoring-metric" class="form-label">Optimizasyon Metriği</label>
+                                        <select class="form-select" id="scoring-metric" required>
+                                            <option value="neg_mean_squared_error">Mean Squared Error (MSE)</option>
+                                            <option value="neg_mean_absolute_error">Mean Absolute Error (MAE)</option>
+                                            <option value="r2">R² Score</option>
+                                        </select>
+                                        <div class="form-text">Optimize edilecek metrik</div>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-4">
+                                        <label for="search-type" class="form-label">Arama Tipi</label>
+                                        <select class="form-select" id="search-type" required>
+                                            <option value="random">Rastgele Arama (Daha Hızlı)</option>
+                                            <option value="grid">Tam Grid Arama (Daha Kapsamlı)</option>
+                                        </select>
+                                        <div class="form-text">Optimizasyon yöntemi</div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="n-iter" class="form-label">İterasyon Sayısı</label>
+                                        <input type="number" class="form-control" id="n-iter" min="5" max="100" value="20" required>
+                                        <div class="form-text">Rastgele arama için deneme sayısı</div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="season-weight" class="form-label">Sezon Ağırlık Faktörü</label>
+                                        <input type="number" class="form-control" id="season-weight" min="1" max="3" step="0.1" value="1.5" required>
+                                        <div class="form-text">Mevcut sezon maçlarına verilecek ek ağırlık</div>
+                                    </div>
+                                </div>
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="hyper-use-time-weights" checked>
+                                    <label class="form-check-label" for="hyper-use-time-weights">
+                                        Zaman Ağırlıklı (Daha yakın tarihlere daha fazla ağırlık ver)
+                                    </label>
+                                </div>
+                                <button type="button" class="btn btn-primary" id="run-hyperparameter-btn">
+                                    <i class="fas fa-play-circle"></i> Hiperparametre Optimizasyonu Başlat
+                                </button>
+                            </form>
+                            
+                            <div id="hyperparameter-results-spinner" class="text-center my-4 d-none">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Yükleniyor...</span>
+                                </div>
+                                <p class="mt-2">Hiperparametre optimizasyonu gerçekleştiriliyor, lütfen bekleyin...<br>
+                                <small class="text-muted">Bu işlem veri boyutuna bağlı olarak biraz zaman alabilir.</small></p>
+                                <div class="mt-3">
+                                    <div class="progress">
+                                        <div id="optimization-progress-bar" class="progress-bar progress-bar-striped progress-bar-animated" 
+                                             role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">0%</div>
+                                    </div>
+                                    <p class="mt-2">
+                                        <span id="optimization-timer">Tahmini süre hesaplanıyor...</span>
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            <div id="hyperparameter-results" class="d-none">
+                                <h6>Sonuçlar</h6>
+                                <div class="alert alert-info">
+                                    <div id="hyperparameter-status"></div>
+                                    <div id="hyperparameter-date"></div>
+                                    <div id="hyperparameter-model-info"></div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="card">
+                                            <div class="card-header bg-success text-white">
+                                                <h6 class="mb-0">Ev Sahibi En İyi Parametreler</h6>
+                                            </div>
+                                            <div class="card-body">
+                                                <pre id="home-best-params" class="p-2 bg-dark text-light" style="border-radius: 5px;"></pre>
+                                                <div id="home-best-score"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="card">
+                                            <div class="card-header bg-info text-white">
+                                                <h6 class="mb-0">Deplasman En İyi Parametreler</h6>
+                                            </div>
+                                            <div class="card-body">
+                                                <pre id="away-best-params" class="p-2 bg-dark text-light" style="border-radius: 5px;"></pre>
+                                                <div id="away-best-score"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <h6 class="mt-4">CV Sonuçları</h6>
+                                <ul class="nav nav-tabs" id="hyperparameter-tabs" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link active" id="home-cv-tab" data-bs-toggle="tab" data-bs-target="#home-cv" type="button" role="tab" aria-controls="home-cv" aria-selected="true">Ev Sahibi</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="away-cv-tab" data-bs-toggle="tab" data-bs-target="#away-cv" type="button" role="tab" aria-controls="away-cv" aria-selected="false">Deplasman</button>
+                                    </li>
+                                </ul>
+                                <div class="tab-content" id="hyperparameter-tab-content">
+                                    <div class="tab-pane fade show active" id="home-cv" role="tabpanel" aria-labelledby="home-cv-tab">
+                                        <div class="table-responsive mt-3">
+                                            <table class="table table-sm table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Sıralama</th>
+                                                        <th>Parametreler</th>
+                                                        <th>Skor</th>
+                                                        <th>Std</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="home-cv-results">
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="away-cv" role="tabpanel" aria-labelledby="away-cv-tab">
+                                        <div class="table-responsive mt-3">
+                                            <table class="table table-sm table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Sıralama</th>
+                                                        <th>Parametreler</th>
+                                                        <th>Skor</th>
+                                                        <th>Std</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="away-cv-results">
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Rapor Sekmesi -->
+                <div class="tab-pane fade" id="report" role="tabpanel" aria-labelledby="report-tab">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Model Değerlendirme Raporu</h5>
+                            
+                            <button class="btn btn-primary mb-4" id="fetch-report-btn">
+                                <i class="fas fa-file-alt"></i> Raporu Getir
+                            </button>
+                            
+                            <div id="report-spinner" class="text-center my-4 d-none">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Yükleniyor...</span>
+                                </div>
+                                <p class="mt-2">Rapor hazırlanıyor, lütfen bekleyin...</p>
+                            </div>
+                            
+                            <div id="report-results" class="d-none">
+                                <div class="alert alert-info">
+                                    <div id="report-date"></div>
+                                </div>
+                                
+                                <h6>Metrik Karşılaştırması</h6>
+                                <table class="table table-sm table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Metrik</th>
+                                            <th>Çapraz Doğrulama</th>
+                                            <th>Geriye Dönük Test</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="metrics-comparison-body">
+                                    </tbody>
+                                </table>
+                                
+                                <div class="row mt-4">
+                                    <div class="col-md-6">
+                                        <div class="card mb-4">
+                                            <div class="card-header bg-primary text-white">
+                                                <h6 class="mb-0">Son Ensemble Doğrulama</h6>
+                                            </div>
+                                            <div class="card-body">
+                                                <div id="last-ensemble-summary">
+                                                    <div id="ensemble-no-data" class="alert alert-warning d-none">
+                                                        <p>Henüz ensemble doğrulama sonucu bulunmuyor.</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-6">
+                                        <div class="card mb-4">
+                                            <div class="card-header bg-success text-white">
+                                                <h6 class="mb-0">Son Hiperparametre Optimizasyonu</h6>
+                                            </div>
+                                            <div class="card-body">
+                                                <div id="last-hyperparameter-summary">
+                                                    <div id="hyperparameter-no-data" class="alert alert-warning d-none">
+                                                        <p>Henüz hiperparametre optimizasyonu sonucu bulunmuyor.</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <h6 class="mt-4">İyileştirme Önerileri</h6>
+                                <ul id="improvement-suggestions" class="list-group">
+                                </ul>
+                                
+                                <div id="no-data-message" class="alert alert-warning d-none">
+                                    <p>Henüz rapor için yeterli veri bulunmuyor. Önce Çapraz Doğrulama veya Geriye Dönük Test çalıştırın.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Özellik Önemi Sekmesi -->
+                <div class="tab-pane fade" id="feature-importance" role="tabpanel" aria-labelledby="feature-importance-tab">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Özellik Önemi Analizi</h5>
+                            <p class="text-muted">Bu analiz, tahmin performansına en fazla katkıda bulunan özellikleri görselleştirir.</p>
+                            
+                            <button class="btn btn-primary mb-4" id="fetch-feature-importance-btn">
+                                <i class="fas fa-chart-bar"></i> Özellik Önemi Analizi Getir
+                            </button>
+                            
+                            <div id="feature-importance-spinner" class="text-center my-4 d-none">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Yükleniyor...</span>
+                                </div>
+                                <p class="mt-2">Özellik önemi analizi gerçekleştiriliyor, lütfen bekleyin...</p>
+                            </div>
+                            
+                            <div id="feature-importance-results" class="d-none">
+                                <div class="alert alert-info">
+                                    <div id="feature-importance-date"></div>
+                                </div>
+                                
+                                <div class="row mt-4">
+                                    <div class="col-md-12 mb-4">
+                                        <div class="card bg-dark text-white">
+                                            <div class="card-header bg-primary">
+                                                <h6 class="mb-0">Ev Sahibi Takım Tahminlerine Etki Eden Faktörler</h6>
+                                            </div>
+                                            <div class="card-body">
+                                                <canvas id="home-feature-importance-chart" width="800" height="400" style="width: 100%; height: 400px;"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-12 mb-4">
+                                        <div class="card bg-dark text-white">
+                                            <div class="card-header bg-info">
+                                                <h6 class="mb-0">Deplasman Takımı Tahminlerine Etki Eden Faktörler</h6>
+                                            </div>
+                                            <div class="card-body">
+                                                <canvas id="away-feature-importance-chart" width="800" height="400" style="width: 100%; height: 400px;"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <h6 class="mt-4">Tüm Özelliklerin Detaylı Analizi</h6>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h6 class="text-success">Ev Sahibi Takım Özellikleri</h6>
+                                        <table class="table table-sm table-striped bg-dark text-white">
+                                            <thead>
+                                                <tr>
+                                                    <th>Özellik</th>
+                                                    <th>Önem Derecesi</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="home-feature-importance-table">
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    
+                                    <div class="col-md-6">
+                                        <h6 class="text-info">Deplasman Takımı Özellikleri</h6>
+                                        <table class="table table-sm table-striped bg-dark text-white">
+                                            <thead>
+                                                <tr>
+                                                    <th>Özellik</th>
+                                                    <th>Önem Derecesi</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="away-feature-importance-table">
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-4">
+                                    <h6>Özellik Önemi Analizi Notları</h6>
+                                    <ul id="feature-importance-notes" class="list-group">
+                                        <li class="list-group-item bg-dark text-white">Son maçlardaki form durumu, gol atma ve yeme oranları gibi özellikler tahminlerde büyük öneme sahiptir.</li>
+                                        <li class="list-group-item bg-dark text-white">Son 5 maçtaki form trendi, önceki 10-15 maça göre daha yüksek etkiye sahiptir (zamansal ağırlıklandırmanın etkisi).</li>
+                                        <li class="list-group-item bg-dark text-white">Ev sahibi takımların geçmiş ev sahibi performansı, genel performanslarından daha belirleyicidir.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Sayfa yüklendiğinde çalışacak kodlar
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Model doğrulama sayfası yüklendi - v3');
+    
+    // Çapraz Doğrulama butonuna tıklama işleyicisi
+    document.getElementById('run-cv-btn').onclick = function() {
+        console.log('Çapraz doğrulama butonu tıklandı');
+        
+        // Form verilerini al
+        var kFolds = document.getElementById('k-folds').value;
+        var randomState = document.getElementById('random-state').value;
+        var maxDays = document.getElementById('max-days').value;
+        var useTimeWeights = document.getElementById('use-time-weights').checked;
+        
+        // Sonuçları sıfırla ve spinner'ı göster
+        document.getElementById('cv-results').classList.add('d-none');
+        document.getElementById('cv-results-spinner').classList.remove('d-none');
+        
+        // API isteği gönder
+        fetch('/api/v3/validation/cross-validate', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                k_folds: parseInt(kFolds),
+                random_state: parseInt(randomState),
+                max_days: parseInt(maxDays),
+                use_time_weights: useTimeWeights
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Çapraz doğrulama sonucu:', data);
+            
+            // Spinner'ı gizle
+            document.getElementById('cv-results-spinner').classList.add('d-none');
+            
+            // Sonuçları göster
+            document.getElementById('cv-results').classList.remove('d-none');
+            
+            // Durum bilgisini göster
+            document.getElementById('cv-status').textContent = 'Durum: ' + (data.status === 'success' ? 'Başarılı' : 'Hata');
+            document.getElementById('cv-date').textContent = 'Tarih: ' + data.date;
+            
+            // Eğer mesaj varsa göster
+            if (data.message) {
+                var row = document.createElement('tr');
+                var cell = document.createElement('td');
+                cell.colSpan = 2;
+                cell.textContent = data.message;
+                
+                var metricsBody = document.getElementById('cv-metrics-body');
+                metricsBody.innerHTML = '';
+                metricsBody.appendChild(row);
+                return;
+            }
+            
+            // Metrikleri tabloya ekle
+            var metricsBody = document.getElementById('cv-metrics-body');
+            metricsBody.innerHTML = '';
+            
+            if (data.metrics && Object.keys(data.metrics).length > 0) {
+                for (var key in data.metrics) {
+                    var value = data.metrics[key];
+                    
+                    var row = document.createElement('tr');
+                    
+                    var metricNameCell = document.createElement('td');
+                    metricNameCell.textContent = formatMetricName(key);
+                    
+                    var metricValueCell = document.createElement('td');
+                    metricValueCell.textContent = parseFloat(value).toFixed(4);
+                    
+                    row.appendChild(metricNameCell);
+                    row.appendChild(metricValueCell);
+                    
+                    metricsBody.appendChild(row);
+                }
+            } else {
+                var row = document.createElement('tr');
+                var cell = document.createElement('td');
+                cell.colSpan = 2;
+                cell.textContent = data.message || 'Metrik bilgisi bulunamadı.';
+                row.appendChild(cell);
+                metricsBody.appendChild(row);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('cv-results-spinner').classList.add('d-none');
+            alert('Çapraz doğrulama işlemi sırasında bir hata oluştu.');
+        });
+    };
+    
+    // Geriye Dönük Test butonuna tıklama işleyicisi
+    document.getElementById('run-bt-btn').onclick = function() {
+        console.log('Geriye dönük test butonu tıklandı');
+        
+        // Form verilerini al
+        var daysBack = document.getElementById('days-back').value;
+        var testRatio = document.getElementById('test-ratio').value;
+        
+        // Sonuçları sıfırla ve spinner'ı göster
+        document.getElementById('bt-results').classList.add('d-none');
+        document.getElementById('bt-results-spinner').classList.remove('d-none');
+        
+        // API isteği gönder
+        fetch('/api/v3/validation/backtesting', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                days_back: parseInt(daysBack),
+                test_ratio: parseFloat(testRatio)
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Geriye dönük test sonucu:', data);
+            
+            // Spinner'ı gizle
+            document.getElementById('bt-results-spinner').classList.add('d-none');
+            
+            // Sonuçları göster
+            document.getElementById('bt-results').classList.remove('d-none');
+            
+            // Durum bilgisini göster
+            document.getElementById('bt-status').textContent = 'Durum: ' + (data.status === 'success' ? 'Başarılı' : 'Hata');
+            document.getElementById('bt-date').textContent = 'Tarih: ' + data.date;
+            
+            if (data.train_size && data.test_size) {
+                document.getElementById('bt-data-info').textContent = 'Eğitim veri sayısı: ' + data.train_size + ', Test veri sayısı: ' + data.test_size;
+            }
+            
+            // Eğer mesaj varsa göster
+            if (data.message) {
+                var row = document.createElement('tr');
+                var cell = document.createElement('td');
+                cell.colSpan = 2;
+                cell.textContent = data.message;
+                
+                var metricsBody = document.getElementById('bt-metrics-body');
+                metricsBody.innerHTML = '';
+                metricsBody.appendChild(row);
+                return;
+            }
+            
+            // Metrikleri tabloya ekle
+            var metricsBody = document.getElementById('bt-metrics-body');
+            metricsBody.innerHTML = '';
+            
+            if (data.metrics && Object.keys(data.metrics).length > 0) {
+                for (var key in data.metrics) {
+                    var value = data.metrics[key];
+                    
+                    var row = document.createElement('tr');
+                    
+                    var metricNameCell = document.createElement('td');
+                    metricNameCell.textContent = formatMetricName(key);
+                    
+                    var metricValueCell = document.createElement('td');
+                    metricValueCell.textContent = parseFloat(value).toFixed(4);
+                    
+                    row.appendChild(metricNameCell);
+                    row.appendChild(metricValueCell);
+                    
+                    metricsBody.appendChild(row);
+                }
+            } else {
+                var row = document.createElement('tr');
+                var cell = document.createElement('td');
+                cell.colSpan = 2;
+                cell.textContent = data.message || 'Metrik bilgisi bulunamadı.';
+                row.appendChild(cell);
+                metricsBody.appendChild(row);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('bt-results-spinner').classList.add('d-none');
+            alert('Geriye dönük test işlemi sırasında bir hata oluştu.');
+        });
+    };
+    
+    // Rapor Getir butonuna tıklama işleyicisi
+    document.getElementById('fetch-report-btn').onclick = function() {
+        console.log('Rapor getir butonu tıklandı');
+        
+        // Sonuçları sıfırla ve spinner'ı göster
+        document.getElementById('report-results').classList.add('d-none');
+        document.getElementById('report-spinner').classList.remove('d-none');
+        
+        // API isteği gönder
+        fetch('/api/v3/validation/report')
+        .then(response => response.json())
+        .then(data => {
+            console.log('Rapor verileri alındı:', data);
+            
+            // Spinner'ı gizle
+            document.getElementById('report-spinner').classList.add('d-none');
+            
+            // Sonuçları göster
+            document.getElementById('report-results').classList.remove('d-none');
+            
+            // Rapor tarihini göster
+            document.getElementById('report-date').textContent = 'Rapor tarihi: ' + data.date;
+            
+            // Veri yoksa mesaj göster
+            var noDataMessage = document.getElementById('no-data-message');
+            if (!data.latest_cross_validation && !data.latest_backtesting) {
+                noDataMessage.classList.remove('d-none');
+            } else {
+                noDataMessage.classList.add('d-none');
+            }
+            
+            // Ensemble sonuçlarını göster/gizle
+            var ensembleNoData = document.getElementById('ensemble-no-data');
+            var lastEnsembleSummary = document.getElementById('last-ensemble-summary');
+            
+            if (data.latest_ensemble_validation) {
+                ensembleNoData.classList.add('d-none');
+                
+                // Son ensemble sonuçlarını temizle ve göster
+                var ensembleContent = document.createElement('div');
+                
+                // Tarih ve tip
+                var ensembleDate = document.createElement('p');
+                ensembleDate.innerHTML = '<strong>Tarih:</strong> ' + data.latest_ensemble_validation.date;
+                
+                var ensembleType = document.createElement('p');
+                ensembleType.innerHTML = '<strong>Ensemble Tipi:</strong> ' + data.latest_ensemble_validation.ensemble_type;
+                
+                // Ortalama metrikler
+                var ensembleMetricsTitle = document.createElement('h6');
+                ensembleMetricsTitle.textContent = 'Ortalama Metrikler';
+                
+                ensembleContent.appendChild(ensembleDate);
+                ensembleContent.appendChild(ensembleType);
+                ensembleContent.appendChild(ensembleMetricsTitle);
+                
+                // Metrik tablosu
+                if (data.latest_ensemble_validation.metrics) {
+                    var ensembleMetricsTable = document.createElement('table');
+                    ensembleMetricsTable.className = 'table table-sm';
+                    
+                    var thead = document.createElement('thead');
+                    var headerRow = document.createElement('tr');
+                    var thMetric = document.createElement('th');
+                    thMetric.textContent = 'Metrik';
+                    var thValue = document.createElement('th');
+                    thValue.textContent = 'Değer';
+                    
+                    headerRow.appendChild(thMetric);
+                    headerRow.appendChild(thValue);
+                    thead.appendChild(headerRow);
+                    ensembleMetricsTable.appendChild(thead);
+                    
+                    var tbody = document.createElement('tbody');
+                    
+                    for (var key in data.latest_ensemble_validation.metrics) {
+                        var row = document.createElement('tr');
+                        var tdMetric = document.createElement('td');
+                        tdMetric.textContent = formatMetricName(key);
+                        var tdValue = document.createElement('td');
+                        
+                        // NaN kontrolü ve iç içe veri yapısı için özel işlem
+                        if (key === 'ensemble_improvement' && typeof data.latest_ensemble_validation.metrics[key] === 'object') {
+                            // İç içe geçmiş improvement değerlerini özel formatta göster
+                            var impObj = data.latest_ensemble_validation.metrics[key];
+                            
+                            // İçeriğini bir tabloya aktar
+                            var impTable = document.createElement('table');
+                            impTable.className = 'table table-sm table-borderless mb-0 small';
+                            var impTableBody = document.createElement('tbody');
+                            
+                            for (var impKey in impObj) {
+                                if (!isNaN(parseFloat(impObj[impKey]))) {
+                                    var impRow = document.createElement('tr');
+                                    var keyCell = document.createElement('td');
+                                    keyCell.textContent = formatMetricName(impKey);
+                                    
+                                    var valueCell = document.createElement('td');
+                                    var value = parseFloat(impObj[impKey]);
+                                    valueCell.textContent = value.toFixed(4);
+                                    valueCell.className = value > 0 ? 'text-success' : 'text-danger';
+                                    
+                                    impRow.appendChild(keyCell);
+                                    impRow.appendChild(valueCell);
+                                    impTableBody.appendChild(impRow);
+                                }
+                            }
+                            
+                            if (impTableBody.childNodes.length > 0) {
+                                impTable.appendChild(impTableBody);
+                                tdValue.appendChild(impTable);
+                            } else {
+                                tdValue.textContent = 'Hesaplanamadı';
+                            }
+                        } else if (!isNaN(parseFloat(data.latest_ensemble_validation.metrics[key]))) {
+                            tdValue.textContent = parseFloat(data.latest_ensemble_validation.metrics[key]).toFixed(4);
+                        } else {
+                            tdValue.textContent = 'Hesaplanamadı';
+                        }
+                        
+                        row.appendChild(tdMetric);
+                        row.appendChild(tdValue);
+                        tbody.appendChild(row);
+                    }
+                    
+                    ensembleMetricsTable.appendChild(tbody);
+                    ensembleContent.appendChild(ensembleMetricsTable);
+                }
+                
+                // İçeriği ekle
+                lastEnsembleSummary.innerHTML = '';
+                lastEnsembleSummary.appendChild(ensembleContent);
+            } else {
+                ensembleNoData.classList.remove('d-none');
+            }
+            
+            // Hiperparametre sonuçlarını göster/gizle
+            var hyperparameterNoData = document.getElementById('hyperparameter-no-data');
+            var lastHyperparameterSummary = document.getElementById('last-hyperparameter-summary');
+            
+            if (data.latest_hyperparameter_tuning) {
+                hyperparameterNoData.classList.add('d-none');
+                
+                // Son hiperparametre sonuçlarını temizle ve göster
+                var hyperContent = document.createElement('div');
+                
+                // Tarih ve model tipi
+                var hyperDate = document.createElement('p');
+                hyperDate.innerHTML = '<strong>Tarih:</strong> ' + data.latest_hyperparameter_tuning.date;
+                
+                var hyperType = document.createElement('p');
+                hyperType.innerHTML = '<strong>Model Tipi:</strong> ' + data.latest_hyperparameter_tuning.model_type;
+                
+                hyperContent.appendChild(hyperDate);
+                hyperContent.appendChild(hyperType);
+                
+                // En iyi parametreler
+                if (data.latest_hyperparameter_tuning.home_best_params) {
+                    var homeBestTitle = document.createElement('h6');
+                    homeBestTitle.textContent = 'Ev Sahibi En İyi Parametreler';
+                    hyperContent.appendChild(homeBestTitle);
+                    
+                    var homeBestParams = document.createElement('pre');
+                    homeBestParams.className = 'small bg-dark text-white p-2';
+                    homeBestParams.textContent = JSON.stringify(data.latest_hyperparameter_tuning.home_best_params, null, 2);
+                    hyperContent.appendChild(homeBestParams);
+                    
+                    var homeScore = document.createElement('p');
+                    homeScore.innerHTML = '<strong>MSE:</strong> ' + parseFloat(data.latest_hyperparameter_tuning.home_best_score).toFixed(4);
+                    hyperContent.appendChild(homeScore);
+                }
+                
+                if (data.latest_hyperparameter_tuning.away_best_params) {
+                    var awayBestTitle = document.createElement('h6');
+                    awayBestTitle.className = 'mt-3';
+                    awayBestTitle.textContent = 'Deplasman En İyi Parametreler';
+                    hyperContent.appendChild(awayBestTitle);
+                    
+                    var awayBestParams = document.createElement('pre');
+                    awayBestParams.className = 'small bg-dark text-white p-2';
+                    awayBestParams.textContent = JSON.stringify(data.latest_hyperparameter_tuning.away_best_params, null, 2);
+                    hyperContent.appendChild(awayBestParams);
+                    
+                    var awayScore = document.createElement('p');
+                    awayScore.innerHTML = '<strong>MSE:</strong> ' + parseFloat(data.latest_hyperparameter_tuning.away_best_score).toFixed(4);
+                    hyperContent.appendChild(awayScore);
+                }
+                
+                // İçeriği ekle
+                lastHyperparameterSummary.innerHTML = '';
+                lastHyperparameterSummary.appendChild(hyperContent);
+            } else {
+                hyperparameterNoData.classList.remove('d-none');
+            }
+            
+            // Metrik karşılaştırmalarını tabloya ekle
+            var metricsBody = document.getElementById('metrics-comparison-body');
+            metricsBody.innerHTML = '';
+            
+            if (data.metrics_comparison && Object.keys(data.metrics_comparison).length > 0) {
+                for (var key in data.metrics_comparison) {
+                    var values = data.metrics_comparison[key];
+                    
+                    var row = document.createElement('tr');
+                    
+                    var metricNameCell = document.createElement('td');
+                    metricNameCell.textContent = formatMetricName(key);
+                    
+                    var cvValueCell = document.createElement('td');
+                    cvValueCell.textContent = typeof values.cross_validation === 'number' 
+                        ? parseFloat(values.cross_validation).toFixed(4) 
+                        : values.cross_validation;
+                    
+                    var btValueCell = document.createElement('td');
+                    btValueCell.textContent = typeof values.backtesting === 'number' 
+                        ? parseFloat(values.backtesting).toFixed(4) 
+                        : values.backtesting;
+                    
+                    row.appendChild(metricNameCell);
+                    row.appendChild(cvValueCell);
+                    row.appendChild(btValueCell);
+                    
+                    metricsBody.appendChild(row);
+                }
+            } else {
+                var row = document.createElement('tr');
+                var cell = document.createElement('td');
+                cell.colSpan = 3;
+                cell.textContent = 'Metrik karşılaştırma bilgisi bulunamadı.';
+                row.appendChild(cell);
+                metricsBody.appendChild(row);
+            }
+            
+            // İyileştirme önerilerini liste olarak ekle
+            var suggestionsList = document.getElementById('improvement-suggestions');
+            suggestionsList.innerHTML = '';
+            
+            if (data.improvement_suggestions && data.improvement_suggestions.length > 0) {
+                data.improvement_suggestions.forEach(suggestion => {
+                    var listItem = document.createElement('li');
+                    listItem.className = 'list-group-item';
+                    listItem.textContent = suggestion;
+                    suggestionsList.appendChild(listItem);
+                });
+            } else {
+                var listItem = document.createElement('li');
+                listItem.className = 'list-group-item';
+                listItem.textContent = 'İyileştirme önerisi bulunamadı.';
+                suggestionsList.appendChild(listItem);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('report-spinner').classList.add('d-none');
+            alert('Rapor alınırken bir hata oluştu.');
+        });
+    };
+    
+    // Ensemble butonu tıklama işleyicisi
+    document.getElementById('run-ensemble-btn').onclick = function() {
+        console.log('Ensemble doğrulama butonu tıklandı');
+        
+        // Form verilerini al
+        var ensembleType = document.getElementById('ensemble-type').value;
+        var kFolds = document.getElementById('ensemble-k-folds').value;
+        var randomState = document.getElementById('ensemble-random-state').value;
+        
+        // Sonuçları sıfırla ve spinner'ı göster
+        document.getElementById('ensemble-results').classList.add('d-none');
+        document.getElementById('ensemble-results-spinner').classList.remove('d-none');
+        
+        // API isteği gönder
+        fetch('/api/v3/validation/ensemble', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                ensemble_type: ensembleType,
+                k_folds: parseInt(kFolds),
+                random_state: parseInt(randomState)
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Ensemble doğrulama sonucu:', data);
+            
+            // Spinner'ı gizle
+            document.getElementById('ensemble-results-spinner').classList.add('d-none');
+            
+            // Sonuçları göster
+            document.getElementById('ensemble-results').classList.remove('d-none');
+            
+            // Durum bilgisini göster
+            document.getElementById('ensemble-status').textContent = 'Durum: ' + (data.status === 'success' ? 'Başarılı' : 'Hata');
+            document.getElementById('ensemble-date').textContent = 'Tarih: ' + data.date;
+            document.getElementById('ensemble-type-info').textContent = 'Ensemble tipi: ' + formatEnsembleType(data.ensemble_type || ensembleType);
+            
+            // Eğer mesaj varsa göster
+            if (data.message) {
+                var row = document.createElement('tr');
+                var cell = document.createElement('td');
+                cell.colSpan = 2;
+                cell.textContent = data.message;
+                
+                var metricsBody = document.getElementById('ensemble-metrics-body');
+                metricsBody.innerHTML = '';
+                metricsBody.appendChild(row);
+                document.getElementById('ensemble-improvement').innerHTML = '';
+                return;
+            }
+            
+            // Metrikleri tabloya ekle
+            var metricsBody = document.getElementById('ensemble-metrics-body');
+            metricsBody.innerHTML = '';
+            
+            if (data.metrics && Object.keys(data.metrics).length > 0) {
+                var hasValidMetrics = false;
+                for (var key in data.metrics) {
+                    var value = data.metrics[key];
+                    
+                    // NaN değerleri ve özel alanları atla
+                    if (isNaN(value) || key === 'ensemble_improvement') {
+                        continue;
+                    }
+                    
+                    hasValidMetrics = true;
+                    var row = document.createElement('tr');
+                    
+                    var metricNameCell = document.createElement('td');
+                    metricNameCell.textContent = formatMetricName(key);
+                    
+                    var metricValueCell = document.createElement('td');
+                    metricValueCell.textContent = parseFloat(value).toFixed(4);
+                    
+                    row.appendChild(metricNameCell);
+                    row.appendChild(metricValueCell);
+                    
+                    metricsBody.appendChild(row);
+                }
+                
+                // Hiç geçerli metrik yoksa bilgi mesajı göster
+                if (!hasValidMetrics) {
+                    var row = document.createElement('tr');
+                    var cell = document.createElement('td');
+                    cell.colSpan = 2;
+                    cell.textContent = 'Geçerli metrik bilgisi bulunamadı.';
+                    row.appendChild(cell);
+                    metricsBody.appendChild(row);
+                }
+                
+                // İyileştirme oranlarını göster
+                var improvementDiv = document.getElementById('ensemble-improvement');
+                improvementDiv.innerHTML = '';
+                
+                // Ensemble improvement verisi iki farklı yerde olabilir
+                var improvements = data.improvements || {};
+                
+                // Eğer improvements yoksa ama ensemble_improvement varsa onu kullan
+                if (Object.keys(improvements).length === 0 && 
+                    data.metrics && data.metrics.ensemble_improvement) {
+                    improvements = data.metrics.ensemble_improvement;
+                }
+                
+                if (improvements && Object.keys(improvements).length > 0) {
+                    var list = document.createElement('ul');
+                    list.className = 'list-group';
+                    var hasValidImprovement = false;
+                    
+                    for (var key in improvements) {
+                        var value = improvements[key];
+                        
+                        // NaN değerleri kontrol et ve atla
+                        if (isNaN(value)) {
+                            continue;
+                        }
+                        
+                        hasValidImprovement = true;
+                        
+                        var listItem = document.createElement('li');
+                        listItem.className = 'list-group-item d-flex justify-content-between align-items-center';
+                        
+                        var metricName = document.createElement('span');
+                        metricName.textContent = formatMetricName(key);
+                        
+                        var improvementBadge = document.createElement('span');
+                        improvementBadge.className = value > 0 ? 'badge bg-success' : 'badge bg-danger';
+                        improvementBadge.textContent = (value > 0 ? '+' : '') + value.toFixed(4);
+                        
+                        listItem.appendChild(metricName);
+                        listItem.appendChild(improvementBadge);
+                        list.appendChild(listItem);
+                    }
+                    
+                    // Eğer listeye hiç öğe eklenmezse boş olduğunu kontrol et
+                    if (hasValidImprovement) {
+                        improvementDiv.appendChild(list);
+                    } else {
+                        var noImprovementText = document.createElement('p');
+                        noImprovementText.className = 'text-muted';
+                        noImprovementText.textContent = 'İyileştirme oranı bilgisi bulunamadı.';
+                        improvementDiv.appendChild(noImprovementText);
+                    }
+                } else {
+                    var noImprovementText = document.createElement('p');
+                    noImprovementText.className = 'text-muted';
+                    noImprovementText.textContent = 'İyileştirme oranı bilgisi bulunamadı.';
+                    improvementDiv.appendChild(noImprovementText);
+                }
+                
+                // Fold detaylarını göster
+                var foldDetailsDiv = document.getElementById('ensemble-fold-details');
+                foldDetailsDiv.innerHTML = '';
+                
+                if (data.fold_details && data.fold_details.length > 0) {
+                    data.fold_details.forEach((fold, index) => {
+                        var accordionItem = document.createElement('div');
+                        accordionItem.className = 'accordion-item';
+                        
+                        var accordionHeader = document.createElement('h2');
+                        accordionHeader.className = 'accordion-header';
+                        accordionHeader.id = 'fold-heading-' + index;
+                        
+                        var button = document.createElement('button');
+                        button.className = 'accordion-button collapsed';
+                        button.type = 'button';
+                        button.setAttribute('data-bs-toggle', 'collapse');
+                        button.setAttribute('data-bs-target', '#fold-collapse-' + index);
+                        button.setAttribute('aria-expanded', 'false');
+                        button.setAttribute('aria-controls', 'fold-collapse-' + index);
+                        button.textContent = 'Fold ' + (index + 1);
+                        
+                        var accordionCollapse = document.createElement('div');
+                        accordionCollapse.id = 'fold-collapse-' + index;
+                        accordionCollapse.className = 'accordion-collapse collapse';
+                        accordionCollapse.setAttribute('aria-labelledby', 'fold-heading-' + index);
+                        
+                        var accordionBody = document.createElement('div');
+                        accordionBody.className = 'accordion-body';
+                        
+                        // Fold metrik detaylarını ekle
+                        var addMetricsTable = function(title, metrics) {
+                            if (!metrics || Object.keys(metrics).length === 0) {
+                                return false;
+                            }
+                            
+                            var sectionTitle = document.createElement('h5');
+                            sectionTitle.textContent = title;
+                            sectionTitle.className = 'mb-3 mt-3';
+                            accordionBody.appendChild(sectionTitle);
+                            
+                            var table = document.createElement('table');
+                            table.className = 'table table-sm';
+                            
+                            var tableHead = document.createElement('thead');
+                            var headerRow = document.createElement('tr');
+                            var metricHeader = document.createElement('th');
+                            metricHeader.textContent = 'Metrik';
+                            var valueHeader = document.createElement('th');
+                            valueHeader.textContent = 'Değer';
+                            
+                            headerRow.appendChild(metricHeader);
+                            headerRow.appendChild(valueHeader);
+                            tableHead.appendChild(headerRow);
+                            table.appendChild(tableHead);
+                            
+                            var tableBody = document.createElement('tbody');
+                            
+                            for (var key in metrics) {
+                                // NaN kontrolü
+                                if (isNaN(metrics[key])) {
+                                    continue;
+                                }
+                                
+                                var row = document.createElement('tr');
+                                
+                                var nameCell = document.createElement('td');
+                                nameCell.textContent = formatMetricName(key);
+                                
+                                var valueCell = document.createElement('td');
+                                valueCell.textContent = parseFloat(metrics[key]).toFixed(4);
+                                
+                                row.appendChild(nameCell);
+                                row.appendChild(valueCell);
+                                tableBody.appendChild(row);
+                            }
+                            
+                            if (tableBody.children.length === 0) {
+                                return false;
+                            }
+                            
+                            table.appendChild(tableBody);
+                            accordionBody.appendChild(table);
+                            return true;
+                        };
+                        
+                        var addFoldInfo = function(info) {
+                            var infoDiv = document.createElement('div');
+                            infoDiv.className = 'alert alert-info';
+                            infoDiv.innerHTML = '<strong>Fold Bilgisi:</strong> ' +
+                                'Eğitim set boyutu: ' + info.train_size + ', ' +
+                                'Test set boyutu: ' + info.test_size;
+                            accordionBody.appendChild(infoDiv);
+                        };
+                        
+                        // Fold bilgileri ve metriklerini göster
+                        if (fold.train_size && fold.test_size) {
+                            addFoldInfo(fold);
+                        }
+                        
+                        var hasBaseMetrics = false;
+                        var hasEnsembleMetrics = false;
+                        
+                        if (fold.base_metrics) {
+                            hasBaseMetrics = addMetricsTable('Temel Model Metrikleri', fold.base_metrics);
+                        }
+                        
+                        if (fold.ensemble_metrics) {
+                            hasEnsembleMetrics = addMetricsTable('Ensemble Model Metrikleri', fold.ensemble_metrics);
+                        }
+                        
+                        // İyileştirme bilgilerini göster
+                        if (fold.improvement && Object.keys(fold.improvement).length > 0) {
+                            var improvementTitle = document.createElement('h5');
+                            improvementTitle.textContent = 'İyileştirme Oranları';
+                            improvementTitle.className = 'mb-3 mt-3';
+                            accordionBody.appendChild(improvementTitle);
+                            
+                            var improvementList = document.createElement('ul');
+                            improvementList.className = 'list-group';
+                            
+                            var hasValidImprovement = false;
+                            
+                            for (var key in fold.improvement) {
+                                var value = fold.improvement[key];
+                                
+                                if (isNaN(value)) {
+                                    continue;
+                                }
+                                
+                                hasValidImprovement = true;
+                                
+                                var listItem = document.createElement('li');
+                                listItem.className = 'list-group-item d-flex justify-content-between align-items-center';
+                                
+                                var name = document.createElement('span');
+                                name.textContent = formatMetricName(key);
+                                
+                                var badge = document.createElement('span');
+                                badge.className = value > 0 ? 'badge bg-success' : 'badge bg-danger';
+                                badge.textContent = (value > 0 ? '+' : '') + value.toFixed(4);
+                                
+                                listItem.appendChild(name);
+                                listItem.appendChild(badge);
+                                improvementList.appendChild(listItem);
+                            }
+                            
+                            if (hasValidImprovement) {
+                                accordionBody.appendChild(improvementList);
+                            }
+                        }
+                        
+                        // Hiçbir metrik gösterilmediyse hata mesajı
+                        if (!hasBaseMetrics && !hasEnsembleMetrics) {
+                            var noMetricsText = document.createElement('p');
+                            noMetricsText.className = 'text-muted';
+                            noMetricsText.textContent = 'Bu fold için metrik bilgisi bulunamadı.';
+                            accordionBody.appendChild(noMetricsText);
+                        }
+                        
+                        accordionCollapse.appendChild(accordionBody);
+                        accordionHeader.appendChild(button);
+                        
+                        accordionItem.appendChild(accordionHeader);
+                        accordionItem.appendChild(accordionCollapse);
+                        
+                        foldDetailsDiv.appendChild(accordionItem);
+                    });
+                }
+            } else {
+                var row = document.createElement('tr');
+                var cell = document.createElement('td');
+                cell.colSpan = 2;
+                cell.textContent = data.message || 'Metrik bilgisi bulunamadı.';
+                row.appendChild(cell);
+                metricsBody.appendChild(row);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('ensemble-results-spinner').classList.add('d-none');
+            alert('Ensemble doğrulama işlemi sırasında bir hata oluştu.');
+        });
+    };
+    
+    // Hiperparametre Optimizasyonu butonu tıklama işleyicisi
+    document.getElementById('run-hyperparameter-btn').onclick = function() {
+        console.log('Hiperparametre optimizasyonu butonu tıklandı');
+        
+        // Form verilerini al
+        var modelType = document.getElementById('model-type').value;
+        var cvFolds = document.getElementById('cv-folds').value;
+        var scoringMetric = document.getElementById('scoring-metric').value;
+        var searchType = document.getElementById('search-type').value;
+        var nIter = document.getElementById('n-iter').value;
+        var seasonWeight = document.getElementById('season-weight').value;
+        var useTimeWeights = document.getElementById('hyper-use-time-weights').checked;
+        
+        // Sonuçları sıfırla ve spinner'ı göster
+        document.getElementById('hyperparameter-results').classList.add('d-none');
+        document.getElementById('hyperparameter-results-spinner').classList.remove('d-none');
+        
+        // API isteği gönder
+        fetch('/api/v3/validation/hyperparameter-optimization', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                model_type: modelType,
+                cv: parseInt(cvFolds),
+                scoring: scoringMetric,
+                search_type: searchType,
+                n_iter: parseInt(nIter),
+                season_weight_factor: parseFloat(seasonWeight),
+                use_time_weights: useTimeWeights,
+                max_days: 180
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Hiperparametre optimizasyonu sonucu:', data);
+            
+            // Spinner'ı gizle
+            document.getElementById('hyperparameter-results-spinner').classList.add('d-none');
+            
+            // Sonuçları göster
+            document.getElementById('hyperparameter-results').classList.remove('d-none');
+            
+            // Durum bilgisini göster
+            document.getElementById('hyperparameter-status').textContent = 'Durum: ' + (data.status === 'success' ? 'Başarılı' : 'Hata');
+            document.getElementById('hyperparameter-date').textContent = 'Tarih: ' + data.date;
+            document.getElementById('hyperparameter-model-info').textContent = 'Model tipi: ' + formatModelType(data.model_type || modelType);
+            
+            // Eğer mesaj varsa göster
+            if (data.message) {
+                document.getElementById('home-best-params').textContent = 'Hata: ' + data.message;
+                document.getElementById('away-best-params').textContent = 'Hata: ' + data.message;
+                return;
+            }
+            
+            // En iyi parametreleri göster
+            if (data.home_best_params) {
+                // <pre> etiketinin içeriğini değiştir ve sözdizimi vurgulamasını etkinleştir
+                var preElement = document.getElementById('home-best-params');
+                preElement.innerHTML = '';
+                preElement.textContent = JSON.stringify(data.home_best_params, null, 2);
+                
+                // Style ekle
+                preElement.style.backgroundColor = '#f5f5f5';
+                preElement.style.padding = '10px';
+                preElement.style.border = '1px solid #ddd';
+                preElement.style.borderRadius = '4px';
+                
+                document.getElementById('home-best-score').textContent = 'MSE: ' + parseFloat(data.home_best_score).toFixed(4);
+            } else {
+                document.getElementById('home-best-params').textContent = 'En iyi parametre bilgisi bulunamadı.';
+            }
+            
+            if (data.away_best_params) {
+                // <pre> etiketinin içeriğini değiştir ve sözdizimi vurgulamasını etkinleştir
+                var preElement = document.getElementById('away-best-params');
+                preElement.innerHTML = '';
+                preElement.textContent = JSON.stringify(data.away_best_params, null, 2);
+                
+                // Style ekle
+                preElement.style.backgroundColor = '#f5f5f5';
+                preElement.style.padding = '10px';
+                preElement.style.border = '1px solid #ddd';
+                preElement.style.borderRadius = '4px';
+                
+                document.getElementById('away-best-score').textContent = 'MSE: ' + parseFloat(data.away_best_score).toFixed(4);
+            } else {
+                document.getElementById('away-best-params').textContent = 'En iyi parametre bilgisi bulunamadı.';
+            }
+            
+            // CV sonuçlarını göster
+            var homeCvResults = document.getElementById('home-cv-results');
+            homeCvResults.innerHTML = '';
+            
+            if (data.home_cv_results && data.home_cv_results.length > 0) {
+                data.home_cv_results.forEach((result, index) => {
+                    var row = document.createElement('tr');
+                    
+                    var rankCell = document.createElement('td');
+                    rankCell.textContent = index + 1;
+                    
+                    var paramsCell = document.createElement('td');
+                    paramsCell.textContent = JSON.stringify(result.params);
+                    
+                    var scoreCell = document.createElement('td');
+                    scoreCell.textContent = parseFloat(result.mean_test_score).toFixed(4);
+                    
+                    var stdCell = document.createElement('td');
+                    stdCell.textContent = parseFloat(result.std_test_score).toFixed(4);
+                    
+                    row.appendChild(rankCell);
+                    row.appendChild(paramsCell);
+                    row.appendChild(scoreCell);
+                    row.appendChild(stdCell);
+                    
+                    homeCvResults.appendChild(row);
+                });
+            } else {
+                var row = document.createElement('tr');
+                var cell = document.createElement('td');
+                cell.colSpan = 4;
+                cell.textContent = 'CV sonuçları bulunamadı.';
+                row.appendChild(cell);
+                homeCvResults.appendChild(row);
+            }
+            
+            var awayCvResults = document.getElementById('away-cv-results');
+            awayCvResults.innerHTML = '';
+            
+            if (data.away_cv_results && data.away_cv_results.length > 0) {
+                data.away_cv_results.forEach((result, index) => {
+                    var row = document.createElement('tr');
+                    
+                    var rankCell = document.createElement('td');
+                    rankCell.textContent = index + 1;
+                    
+                    var paramsCell = document.createElement('td');
+                    paramsCell.textContent = JSON.stringify(result.params);
+                    
+                    var scoreCell = document.createElement('td');
+                    scoreCell.textContent = parseFloat(result.mean_test_score).toFixed(4);
+                    
+                    var stdCell = document.createElement('td');
+                    stdCell.textContent = parseFloat(result.std_test_score).toFixed(4);
+                    
+                    row.appendChild(rankCell);
+                    row.appendChild(paramsCell);
+                    row.appendChild(scoreCell);
+                    row.appendChild(stdCell);
+                    
+                    awayCvResults.appendChild(row);
+                });
+            } else {
+                var row = document.createElement('tr');
+                var cell = document.createElement('td');
+                cell.colSpan = 4;
+                cell.textContent = 'CV sonuçları bulunamadı.';
+                row.appendChild(cell);
+                awayCvResults.appendChild(row);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('hyperparameter-results-spinner').classList.add('d-none');
+            alert('Hiperparametre optimizasyonu işlemi sırasında bir hata oluştu.');
+        });
+    };
+    
+    // Yardımcı fonksiyonlar
+    function formatMetricName(key) {
+        // Metrik isimlerini daha okunabilir hale getir
+        var metricMap = {
+            'outcome_accuracy': 'Maç Sonucu Doğruluğu',
+            'home_goals_mse': 'Ev Sahibi Gol MSE',
+            'away_goals_mse': 'Deplasman Gol MSE',
+            'total_goals_mse': 'Toplam Gol MSE',
+            'over_under_accuracy': '2.5 Üst/Alt Doğruluğu',
+            'both_teams_to_score_accuracy': 'KG Var/Yok Doğruluğu',
+            'r2_score': 'R² Skoru',
+            'explained_variance': 'Açıklanan Varyans',
+            'mean_absolute_error': 'Ortalama Mutlak Hata (MAE)',
+            'mean_squared_error': 'Ortalama Kare Hata (MSE)',
+            'neg_mean_squared_error': 'Negatif MSE'
+        };
+        
+        return metricMap[key] || key;
+    }
+    
+    function formatEnsembleType(type) {
+        // Ensemble tiplerini daha okunabilir hale getir
+        var typeMap = {
+            'voting': 'Voting (Ağırlıklı Oy)',
+            'stacking': 'Stacking (Meta-Öğrenme)',
+            'blending': 'Blending (Karıştırma)'
+        };
+        
+        return typeMap[type] || type;
+    }
+    
+    function formatModelType(type) {
+        // Model tiplerini daha okunabilir hale getir
+        var typeMap = {
+            'rf': 'Random Forest',
+            'gbm': 'Gradient Boosting',
+            'xgb': 'XGBoost',
+            'linear': 'Linear Regression',
+            'elasticnet': 'Elastic Net'
+        };
+        
+        return typeMap[type] || type;
+    }
+    
+    // Özellik Önemi butonuna tıklama işleyicisi
+    document.getElementById('fetch-feature-importance-btn').onclick = function() {
+        console.log('Özellik önemi analizi butonu tıklandı');
+        
+        // Sonuçları sıfırla ve spinner'ı göster
+        document.getElementById('feature-importance-results').classList.add('d-none');
+        document.getElementById('feature-importance-spinner').classList.remove('d-none');
+        
+        // API isteği gönder
+        fetch('/api/v3/validation/feature-importance-analysis')
+        .then(response => response.json())
+        .then(data => {
+            console.log('Özellik önemi analizi alındı:', data);
+            
+            // Spinner'ı gizle
+            document.getElementById('feature-importance-spinner').classList.add('d-none');
+            
+            // Sonuçları göster
+            document.getElementById('feature-importance-results').classList.remove('d-none');
+            
+            // Tarih bilgisini göster
+            document.getElementById('feature-importance-date').textContent = 'Analiz tarihi: ' + data.date;
+            
+            // Ev sahibi takım özellik önemi tablosu
+            var homeFeatureTable = document.getElementById('home-feature-importance-table');
+            homeFeatureTable.innerHTML = '';
+            
+            // API'den gelen veri yapısını kontrol et
+            console.log("Ev sahibi özellik önemi verisi:", data.importance ? data.importance.home : null);
+            
+            if (data.importance && data.importance.home && data.importance.home.features && data.importance.home.features.length > 0) {
+                // Yeni API yapısına göre verileri işle
+                var homeFeatures = [];
+                for (var i = 0; i < data.importance.home.features.length; i++) {
+                    homeFeatures.push({
+                        name: data.importance.home.features[i],
+                        importance: data.importance.home.importances[i]
+                    });
+                }
+                
+                // Tabloyu doldur
+                homeFeatures.forEach(feature => {
+                    var row = document.createElement('tr');
+                    
+                    var nameCell = document.createElement('td');
+                    nameCell.textContent = formatFeatureName(feature.name);
+                    
+                    var importanceCell = document.createElement('td');
+                    importanceCell.textContent = parseFloat(feature.importance).toFixed(4);
+                    
+                    row.appendChild(nameCell);
+                    row.appendChild(importanceCell);
+                    
+                    homeFeatureTable.appendChild(row);
+                });
+                
+                // Grafiği çiz
+                drawFeatureImportanceChart('home-feature-importance-chart', homeFeatures);
+            } else {
+                homeFeatureTable.innerHTML = '<tr><td colspan="2">Özellik önemi verisi bulunamadı.</td></tr>';
+            }
+            
+            // Deplasman takımı özellik önemi tablosu
+            var awayFeatureTable = document.getElementById('away-feature-importance-table');
+            awayFeatureTable.innerHTML = '';
+            
+            // API'den gelen veri yapısını kontrol et
+            console.log("Deplasman özellik önemi verisi:", data.importance ? data.importance.away : null);
+            
+            if (data.importance && data.importance.away && data.importance.away.features && data.importance.away.features.length > 0) {
+                // Yeni API yapısına göre verileri işle
+                var awayFeatures = [];
+                for (var i = 0; i < data.importance.away.features.length; i++) {
+                    awayFeatures.push({
+                        name: data.importance.away.features[i],
+                        importance: data.importance.away.importances[i]
+                    });
+                }
+                
+                // Tabloyu doldur
+                awayFeatures.forEach(feature => {
+                    var row = document.createElement('tr');
+                    
+                    var nameCell = document.createElement('td');
+                    nameCell.textContent = formatFeatureName(feature.name);
+                    
+                    var importanceCell = document.createElement('td');
+                    importanceCell.textContent = parseFloat(feature.importance).toFixed(4);
+                    
+                    row.appendChild(nameCell);
+                    row.appendChild(importanceCell);
+                    
+                    awayFeatureTable.appendChild(row);
+                });
+                
+                // Grafiği çiz
+                drawFeatureImportanceChart('away-feature-importance-chart', awayFeatures);
+            } else {
+                awayFeatureTable.innerHTML = '<tr><td colspan="2">Özellik önemi verisi bulunamadı.</td></tr>';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('feature-importance-spinner').classList.add('d-none');
+            alert('Özellik önemi analizi sırasında bir hata oluştu.');
+        });
+    };
+    
+    // Özellik adlarını daha okunabilir formata çevirir
+    function formatFeatureName(feature) {
+        var featureMap = {
+            'recent_form': 'Son Form Durumu',
+            'goal_avg_scored': 'Maç Başı Atılan Gol Ort.',
+            'goal_avg_conceded': 'Maç Başı Yenilen Gol Ort.',
+            'home_form': 'İç Saha Form Durumu',
+            'away_form': 'Deplasman Form Durumu',
+            'home_goal_avg': 'İç Saha Gol Ortalaması',
+            'away_goal_avg': 'Deplasman Gol Ortalaması',
+            'recent_games_played': 'Son Maç Sayısı',
+            'win_rate': 'Galibiyet Oranı',
+            'draw_rate': 'Beraberlik Oranı',
+            'loss_rate': 'Mağlubiyet Oranı',
+            'clean_sheet_rate': 'Gol Yememe Oranı',
+            'btts_rate': 'KG Var Oranı',
+            'form_trend': 'Form Trendi',
+            'home_win_rate': 'İç Saha Galibiyet Oranı',
+            'away_win_rate': 'Deplasman Galibiyet Oranı',
+            'avg_goals_for_last_5': 'Son 5 Maçta Atılan Gol Ort.',
+            'avg_goals_against_last_5': 'Son 5 Maçta Yenilen Gol Ort.',
+            'form_momentum': 'Form Momentum Değeri',
+            'opponent_strength': 'Ortalama Rakip Gücü',
+            'motivation_factor': 'Motivasyon Faktörü',
+            'form_acceleration': 'Form İvmesi',
+            'defensive_stability': 'Savunma İstikrarı',
+            'offensive_efficiency': 'Hücum Verimliliği'
+        };
+        
+        return featureMap[feature] || feature;
+    }
+    
+    // Özellik önemi grafiğini çiz
+    function drawFeatureImportanceChart(chartId, features) {
+        try {
+            console.log(`Grafik çiziliyor: ${chartId}`, features);
+            
+            // Boş veri kontrolü
+            if (!features || features.length === 0) {
+                console.error(`${chartId} için özellik verisi bulunamadı`);
+                return;
+            }
+            
+            // En önemli 10 özelliği al
+            var topFeatures = features.slice(0, 10);
+            
+            // HTML5 Canvas ile çizim
+            var canvas = document.getElementById(chartId);
+            if (!canvas) {
+                console.error(`Canvas bulunamadı: ${chartId}`);
+                return;
+            }
+            
+            var ctx = canvas.getContext('2d');
+            
+            // Canvas boyutlarını ayarla
+            canvas.width = canvas.offsetWidth || 500;  // Varsayılan genişlik
+            canvas.height = 400;  // Sabit yükseklik
+            
+            var width = canvas.width;
+            var height = canvas.height;
+            var barHeight = 30;
+            var barPadding = 10;
+            var leftPadding = 220; // Özellik adları için yeterli alan
+            var maxBarWidth = width - leftPadding - 50;
+            
+            // Arka planı temizle
+            ctx.fillStyle = '#343a40'; // bg-dark rengi
+            ctx.fillRect(0, 0, width, height);
+            
+            // Başlık
+            ctx.fillStyle = '#ffffff'; // Beyaz renk
+            ctx.font = 'bold 16px Arial';
+            ctx.fillText('En Önemli 10 Özellik (Daha yüksek değer = Daha önemli)', 20, 30);
+            
+            // Maksimum önem değerini bul - 0 değerini önle
+            var maxImportance = Math.max(0.001, ...topFeatures.map(f => parseFloat(f.importance) || 0.001));
+            
+            // Özellikleri çiz
+            topFeatures.forEach((feature, index) => {
+                var y = 60 + index * (barHeight + barPadding);
+                
+                // Özellik adı
+                ctx.fillStyle = '#ffffff';
+                ctx.font = '14px Arial';
+                ctx.textAlign = 'right';
+                ctx.fillText(formatFeatureName(feature.name), leftPadding - 10, y + barHeight / 2 + 5);
+                
+                // Çubuk - sayısal değer kontrolü
+                var importance = parseFloat(feature.importance) || 0;
+                var barWidth = (importance / maxImportance) * maxBarWidth;
+                
+                // Renk belirle (ev sahibi ve deplasman için farklı renk şemaları)
+                var hue;
+                if (chartId === 'home-feature-importance-chart') {
+                    hue = 120 - (index * 4); // Yeşil tonlar (ev sahibi)
+                    ctx.fillStyle = `hsl(${hue}, 80%, 50%)`;
+                } else {
+                    hue = 200 - (index * 4); // Mavi tonlar (deplasman)
+                    ctx.fillStyle = `hsl(${hue}, 80%, 60%)`;
+                }
+                
+                ctx.fillRect(leftPadding, y, barWidth, barHeight);
+                
+                // Değer
+                ctx.fillStyle = '#ffffff';
+                ctx.textAlign = 'left';
+                ctx.fillText(parseFloat(feature.importance).toFixed(3), leftPadding + barWidth + 5, y + barHeight / 2 + 5);
+            });
+        } catch (error) {
+            console.error(`Grafik çizim hatası: ${error.message}`, error);
+        }
+    }
+    
+    // Hiperparametre optimizasyonu için geri sayım zamanlayıcısı ve ilerleme çubuğu
+    let optimizationTimer;
+    let startTime;
+    let estimatedTotalTime;
+    
+    // Arama tipine göre tahmini süre (saniye)
+    const estimatedTimes = {
+        'random': {
+            'rf': 60,     // Random Forest için rastgele arama ~1 dakika
+            'gbm': 90,    // Gradient Boosting için rastgele arama ~1.5 dakika
+            'xgb': 120,   // XGBoost için rastgele arama ~2 dakika
+            'linear': 30, // Linear Regression için rastgele arama ~30 saniye
+            'elasticnet': 60 // Elastic Net için rastgele arama ~1 dakika
+        },
+        'grid': {
+            'rf': 300,     // Random Forest için tam grid arama ~5 dakika
+            'gbm': 360,    // Gradient Boosting için tam grid arama ~6 dakika
+            'xgb': 420,    // XGBoost için tam grid arama ~7 dakika
+            'linear': 60,  // Linear Regression için tam grid arama ~1 dakika
+            'elasticnet': 180 // Elastic Net için tam grid arama ~3 dakika
+        }
+    };
+    
+    // Hiperparametre optimizasyonu başlatıldığında zamanlayıcıyı başlat
+    $("#run-hyperparameter-btn").on("click", function() {
+        const searchType = $("#search-type").val();
+        const modelType = $("#model-type").val();
+        
+        // Tahmini toplam süreyi belirle
+        estimatedTotalTime = estimatedTimes[searchType][modelType] || 120; // Varsayılan 2 dakika
+        
+        // Zamanlayıcıyı sıfırla ve başlat
+        startTime = new Date();
+        updateProgressBar(0);
+        
+        // Önceki zamanlayıcıyı temizle (varsa)
+        if (optimizationTimer) {
+            clearInterval(optimizationTimer);
+        }
+        
+        // Yeni zamanlayıcıyı başlat - her saniye güncelle
+        optimizationTimer = setInterval(function() {
+            const currentTime = new Date();
+            const elapsedSeconds = Math.floor((currentTime - startTime) / 1000);
+            const percentComplete = Math.min(98, Math.floor((elapsedSeconds / estimatedTotalTime) * 100));
+            
+            updateProgressBar(percentComplete);
+            
+            // Kalan süreyi hesapla ve göster
+            const remainingSeconds = estimatedTotalTime - elapsedSeconds;
+            if (remainingSeconds > 0) {
+                $("#optimization-timer").text(`Tahmini kalan süre: ${formatTime(remainingSeconds)}`);
+            } else {
+                $("#optimization-timer").text("İşlem bitmek üzere...");
+                updateProgressBar(99); // %99'da tut
+            }
+        }, 1000);
+    });
+    
+    // API yanıt verdiğinde zamanlayıcıyı durdur
+    $(document).ajaxComplete(function(event, xhr, settings) {
+        if (settings.url === "/api/v3/validation/hyperparameter-optimization") {
+            clearInterval(optimizationTimer);
+            updateProgressBar(100);
+            $("#optimization-timer").text("İşlem tamamlandı!");
+        }
+    });
+    
+    // İlerleme çubuğunu güncelle
+    function updateProgressBar(percent) {
+        $("#optimization-progress-bar").css("width", percent + "%");
+        $("#optimization-progress-bar").attr("aria-valuenow", percent);
+        $("#optimization-progress-bar").text(percent + "%");
+    }
+    
+    // Saniye cinsinden süreyi formatla
+    function formatTime(seconds) {
+        const minutes = Math.floor(seconds / 60);
+        const remainingSeconds = seconds % 60;
+        
+        if (minutes > 0) {
+            return `${minutes} dakika ${remainingSeconds} saniye`;
+        } else {
+            return `${remainingSeconds} saniye`;
+        }
+    }
+});
+</script>
+{% endblock %}

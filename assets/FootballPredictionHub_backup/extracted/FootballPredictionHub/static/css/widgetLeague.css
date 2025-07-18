@@ -1,0 +1,98 @@
+.widget-league {
+    background: var(--bs-dark);
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.league-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.league-logo {
+    width: 32px;
+    height: 32px;
+    margin-right: 10px;
+}
+
+.league-info {
+    flex: 1;
+}
+
+.league-name {
+    color: var(--bs-light);
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+.league-country {
+    color: var(--bs-gray-400);
+    font-size: 0.9rem;
+}
+
+.match-list {
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.match-item {
+    background: var(--bs-gray-800);
+    padding: 12px;
+    margin-bottom: 1px;
+}
+
+.match-time {
+    color: var(--bs-gray-400);
+    font-size: 0.9rem;
+}
+
+.match-teams {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 8px 0;
+}
+
+.team {
+    display: flex;
+    align-items: center;
+}
+
+.team-logo {
+    width: 24px;
+    height: 24px;
+    margin-right: 8px;
+}
+
+.team-name {
+    color: var(--bs-light);
+}
+
+.match-score {
+    color: var(--bs-light);
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.match-status {
+    font-size: 0.8rem;
+    padding: 2px 6px;
+    border-radius: 3px;
+}
+
+.status-live {
+    background: var(--bs-danger);
+    color: var(--bs-light);
+}
+
+.status-finished {
+    background: var(--bs-success);
+    color: var(--bs-light);
+}
+
+.status-scheduled {
+    background: var(--bs-gray-600);
+    color: var(--bs-light);
+}
