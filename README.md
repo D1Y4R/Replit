@@ -4,20 +4,23 @@ AI-powered football match prediction system with advanced machine learning algor
 
 ## 🚀 Quick Start (CodeSandbox)
 
-### Option 1: Using requirements.txt
+### Automatic Setup (Recommended)
+CodeSandbox will automatically run these commands:
+```bash
+# Install dependencies (runs automatically)
+pnpm install
+
+# Start the application (runs automatically)
+pnpm dev
+```
+
+### Manual Setup
 ```bash
 # Install dependencies
 pip install -r requirements.txt
 
 # Run the application
 python3 main.py
-```
-
-### Option 2: Using package.json scripts
-```bash
-# Install dependencies and start
-npm run install-deps
-npm start
 ```
 
 ## 📋 Requirements
@@ -27,6 +30,12 @@ npm start
 
 ## 🏃‍♂️ Running the Application
 
+### Automatic (CodeSandbox)
+1. **Install Dependencies:** `pnpm install` (runs automatically)
+2. **Run Application:** `pnpm dev` (runs automatically)
+3. **Access Web Interface:** Open the URL provided by CodeSandbox
+
+### Manual
 1. **Install Dependencies:**
    ```bash
    pip install -r requirements.txt
@@ -57,3 +66,9 @@ npm start
 - `templates/` - HTML templates
 - `static/` - CSS, JS, and image files
 - `data/` - Data files and databases
+
+## 📦 Package Scripts
+
+- `pnpm install` - Installs Python dependencies
+- `pnpm dev` - Starts the application
+- `pnpm start` - Alternative start command

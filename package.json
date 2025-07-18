@@ -5,8 +5,9 @@
   "main": "main.py",
   "scripts": {
     "start": "python3 main.py",
-    "install-deps": "pip install -r requirements.txt",
-    "dev": "python3 main.py"
+    "install": "pip install -r requirements.txt",
+    "dev": "python3 main.py",
+    "install-deps": "pip install -r requirements.txt"
   },
   "keywords": ["football", "prediction", "ai", "machine-learning"],
   "author": "",
