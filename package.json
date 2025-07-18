@@ -1,0 +1,14 @@
+{
+  "name": "football-prediction-hub",
+  "version": "1.0.0",
+  "description": "Football Prediction Hub - AI-powered football match prediction system",
+  "main": "main.py",
+  "scripts": {
+    "start": "python3 main.py",
+    "install-deps": "pip install -r requirements.txt",
+    "dev": "python3 main.py"
+  },
+  "keywords": ["football", "prediction", "ai", "machine-learning"],
+  "author": "",
+  "license": "MIT"
+}
