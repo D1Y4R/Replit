@@ -14,6 +14,8 @@ pnpm install
 pnpm dev
 ```
 
+The application will be available at the URL provided by CodeSandbox.
+
 ### Manual Setup
 ```bash
 # Install dependencies
@@ -26,7 +28,7 @@ python3 main.py
 ## 📋 Requirements
 
 - Python 3.11+
-- All dependencies listed in `requirements.txt`
+- Essential libraries: Flask, NumPy, Pandas, Scikit-learn, XGBoost
 
 ## 🏃‍♂️ Running the Application
 
@@ -69,6 +71,12 @@ python3 main.py
 
 ## 📦 Package Scripts
 
-- `pnpm install` - Installs Python dependencies
-- `pnpm dev` - Starts the application
+- `pnpm install` - Installs Python dependencies (simplified)
+- `pnpm dev` - Starts the application on port 3000
 - `pnpm start` - Alternative start command
+
+## ⚡ Optimized for CodeSandbox
+
+- **Fast Installation:** Only essential libraries included
+- **Automatic Port:** Runs on port 3000 by default
+- **Quick Startup:** Minimal dependencies for faster loading

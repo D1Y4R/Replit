@@ -947,6 +947,14 @@ def api_test():
     return jsonify({"status": "ok", "message": "API v3 is working"})
 
 if __name__ == '__main__':
+    import argparse
+    
+    # Command line arguments
+    parser = argparse.ArgumentParser(description='Football Prediction Hub')
+    parser.add_argument('--port', type=int, default=3000, help='Port to run the server on')
+    parser.add_argument('--host', type=str, default='0.0.0.0', help='Host to run the server on')
+    args = parser.parse_args()
+    
     # Dinamik takım analizörünü başlat
     try:
         team_analyzer = DynamicTeamAnalyzer()
@@ -975,6 +983,13 @@ if __name__ == '__main__':
     except Exception as e:
         logger.error(f"Dinamik analiz sistemleri başlatılırken hata: {str(e)}")
         logger.info("Uygulama temel tahmin modelleriyle çalışmaya devam edecek")
+    
+    # Flask uygulamasını başlat
+    port = args.port
+    host = args.host
+    
+    logger.info(f"Flask uygulaması başlatılıyor: http://{host}:{port}")
+    app.run(host=host, port=port, debug=False)
     
 # API endpoint'lerini doğrudan tanımlayalım (global scope'ta)
 @app.route('/api/v3/fixtures/team/<int:team_id>', methods=['GET'])

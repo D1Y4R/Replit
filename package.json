@@ -6,7 +6,7 @@
   "scripts": {
     "start": "python3 main.py",
     "install": "pip install -r requirements.txt",
-    "dev": "python3 main.py",
+    "dev": "python3 main.py --port 3000 --host 0.0.0.0",
     "install-deps": "pip install -r requirements.txt"
   },
   "keywords": ["football", "prediction", "ai", "machine-learning"],
