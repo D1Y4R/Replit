@@ -1,0 +1,135 @@
+.football-widget {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background: #212529;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    margin: 20px 0;
+    overflow: hidden;
+    border: 1px solid #343a40;
+}
+
+.widget-container {
+    padding: 15px;
+}
+
+.league-section {
+    margin-bottom: 20px;
+}
+
+.league-header {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    background: #343a40;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    border: 1px solid #495057;
+}
+
+.league-logo {
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
+    object-fit: contain;
+}
+
+.league-name {
+    font-weight: 600;
+    color: #f8f9fa;
+}
+
+.match-row {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    border-bottom: 1px solid #343a40;
+    transition: all 0.2s;
+    background-color: #212529;
+    margin-bottom: 5px;
+    border-radius: 4px;
+}
+
+.match-row:hover {
+    background-color: #343a40;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.match-row.live {
+    background-color: rgba(255, 193, 7, 0.15);
+    border-left: 4px solid #ffc107;
+}
+
+.match-time {
+    width: 60px;
+    text-align: center;
+    font-weight: 500;
+    color: #adb5bd;
+}
+
+.match-teams {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.team {
+    display: flex;
+    align-items: center;
+    width: 40%;
+}
+
+.team.home {
+    justify-content: flex-end;
+    text-align: right;
+}
+
+.team.away {
+    justify-content: flex-start;
+    text-align: left;
+}
+
+.team-logo {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+    margin: 0 8px;
+}
+
+.team-name {
+    font-size: 14px;
+    color: #f8f9fa;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+.match-score {
+    width: 80px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 16px;
+    color: #f8f9fa;
+}
+
+.live .match-time {
+    color: #ff6b70;
+    font-weight: bold;
+    text-shadow: 0 0 5px rgba(220, 53, 69, 0.3);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .team-name {
+        font-size: 12px;
+    }
+    
+    .match-score {
+        width: 60px;
+        font-size: 14px;
+    }
+    
+    .match-time {
+        width: 50px;
+        font-size: 12px;
+    }
+}

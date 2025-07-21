@@ -1,0 +1,86 @@
+2025-04-07 23:11:11.129932: I tensorflow/tsl/cuda/cudart_stub.cc:28] Could not find cuda drivers on your machine, GPU will not be used.
+2025-04-07 23:11:11.164797: E tensorflow/compiler/xla/stream_executor/cuda/cuda_dnn.cc:9342] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+2025-04-07 23:11:11.164877: E tensorflow/compiler/xla/stream_executor/cuda/cuda_fft.cc:609] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+2025-04-07 23:11:11.164935: E tensorflow/compiler/xla/stream_executor/cuda/cuda_blas.cc:1518] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+2025-04-07 23:11:11.173024: I tensorflow/tsl/cuda/cudart_stub.cc:28] Could not find cuda drivers on your machine, GPU will not be used.
+2025-04-07 23:11:11.173327: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2025-04-07 23:11:12.080660: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Could not find TensorRT
+INFO:root:Gol Trend İvmesi Analiz modülü başarıyla yüklendi!
+INFO:root:Özelleştirilmiş tahmin modelleri (düşük/orta/yüksek skor) kullanıma hazır.
+INFO:match_prediction:Tahmin önbelleği yüklendi: 4 tahmin
+INFO:match_prediction:Önceden eğitilmiş sinir ağı modelleri yükleniyor...
+INFO:match_prediction:Gelişmiş tahmin modelleri yükleniyor...
+INFO:advanced_ml_models:GBM modeli bulunamadı, yeni model oluşturuluyor...
+INFO:advanced_ml_models:LSTM modeli bulunamadı, yeni model oluşturuluyor...
+INFO:advanced_ml_models:Özellik ölçekleyici bulunamadı, yeni ölçekleyici oluşturuluyor...
+INFO:match_prediction:Gelişmiş tahmin modelleri başarıyla yüklendi.
+INFO:match_prediction:Gelişmiş Monte Carlo simülasyonu yükleniyor...
+INFO:match_prediction:Gelişmiş Monte Carlo simülasyonu başarıyla yüklendi.
+INFO:match_prediction:Takım-spesifik tahmin modelleri yükleniyor...
+INFO:match_prediction:Takım-spesifik tahmin modelleri başarıyla yüklendi.
+INFO:match_prediction:Özelleştirilmiş tahmin modelleri (düşük/orta/yüksek skorlu maçlar) yükleniyor...
+INFO:specialized_models:Low skorlu maç modeli bulunamadı, varsayılan model oluşturuluyor
+INFO:specialized_models:Medium skorlu maç modeli bulunamadı, varsayılan model oluşturuluyor
+INFO:specialized_models:High skorlu maç modeli bulunamadı, varsayılan model oluşturuluyor
+INFO:match_prediction:Özelleştirilmiş tahmin modelleri başarıyla yüklendi.
+INFO:match_prediction:Gelişmiş tahmin faktörleri yükleniyor...
+WARNING:enhanced_prediction_factors:Lig verileri dosyası bulunamadı: ./league_data.json, varsayılan veriler kullanılacak.
+WARNING:enhanced_prediction_factors:Geçmiş maç verileri dosyası bulunamadı: ./historical_matches.json, boş liste kullanılacak.
+INFO:enhanced_prediction_factors:Gelişmiş Tahmin Faktörleri modülü başlatıldı
+INFO:match_prediction:Gelişmiş tahmin faktörleri başarıyla yüklendi.
+INFO:match_prediction:Gol Trend İvmesi Analiz modülü yükleniyor...
+INFO:goal_trend_analyzer:Gol Trend Analizörü başlatıldı
+INFO:match_prediction:Gol Trend İvmesi Analiz modülü başarıyla yüklendi.
+INFO:dynamic_team_analyzer:Veritabanı başarıyla oluşturuldu/bağlandı
+INFO:__main__:Dinamik Takım Analizörü başlatıldı
+INFO:dynamic_team_analyzer:Tahmin önbelleği yüklendi: 4 tahmin
+INFO:dynamic_team_analyzer:Takım performansları güncellendi: 8 güncelleme, 0 ekleme
+INFO:dynamic_team_analyzer:Takım faktörleri hesaplandı: 250 takım
+INFO:__main__:Takım performans analizi tamamlandı
+INFO:self_learning_predictor:Model başarıyla yüklendi: self_learning_model.json
+INFO:__main__:Kendi Kendine Öğrenen Tahmin Modeli başlatıldı
+WARNING:self_learning_predictor:Yeterli doğrulama maçı yok: 0 < 10
+INFO:__main__:Yeterli doğrulama verisi yok, model analizi atlandı
+INFO:team_performance_updater:Takım performans güncellemesi başlatılıyor...
+INFO:dynamic_team_analyzer:Tahmin önbelleği yüklendi: 4 tahmin
+INFO:dynamic_team_analyzer:Takım performansları güncellendi: 8 güncelleme, 0 ekleme
+WARNING:team_performance_updater:API anahtarı olmadan maç sonuçları güncellenemiyor.
+INFO:dynamic_team_analyzer:Takım faktörleri JSON dosyasına aktarıldı: team_factors.json
+INFO:team_performance_updater:Takım performans güncellemesi tamamlandı.
+INFO:team_performance_updater:Takım performans güncelleyici başlatıldı. Güncelleme aralığı: 12 saat
+INFO:__main__:Takım Performans Güncelleyici arkaplanda başlatıldı
+INFO:__main__:Uygulama 8080 portunda başlatılıyor
+INFO:match_prediction:Tahmin önbelleği yüklendi: 4 tahmin
+INFO:match_prediction:Önceden eğitilmiş sinir ağı modelleri yükleniyor...
+INFO:match_prediction:Gelişmiş tahmin modelleri yükleniyor...
+INFO:advanced_ml_models:GBM modeli bulunamadı, yeni model oluşturuluyor...
+INFO:advanced_ml_models:LSTM modeli bulunamadı, yeni model oluşturuluyor...
+INFO:advanced_ml_models:Özellik ölçekleyici bulunamadı, yeni ölçekleyici oluşturuluyor...
+INFO:match_prediction:Gelişmiş tahmin modelleri başarıyla yüklendi.
+INFO:match_prediction:Gelişmiş Monte Carlo simülasyonu yükleniyor...
+INFO:match_prediction:Gelişmiş Monte Carlo simülasyonu başarıyla yüklendi.
+INFO:match_prediction:Takım-spesifik tahmin modelleri yükleniyor...
+INFO:match_prediction:Takım-spesifik tahmin modelleri başarıyla yüklendi.
+INFO:match_prediction:Özelleştirilmiş tahmin modelleri (düşük/orta/yüksek skorlu maçlar) yükleniyor...
+INFO:specialized_models:Low skorlu maç modeli bulunamadı, varsayılan model oluşturuluyor
+INFO:specialized_models:Medium skorlu maç modeli bulunamadı, varsayılan model oluşturuluyor
+INFO:specialized_models:High skorlu maç modeli bulunamadı, varsayılan model oluşturuluyor
+INFO:match_prediction:Özelleştirilmiş tahmin modelleri başarıyla yüklendi.
+INFO:match_prediction:Gelişmiş tahmin faktörleri yükleniyor...
+INFO:match_prediction:Gelişmiş tahmin faktörleri başarıyla yüklendi.
+INFO:match_prediction:Gol Trend İvmesi Analiz modülü yükleniyor...
+INFO:match_prediction:Gol Trend İvmesi Analiz modülü başarıyla yüklendi.
+INFO:halfTime_fullTime_predictor:SciPy kütüphanesi kullanılabilir, gelişmiş istatistiksel modeller etkin.
+INFO:halfTime_fullTime_predictor:CRF modeli kullanılabilir, gelişmiş yapısal tahmin modeli etkin.
+INFO:halfTime_fullTime_predictor:Dirichlet Süreci Karışım Modeli kullanılabilir, gizli küme keşfi etkin.
+ERROR:__main__:API Blueprint kaydedilirken hata: View function mapping is overwriting an existing endpoint function: api_v3.clear_prediction_cache
+Uygulama 8080 portunda başlatılıyor
+ * Serving Flask app 'main'
+ * Debug mode: on
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://172.31.128.81:8080
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat

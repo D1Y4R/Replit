@@ -1,0 +1,2428 @@
+APIfootball Version:
+3.0.2
+ Created:
+ 2021-05-20
+ Latest Update:
+ 2023-07-22
+Contact Us
+Documentation API V3
+Version:
+3.0.2
+ Created:
+ 2021-05-20
+ Latest Update:
+ 2023-07-22
+Countries
+
+Method
+GET apiv3.apifootball.com/?action=get_countries
+
+Returns list of supported countries included in your current subscription plan
+
+
+Parameters
+Parameter	Description
+action	API method name
+APIkey	Authorization code generated from your apifootball account
+
+Request URL
+https://apiv3.apifootball.com/?action=get_countries&APIkey=xxxxxxxxxxxxxx
+
+JSON Response
+[
+    {
+        "country_id": "44",
+        "country_name": "England",
+        "country_logo": "https://apiv3.apifootball.com/badges/logo_country/44_england.png"
+    },
+    {
+        "country_id": "6",
+        "country_name": "Spain",
+        "country_logo": "https://apiv3.apifootball.com/badges/logo_country/6_spain.png"
+    },
+    {
+        "country_id": "3",
+        "country_name": "France",
+        "country_logo": "https://apiv3.apifootball.com/badges/logo_country/3_france.png"
+    },
+    {
+        "country_id": "4",
+        "country_name": "Germany",
+        "country_logo": "https://apiv3.apifootball.com/badges/logo_country/4_germany.png"
+    },
+    {
+        "country_id": "5",
+        "country_name": "Italy",
+        "country_logo": "https://apiv3.apifootball.com/badges/logo_country/5_italy.png"
+    },
+    ....
+]
+            
+
+PHP call example
+
+$APIkey='xxxxxxxxxxxxxx';
+
+$curl_options = array(
+  CURLOPT_URL => "https://apiv3.apifootball.com/?action=get_countries&APIkey=$APIkey",
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_HEADER => false,
+  CURLOPT_TIMEOUT => 30,
+  CURLOPT_CONNECTTIMEOUT => 5
+);
+
+$curl = curl_init();
+curl_setopt_array( $curl, $curl_options );
+$result = curl_exec( $curl );
+
+$result = (array) json_decode($result);
+
+var_dump($result);
+
+            
+Competitions
+
+Method
+GET apiv3.apifootball.com/?action=get_leagues
+
+Returns list of supported competitions included in your current subscription plan
+
+
+Parameters
+Parameter	Description
+action	API method name
+APIkey	Authorization code generated from your apifootball account
+country_id	Country ID - if set only leagues from specific country will be returned (Optional)
+
+Request URL
+https://apiv3.apifootball.com/?action=get_leagues&country_id=6&APIkey=xxxxxxxxxxxxxx
+
+JSON Response
+[
+    {
+        "country_id": "6",
+        "country_name": "Spain",
+        "league_id": "300",
+        "league_name": "Copa del Rey",
+        "league_season": "2020/2021",
+        "league_logo": "https://apiv3.apifootball.com/badges/logo_leagues/300_copa-del-rey.png",
+        "country_logo": "https://apiv3.apifootball.com/badges/logo_country/6_spain.png"
+    },
+    {
+        "country_id": "6",
+        "country_name": "Spain",
+        "league_id": "302",
+        "league_name": "La Liga",
+        "league_season": "2020/2021",
+        "league_logo": "https://apiv3.apifootball.com/badges/logo_leagues/302_la-liga.png",
+        "country_logo": "https://apiv3.apifootball.com/badges/logo_country/6_spain.png"
+    },
+    {
+        "country_id": "6",
+        "country_name": "Spain",
+        "league_id": "301",
+        "league_name": "Segunda División",
+        "league_season": "2020/2021",
+        "league_logo": "https://apiv3.apifootball.com/badges/logo_leagues/301_segunda-división.png",
+        "country_logo": "https://apiv3.apifootball.com/badges/logo_country/6_spain.png"
+    },
+    {
+        "country_id": "6",
+        "country_name": "Spain",
+        "league_id": "383",
+        "league_name": "Super Cup",
+        "league_season": "2021",
+        "league_logo": "https://apiv3.apifootball.com/badges/logo_leagues/383_super-cup.png",
+        "country_logo": "https://apiv3.apifootball.com/badges/logo_country/6_spain.png"
+    },
+    ......
+]
+            
+
+PHP call example
+
+$APIkey='xxxxxxxxxxxxxx';
+$country_id = 6;
+
+$curl_options = array(
+  CURLOPT_URL => "https://apiv3.apifootball.com/?action=get_leagues&country_id=$country_id&APIkey=$APIkey",
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_HEADER => false,
+  CURLOPT_TIMEOUT => 30,
+  CURLOPT_CONNECTTIMEOUT => 5
+);
+
+$curl = curl_init();
+curl_setopt_array( $curl, $curl_options );
+$result = curl_exec( $curl );
+
+$result = (array) json_decode($result);
+
+var_dump($result);
+
+            
+Teams
+
+Method
+GET apiv3.apifootball.com/?action=get_teams
+
+Returns list of available teams
+
+
+Parameters
+Parameter	Description
+action	API method name
+APIkey	Authorization code generated from your apifootball account
+team_id	Team ID - team id mandatory if league id is not set
+league_id	League ID - league id mandatory if team id is not set
+
+Request URL
+https://apiv3.apifootball.com/?action=get_teams&league_id=302&APIkey=xxxxxxxxxxxxxx
+
+JSON Response
+[
+    {
+        "team_key": "73",
+        "team_name": "Atletico Madrid",
+        "team_country": "Spain",
+        "team_founded": "1903",
+        "team_badge": "https://apiv3.apifootball.com/badges/73_atletico-madrid.jpg",
+        "venue": {
+            "venue_name": "Estadio Wanda Metropolitano",
+            "venue_address": "Rosas",
+            "venue_city": "Madrid",
+            "venue_capacity": "68032",
+            "venue_surface": "grass"
+        },
+        "players": [
+            {
+                "player_key": 106805300,
+                "player_id": "106805300",
+                "player_image": "https://apiv3.apifootball.com/badges/players/31641_i-grbi.jpg",
+                "player_name": "I. Grbić",
+                "player_number": "1",
+                "player_country": "",
+                "player_type": "Goalkeepers",
+                "player_age": "27",
+                "player_match_played": "0",
+                "player_goals": "0",
+                "player_yellow_cards": "0",
+                "player_red_cards": "0",
+                "player_injured": "No",
+                "player_substitute_out": "0",
+                "player_substitutes_on_bench": "6",
+                "player_assists": "0",
+                "player_birthdate": "1996-01-18",
+                "player_is_captain": "0",
+                "player_shots_total": "",
+                "player_goals_conceded": "12",
+                "player_fouls_committed": "1",
+                "player_tackles": "",
+                "player_blocks": "",
+                "player_crosses_total": "",
+                "player_interceptions": "",
+                "player_clearances": "18",
+                "player_dispossesed": "",
+                "player_saves": "36",
+                "player_inside_box_saves": "26",
+                "player_duels_total": "7",
+                "player_duels_won": "5",
+                "player_dribble_attempts": "",
+                "player_dribble_succ": "",
+                "player_pen_comm": "",
+                "player_pen_won": "",
+                "player_pen_scored": "0",
+                "player_pen_missed": "0",
+                "player_passes": "279",
+                "player_passes_accuracy": "171",
+                "player_key_passes": "",
+                "player_woordworks": "",
+                "player_rating": "6.90"
+            },
+            {
+                "player_key": 1770510014,
+                "player_id": "1770510014",
+                "player_image": "https://apiv3.apifootball.com/badges/players/124730_j-oblak.jpg",
+                "player_name": "J. Oblak",
+                "player_number": "13",
+                "player_country": "",
+                "player_type": "Goalkeepers",
+                "player_age": "30",
+                "player_match_played": "7",
+                "player_goals": "0",
+                "player_yellow_cards": "0",
+                "player_red_cards": "0",
+                "player_injured": "No",
+                "player_substitute_out": "0",
+                "player_substitutes_on_bench": "0",
+                "player_assists": "0",
+                "player_birthdate": "1993-01-07",
+                "player_is_captain": "6",
+                "player_shots_total": "",
+                "player_goals_conceded": "20",
+                "player_fouls_committed": "",
+                "player_tackles": "",
+                "player_blocks": "",
+                "player_crosses_total": "",
+                "player_interceptions": "",
+                "player_clearances": "13",
+                "player_dispossesed": "",
+                "player_saves": "61",
+                "player_inside_box_saves": "29",
+                "player_duels_total": "6",
+                "player_duels_won": "6",
+                "player_dribble_attempts": "1",
+                "player_dribble_succ": "1",
+                "player_pen_comm": "",
+                "player_pen_won": "",
+                "player_pen_scored": "0",
+                "player_pen_missed": "0",
+                "player_passes": "699",
+                "player_passes_accuracy": "426",
+                "player_key_passes": "",
+                "player_woordworks": "",
+                "player_rating": "6.92"
+            },
+            ...............................
+        ],
+        "coaches": [
+            {
+                "coach_name": "D. Simeone",
+                "coach_country": "",
+                "coach_age": ""
+            }
+        ]
+    }
+]
+            
+
+PHP call example
+
+$APIkey='xxxxxxxxxxxxxx';
+$league_id = 302;
+
+$curl_options = array(
+  CURLOPT_URL => "https://apiv3.apifootball.com/?action=get_teams&league_id=$league_id&APIkey=$APIkey",
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_HEADER => false,
+  CURLOPT_TIMEOUT => 30,
+  CURLOPT_CONNECTTIMEOUT => 5
+);
+
+$curl = curl_init();
+curl_setopt_array( $curl, $curl_options );
+$result = curl_exec( $curl );
+
+$result = (array) json_decode($result);
+
+var_dump($result);
+
+            
+Players
+
+Method
+GET apiv3.apifootball.com/?action=get_players
+
+Returns available players
+
+
+Parameters
+Parameter	Description
+action	API method name
+APIkey	Authorization code generated from your apifootball account
+player_id	Player ID - mandatory if player name is not set
+player_name	Player Name - mandatory if player id is not set
+
+Request URL
+https://apiv3.apifootball.com/?action=get_players&player_name=Benzema&APIkey=xxxxxxxxxxxxxx
+
+JSON Response
+[
+	  {
+		"player_key": 323235386,
+		"player_id": "323235386",
+		"player_image": "https://apiv3.apifootball.com/badges/players/9898_k-benzema.jpg",
+		"player_name": "K. Benzema",
+		"player_number": "9",
+		"player_country": "",
+		"player_type": "Forwards",
+		"player_age": "35",
+		"player_birthdate": "1987-12-19",
+		"player_match_played": "23",
+		"player_goals": "18",
+		"player_yellow_cards": "1",
+		"player_red_cards": "0",
+		"player_minutes": "1970",
+		"player_injured": "Yes",
+		"player_substitute_out": "5",
+		"player_substitutes_on_bench": "0",
+		"player_assists": "3",
+		"player_is_captain": "23",
+		"player_shots_total": "77",
+		"player_goals_conceded": "0",
+		"player_fouls_committed": "10",
+		"player_tackles": "10",
+		"player_blocks": "",
+		"player_crosses_total": "3",
+		"player_interceptions": "2",
+		"player_clearances": "5",
+		"player_dispossesed": "27",
+		"player_saves": "",
+		"player_inside_box_saves": "",
+		"player_duels_total": "128",
+		"player_duels_won": "49",
+		"player_dribble_attempts": "41",
+		"player_dribble_succ": "19",
+		"player_pen_comm": "",
+		"player_pen_won": "",
+		"player_pen_scored": "6",
+		"player_pen_missed": "1",
+		"player_passes": "1022",
+		"player_passes_accuracy": "888",
+		"player_key_passes": "48",
+		"player_woordworks": "",
+		"player_rating": "7.51",
+		"team_name": "Real Madrid",
+		"team_key": "76"
+	  }
+  ]
+            
+
+PHP call example
+
+$APIkey='xxxxxxxxxxxxxx';
+$player_name = "Benzema";
+
+$curl_options = array(
+  CURLOPT_URL => "https://apiv3.apifootball.com/?action=get_players&player_name=$player_name&APIkey=$APIkey",
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_HEADER => false,
+  CURLOPT_TIMEOUT => 30,
+  CURLOPT_CONNECTTIMEOUT => 5
+);
+
+$curl = curl_init();
+curl_setopt_array( $curl, $curl_options );
+$result = curl_exec( $curl );
+
+$result = (array) json_decode($result);
+
+var_dump($result);
+
+            
+Standings
+
+Method
+GET apiv3.apifootball.com/?action=get_standings
+
+Returns standings for leagues included in your current subscription plan
+
+
+Parameters
+Parameter	Description
+action	API method name
+APIkey	Authorization code generated from your apifootball account
+league_id	League internal code
+
+Request URL
+https://apiv3.apifootball.com/?action=get_standings&league_id=152&APIkey=xxxxxxxxxxxxxx
+
+JSON Response
+[
+  {
+    "country_name": "England",
+    "league_id": "152",
+    "league_name": "Premier League",
+    "team_id": "141",
+    "team_name": "Arsenal",
+    "overall_promotion": "Promotion - Champions League (Group Stage: )",
+    "overall_league_position": "1",
+    "overall_league_payed": "0",
+    "overall_league_W": "0",
+    "overall_league_D": "0",
+    "overall_league_L": "0",
+    "overall_league_GF": "0",
+    "overall_league_GA": "0",
+    "overall_league_PTS": "0",
+    "home_league_position": "1",
+    "home_promotion": "",
+    "home_league_payed": "0",
+    "home_league_W": "0",
+    "home_league_D": "0",
+    "home_league_L": "0",
+    "home_league_GF": "0",
+    "home_league_GA": "0",
+    "home_league_PTS": "0",
+    "away_league_position": "1",
+    "away_promotion": "",
+    "away_league_payed": "0",
+    "away_league_W": "0",
+    "away_league_D": "0",
+    "away_league_L": "0",
+    "away_league_GF": "0",
+    "away_league_GA": "0",
+    "away_league_PTS": "0",
+    "league_round": "",
+    "team_badge": "https://apiv3.apifootball.com/badges/141_arsenal.jpg",
+    "fk_stage_key": "6",
+    "stage_name": "Current"
+  },
+  {
+    "country_name": "England",
+    "league_id": "152",
+    "league_name": "Premier League",
+    "team_id": "3088",
+    "team_name": "Aston Villa",
+    "overall_promotion": "Promotion - Champions League (Group Stage: )",
+    "overall_league_position": "2",
+    "overall_league_payed": "0",
+    "overall_league_W": "0",
+    "overall_league_D": "0",
+    "overall_league_L": "0",
+    "overall_league_GF": "0",
+    "overall_league_GA": "0",
+    "overall_league_PTS": "0",
+    "home_league_position": "2",
+    "home_promotion": "",
+    "home_league_payed": "0",
+    "home_league_W": "0",
+    "home_league_D": "0",
+    "home_league_L": "0",
+    "home_league_GF": "0",
+    "home_league_GA": "0",
+    "home_league_PTS": "0",
+    "away_league_position": "2",
+    "away_promotion": "",
+    "away_league_payed": "0",
+    "away_league_W": "0",
+    "away_league_D": "0",
+    "away_league_L": "0",
+    "away_league_GF": "0",
+    "away_league_GA": "0",
+    "away_league_PTS": "0",
+    "league_round": "",
+    "team_badge": "https://apiv3.apifootball.com/badges/3088_aston-villa.jpg",
+    "fk_stage_key": "6",
+    "stage_name": "Current"
+  },
+    .....
+]
+            
+
+PHP call example
+
+$APIkey='xxxxxxxxxxxxxx';
+$league_id = 152;
+
+$curl_options = array(
+  CURLOPT_URL => "https://apiv3.apifootball.com/?action=get_standings&league_id=$league_id&APIkey=$APIkey",
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_HEADER => false,
+  CURLOPT_TIMEOUT => 30,
+  CURLOPT_CONNECTTIMEOUT => 5
+);
+
+$curl = curl_init();
+curl_setopt_array( $curl, $curl_options );
+$result = curl_exec( $curl );
+
+$result = (array) json_decode($result);
+
+var_dump($result);
+?>
+
+            
+Events (Results / Fixtures)
+
+Method
+GET apiv3.apifootball.com/?action=get_events
+
+Returns events included in your current subscription plan
+
+
+Parameters
+Parameter	Description
+action	API method name
+APIkey	Authorization code generated from your apifootball account
+timezone	Default timezone: Europe/Berlin. With this filter you can set the timezone where you want to receive the data. Timezone is in TZ format (exemple: America/New_York). (Optional)
+from	Start date (yyyy-mm-dd)
+to	Stop date (yyyy-mm-dd)
+country_id	Country ID - if set only leagues from specific country will be returned (Optional)
+league_id	League ID - if set events from specific league will be returned (Optional)
+match_id	Match ID - if set only details from specific match will be returned (Optional)
+team_id	Team ID - if set only details from specific team will be returned (Optional)
+match_live	Livescore - if match_live=1 only live games will be returned (Optional)
+withPlayerStats	withPlayerStats - if you want to receive the players' statistics for that match you must set this parameter with any value (for example you can send value '1') (Optional)
+
+Request URL
+https://apiv3.apifootball.com/?action=get_events&from=2023-04-05&to=2023-04-05&league_id=152&APIkey=xxxxxxxxxxxxxx
+
+JSON Response
+[
+  {
+    "match_id": "112282",
+    "country_id": "44",
+    "country_name": "England",
+    "league_id": "152",
+    "league_name": "Premier League",
+    "match_date": "2023-04-05",
+    "match_status": "Finished",
+    "match_time": "21:00",
+    "match_hometeam_id": "3081",
+    "match_hometeam_name": "West Ham United",
+    "match_hometeam_score": "1",
+    "match_awayteam_name": "Newcastle United",
+    "match_awayteam_id": "3100",
+    "match_awayteam_score": "5",
+    "match_hometeam_halftime_score": "1",
+    "match_awayteam_halftime_score": "2",
+    "match_hometeam_extra_score": "",
+    "match_awayteam_extra_score": "",
+    "match_hometeam_penalty_score": "",
+    "match_awayteam_penalty_score": "",
+    "match_hometeam_ft_score": "1",
+    "match_awayteam_ft_score": "5",
+    "match_hometeam_system": "4-2-3-1",
+    "match_awayteam_system": "4-3-3",
+    "match_live": "0",
+    "match_round": "7",
+    "match_stadium": "London Stadium (London)",
+    "match_referee": "C. Pawson",
+    "team_home_badge": "https://apiv3.apifootball.com/badges/3081_west-ham-united.jpg",
+    "team_away_badge": "https://apiv3.apifootball.com/badges/3100_newcastle-united.jpg",
+    "league_logo": "https://apiv3.apifootball.com/badges/logo_leagues/152_premier-league.png",
+    "country_logo": "https://apiv3.apifootball.com/badges/logo_country/44_england.png",
+    "league_year": "2022/2023",
+    "fk_stage_key": "6",
+    "stage_name": "Current",
+    "goalscorer": [
+      {
+        "time": "6",
+        "home_scorer": "",
+        "home_scorer_id": "",
+        "home_assist": "",
+        "home_assist_id": "",
+        "score": "0 - 1",
+        "away_scorer": "C. Wilson",
+        "away_scorer_id": "2121852954",
+        "away_assist": "A. Saint-Maximin",
+        "away_assist_id": "2561097419",
+        "info": "",
+        "score_info_time": "1st Half"
+      },
+      {
+        "time": "13",
+        "home_scorer": "",
+        "home_scorer_id": "",
+        "home_assist": "",
+        "home_assist_id": "",
+        "score": "0 - 2",
+        "away_scorer": "Joelinton",
+        "away_scorer_id": "310238476",
+        "away_assist": "F. Schar",
+        "away_assist_id": "2223376254",
+        "info": "",
+        "score_info_time": "1st Half"
+      },
+      {
+        "time": "40",
+        "home_scorer": "K. Zouma",
+        "home_scorer_id": "3213109332",
+        "home_assist": "J. Bowen",
+        "home_assist_id": "2223691422",
+        "score": "1 - 2",
+        "away_scorer": "",
+        "away_scorer_id": "",
+        "away_assist": "",
+        "away_assist_id": "",
+        "info": "",
+        "score_info_time": "1st Half"
+      },
+      {
+        "time": "46",
+        "home_scorer": "",
+        "home_scorer_id": "",
+        "home_assist": "",
+        "home_assist_id": "",
+        "score": "1 - 3",
+        "away_scorer": "C. Wilson",
+        "away_scorer_id": "2121852954",
+        "away_assist": "J. Murphy",
+        "away_assist_id": "2802751417",
+        "info": "",
+        "score_info_time": "2nd Half"
+      },
+      {
+        "time": "82",
+        "home_scorer": "",
+        "home_scorer_id": "",
+        "home_assist": "",
+        "home_assist_id": "",
+        "score": "1 - 4",
+        "away_scorer": "A. Isak",
+        "away_scorer_id": "1441588517",
+        "away_assist": "",
+        "away_assist_id": "",
+        "info": "",
+        "score_info_time": "2nd Half"
+      },
+      {
+        "time": "90",
+        "home_scorer": "",
+        "home_scorer_id": "",
+        "home_assist": "",
+        "home_assist_id": "",
+        "score": "1 - 5",
+        "away_scorer": "Joelinton",
+        "away_scorer_id": "310238476",
+        "away_assist": "B. Guimaraes",
+        "away_assist_id": "3432657688",
+        "info": "",
+        "score_info_time": "2nd Half"
+      }
+    ],
+    "cards": [
+      {
+        "time": "42",
+        "home_fault": "Emerson",
+        "card": "yellow card",
+        "away_fault": "",
+        "info": "",
+        "home_player_id": "272748436",
+        "away_player_id": "",
+        "score_info_time": "1st Half"
+      },
+      {
+        "time": "52",
+        "home_fault": "",
+        "card": "yellow card",
+        "away_fault": "Joelinton",
+        "info": "",
+        "home_player_id": "",
+        "away_player_id": "310238476",
+        "score_info_time": "2nd Half"
+      },
+      {
+        "time": "88",
+        "home_fault": "F. Downes",
+        "card": "yellow card",
+        "away_fault": "",
+        "info": "",
+        "home_player_id": "1700855179",
+        "away_player_id": "",
+        "score_info_time": "2nd Half"
+      }
+    ],
+    "substitutions": {
+      "home": [
+        {
+          "time": "63",
+          "substitution": "S. Benrahma | M. Cornet",
+          "substitution_player_id": "1988089512 | 1640583557"
+        },
+        {
+          "time": "63",
+          "substitution": "T. Souček | F. Downes",
+          "substitution_player_id": "3687644194 | 1700855179"
+        },
+        {
+          "time": "63",
+          "substitution": "T. Kehrer | V. Coufal",
+          "substitution_player_id": "2973886884 | 3113667223"
+        },
+        {
+          "time": "63",
+          "substitution": "M. Antonio | D. Ings",
+          "substitution_player_id": "433130452 | 1699091146"
+        }
+      ],
+      "away": [
+        {
+          "time": "64",
+          "substitution": "J. Murphy | J. Willock",
+          "substitution_player_id": "2802751417 | 2886133965"
+        },
+        {
+          "time": "64",
+          "substitution": "C. Wilson | A. Isak",
+          "substitution_player_id": "2121852954 | 1441588517"
+        },
+        {
+          "time": "64",
+          "substitution": "A. Saint-Maximin | A. Gordon",
+          "substitution_player_id": "2561097419 | 2240532787"
+        },
+        {
+          "time": "85",
+          "substitution": "D. Burn | M. Targett",
+          "substitution_player_id": "1235443171 | 1353977287"
+        },
+        {
+          "time": "87",
+          "substitution": "K. Trippier | Javi Manquillo",
+          "substitution_player_id": "2722594872 | 1078052471"
+        }
+      ]
+    },
+    "lineup": {
+      "home": {
+        "starting_lineups": [
+          {
+            "lineup_player": "Lukasz Fabianski",
+            "lineup_number": "1",
+            "lineup_position": "1",
+            "player_key": "1705425493"
+          },
+          {
+            "lineup_player": "Thilo Kehrer",
+            "lineup_number": "24",
+            "lineup_position": "2",
+            "player_key": "2973886884"
+          },
+          {
+            "lineup_player": "Kurt Zouma",
+            "lineup_number": "4",
+            "lineup_position": "3",
+            "player_key": "3213109332"
+          },
+          {
+            "lineup_player": "Nayef Aguerd",
+            "lineup_number": "27",
+            "lineup_position": "4",
+            "player_key": "2746395122"
+          },
+          {
+            "lineup_player": "Emerson Palmieri",
+            "lineup_number": "33",
+            "lineup_position": "5",
+            "player_key": "272748436"
+          },
+          {
+            "lineup_player": "Tomás Soucek",
+            "lineup_number": "28",
+            "lineup_position": "6",
+            "player_key": "3687644194"
+          },
+          {
+            "lineup_player": "Declan Rice",
+            "lineup_number": "41",
+            "lineup_position": "7",
+            "player_key": "353204575"
+          },
+          {
+            "lineup_player": "Jarrod Bowen",
+            "lineup_number": "20",
+            "lineup_position": "8",
+            "player_key": "2223691422"
+          },
+          {
+            "lineup_player": "Lucas Paquetá",
+            "lineup_number": "11",
+            "lineup_position": "9",
+            "player_key": "2727857005"
+          },
+          {
+            "lineup_player": "Saïd Benrahma",
+            "lineup_number": "22",
+            "lineup_position": "10",
+            "player_key": "1988089512"
+          },
+          {
+            "lineup_player": "Michail Antonio",
+            "lineup_number": "9",
+            "lineup_position": "11",
+            "player_key": "433130452"
+          }
+        ],
+        "substitutes": [
+          {
+            "lineup_player": "Alphonse Aréola",
+            "lineup_number": "13",
+            "lineup_position": "0",
+            "player_key": "3909604806"
+          },
+          {
+            "lineup_player": "Vladimír Coufal",
+            "lineup_number": "5",
+            "lineup_position": "0",
+            "player_key": "3113667223"
+          },
+          {
+            "lineup_player": "Angelo Ogbonna",
+            "lineup_number": "21",
+            "lineup_position": "0",
+            "player_key": "1000147898"
+          },
+          {
+            "lineup_player": "Aaron Cresswell",
+            "lineup_number": "3",
+            "lineup_position": "0",
+            "player_key": "74036383"
+          },
+          {
+            "lineup_player": "Pablo Fornals",
+            "lineup_number": "8",
+            "lineup_position": "0",
+            "player_key": "1365350807"
+          },
+          {
+            "lineup_player": "Flynn Downes",
+            "lineup_number": "12",
+            "lineup_position": "0",
+            "player_key": "1700855179"
+          },
+          {
+            "lineup_player": "Manuel Lanzini",
+            "lineup_number": "10",
+            "lineup_position": "0",
+            "player_key": "3641470139"
+          },
+          {
+            "lineup_player": "Danny Ings",
+            "lineup_number": "18",
+            "lineup_position": "0",
+            "player_key": "1699091146"
+          },
+          {
+            "lineup_player": "Maxwel Cornet",
+            "lineup_number": "14",
+            "lineup_position": "0",
+            "player_key": "1640583557"
+          }
+        ],
+        "coach": [
+          {
+            "lineup_player": "D. Moyes",
+            "lineup_number": "",
+            "lineup_position": "",
+            "player_key": "2586269939"
+          }
+        ],
+        "missing_players": []
+      },
+      "away": {
+        "starting_lineups": [
+          {
+            "lineup_player": "Nick Pope",
+            "lineup_number": "22",
+            "lineup_position": "1",
+            "player_key": "3364715977"
+          },
+          {
+            "lineup_player": "Kieran Trippier",
+            "lineup_number": "2",
+            "lineup_position": "2",
+            "player_key": "2722594872"
+          },
+          {
+            "lineup_player": "Fabian Schär",
+            "lineup_number": "5",
+            "lineup_position": "3",
+            "player_key": "2223376254"
+          },
+          {
+            "lineup_player": "Sven Botman",
+            "lineup_number": "4",
+            "lineup_position": "4",
+            "player_key": "559212774"
+          },
+          {
+            "lineup_player": "Dan Burn",
+            "lineup_number": "33",
+            "lineup_position": "5",
+            "player_key": "1235443171"
+          },
+          {
+            "lineup_player": "Sean Longstaff",
+            "lineup_number": "36",
+            "lineup_position": "6",
+            "player_key": "4293692075"
+          },
+          {
+            "lineup_player": "Bruno Guimarães",
+            "lineup_number": "39",
+            "lineup_position": "7",
+            "player_key": "3432657688"
+          },
+          {
+            "lineup_player": "Joelinton",
+            "lineup_number": "7",
+            "lineup_position": "8",
+            "player_key": "310238476"
+          },
+          {
+            "lineup_player": "Jacob Murphy",
+            "lineup_number": "23",
+            "lineup_position": "9",
+            "player_key": "2802751417"
+          },
+          {
+            "lineup_player": "Callum Wilson",
+            "lineup_number": "9",
+            "lineup_position": "10",
+            "player_key": "2121852954"
+          },
+          {
+            "lineup_player": "Allan Saint-Maximin",
+            "lineup_number": "10",
+            "lineup_position": "11",
+            "player_key": "2561097419"
+          }
+        ],
+        "substitutes": [
+          {
+            "lineup_player": "Martin Dúbravka",
+            "lineup_number": "1",
+            "lineup_position": "0",
+            "player_key": "1868209580"
+          },
+          {
+            "lineup_player": "Jamaal Lascelles",
+            "lineup_number": "6",
+            "lineup_position": "0",
+            "player_key": "389777009"
+          },
+          {
+            "lineup_player": "Javier Manquillo",
+            "lineup_number": "19",
+            "lineup_position": "0",
+            "player_key": "1078052471"
+          },
+          {
+            "lineup_player": "Matt Targett",
+            "lineup_number": "13",
+            "lineup_position": "0",
+            "player_key": "1353977287"
+          },
+          {
+            "lineup_player": "Matt Ritchie",
+            "lineup_number": "11",
+            "lineup_position": "0",
+            "player_key": "2044895096"
+          },
+          {
+            "lineup_player": "Joe Willock",
+            "lineup_number": "28",
+            "lineup_position": "0",
+            "player_key": "2886133965"
+          },
+          {
+            "lineup_player": "Elliot Anderson",
+            "lineup_number": "32",
+            "lineup_position": "0",
+            "player_key": "423986543"
+          },
+          {
+            "lineup_player": "Alexander Isak",
+            "lineup_number": "14",
+            "lineup_position": "0",
+            "player_key": "1441588517"
+          },
+          {
+            "lineup_player": "Anthony Gordon",
+            "lineup_number": "8",
+            "lineup_position": "0",
+            "player_key": "2240532787"
+          }
+        ],
+        "coach": [
+          {
+            "lineup_player": "E. Howe",
+            "lineup_number": "",
+            "lineup_position": "",
+            "player_key": "3254088640"
+          }
+        ],
+        "missing_players": []
+      }
+    },
+    "statistics": [
+      {
+        "type": "Throw In",
+        "home": "14",
+        "away": "15"
+      },
+      {
+        "type": "Free Kick",
+        "home": "12",
+        "away": "11"
+      },
+      {
+        "type": "Goal Kick",
+        "home": "7",
+        "away": "7"
+      },
+      {
+        "type": "Penalty",
+        "home": "0",
+        "away": "0"
+      },
+      {
+        "type": "Substitution",
+        "home": "4",
+        "away": "5"
+      },
+      {
+        "type": "Attacks",
+        "home": "108",
+        "away": "94"
+      },
+      {
+        "type": "Dangerous Attacks",
+        "home": "44",
+        "away": "39"
+      },
+      {
+        "type": "On Target",
+        "home": "2",
+        "away": "8"
+      },
+      {
+        "type": "Off Target",
+        "home": "5",
+        "away": "7"
+      },
+      {
+        "type": "Shots Total",
+        "home": "7",
+        "away": "15"
+      },
+      {
+        "type": "Shots On Goal",
+        "home": "2",
+        "away": "8"
+      },
+      {
+        "type": "Shots Off Goal",
+        "home": "3",
+        "away": "5"
+      },
+      {
+        "type": "Shots Blocked",
+        "home": "2",
+        "away": "2"
+      },
+      {
+        "type": "Shots Inside Box",
+        "home": "2",
+        "away": "9"
+      },
+      {
+        "type": "Shots Outside Box",
+        "home": "5",
+        "away": "6"
+      },
+      {
+        "type": "Fouls",
+        "home": "11",
+        "away": "12"
+      },
+      {
+        "type": "Corners",
+        "home": "7",
+        "away": "6"
+      },
+      {
+        "type": "Ball Possession",
+        "home": "42%",
+        "away": "58%"
+      },
+      {
+        "type": "Yellow Cards",
+        "home": "2",
+        "away": "1"
+      },
+      {
+        "type": "Saves",
+        "home": "2",
+        "away": "1"
+      },
+      {
+        "type": "Passes Total",
+        "home": "336",
+        "away": "480"
+      },
+      {
+        "type": "Passes Accurate",
+        "home": "247",
+        "away": "386"
+      }
+    ],
+    "statistics_1half": [
+      {
+        "type": "Throw In",
+        "home": "7",
+        "away": "9"
+      },
+      {
+        "type": "Free Kick",
+        "home": "8",
+        "away": "3"
+      },
+      {
+        "type": "Goal Kick",
+        "home": "5",
+        "away": "3"
+      },
+      {
+        "type": "Penalty",
+        "home": "0",
+        "away": "0"
+      },
+      {
+        "type": "Substitution",
+        "home": "0",
+        "away": "0"
+      },
+      {
+        "type": "Attacks",
+        "home": "58",
+        "away": "45"
+      },
+      {
+        "type": "Dangerous Attacks",
+        "home": "21",
+        "away": "21"
+      },
+      {
+        "type": "On Target",
+        "home": "2",
+        "away": "2"
+      },
+      {
+        "type": "Off Target",
+        "home": "4",
+        "away": "3"
+      },
+      {
+        "type": "Shots Total",
+        "home": "6",
+        "away": "5"
+      },
+      {
+        "type": "Shots On Goal",
+        "home": "2",
+        "away": "2"
+      },
+      {
+        "type": "Shots Off Goal",
+        "home": "3",
+        "away": "3"
+      },
+      {
+        "type": "Shots Blocked",
+        "home": "1",
+        "away": "0"
+      },
+      {
+        "type": "Shots Inside Box",
+        "home": "2",
+        "away": "3"
+      },
+      {
+        "type": "Shots Outside Box",
+        "home": "4",
+        "away": "2"
+      },
+      {
+        "type": "Fouls",
+        "home": "3",
+        "away": "8"
+      },
+      {
+        "type": "Corners",
+        "home": "4",
+        "away": "4"
+      },
+      {
+        "type": "Ball Possession",
+        "home": "44%",
+        "away": "56%"
+      },
+      {
+        "type": "Yellow Cards",
+        "home": "1",
+        "away": "0"
+      },
+      {
+        "type": "Saves",
+        "home": "0",
+        "away": "1"
+      },
+      {
+        "type": "Passes Total",
+        "home": "160",
+        "away": "201"
+      },
+      {
+        "type": "Passes Accurate",
+        "home": "119",
+        "away": "155"
+      }
+    ]
+  }
+  ..........
+]  
+            
+
+Match status values
+13' - minute in play
+Half Time - rest time after first half
+Finished - finished after regular time
+After ET - finished after extra time
+After Pen. - finished after penalty kicks
+Postponed - will be played on onother time/day
+Cancelled - will not be played
+Awarded - a certain team or player has been declared the winner of the match by an official or regulating body 
+            
+
+PHP call example
+
+$APIkey='xxxxxxxxxxxxxx';
+$from = '2023-04-05';
+$to = '2023-04-05';
+$league_id = 152;
+
+$curl_options = array(
+  CURLOPT_URL => "https://apiv3.apifootball.com/?action=get_events&from=$from&to=$to&league_id=$league_id&APIkey=$APIkey",
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_HEADER => false,
+  CURLOPT_TIMEOUT => 30,
+  CURLOPT_CONNECTTIMEOUT => 5
+);
+
+$curl = curl_init();
+curl_setopt_array( $curl, $curl_options );
+$result = curl_exec( $curl );
+
+$result = (array) json_decode($result);
+
+var_dump($result);
+?>
+
+            
+Lineups
+
+Method
+GET apiv3.apifootball.com/?action=get_lineups
+
+Returns lineups of one event
+
+
+Parameters
+Parameter	Description
+action	API method name
+APIkey	Authorization code generated from your apifootball account
+match_id	Match ID
+
+Request URL
+https://apiv3.apifootball.com/?action=get_lineups&match_id=86392&APIkey=xxxxxxxxxxxxxx
+
+JSON Response
+{
+    "86392": {
+        "lineup": {
+            "home": {
+                "starting_lineups": [
+                    {
+                        "lineup_player": "Fernando Pacheco",
+                        "lineup_number": "1",
+                        "lineup_position": "1",
+                        "player_key": "2697551827"
+                    },
+                    {
+                        "lineup_player": "Florian Lejeune",
+                        "lineup_number": "22",
+                        "lineup_position": "4",
+                        "player_key": "676474805"
+                    },
+                    ..................
+                ],
+                "substitutes": [
+                    {
+                        "lineup_player": "Abdallahi Mahmoud",
+                        "lineup_number": "30",
+                        "lineup_position": "0",
+                        "player_key": "3323219436"
+                    },
+                    {
+                        "lineup_player": "Alberto Rodríguez",
+                        "lineup_number": "2",
+                        "lineup_position": "0",
+                        "player_key": "3090376076"
+                    },
+                    ..................
+                ],
+                "coach": [
+                    {
+                        "lineup_player": "Javi Calleja",
+                        "lineup_number": "",
+                        "lineup_position": "",
+                        "player_key": "2090999962"
+                    }
+                ],
+                "missing_players": []
+            },
+            "away": {
+                "starting_lineups": [
+                    {
+                        "lineup_player": "Aarón Escandell",
+                        "lineup_number": "13",
+                        "lineup_position": "1",
+                        "player_key": "4163952067"
+                    },
+                    {
+                        "lineup_player": "Adrián Marín",
+                        "lineup_number": "18",
+                        "lineup_position": "10",
+                        "player_key": "2956156479"
+                    },
+                    ...................
+                ],
+                "substitutes": [
+                    {
+                        "lineup_player": "Antonio Puertas",
+                        "lineup_number": "10",
+                        "lineup_position": "0",
+                        "player_key": "1306175954"
+                    },
+                    {
+                        "lineup_player": "Arnau Fàbrega",
+                        "lineup_number": "31",
+                        "lineup_position": "0",
+                        "player_key": "3737665595"
+                    },
+                    ............
+                ],
+                "coach": [
+                    {
+                        "lineup_player": "Diego Martínez",
+                        "lineup_number": "",
+                        "lineup_position": "",
+                        "player_key": "46479144"
+                    }
+                ],
+                "missing_players": []
+            }
+        }
+    }
+}
+            
+
+PHP call example
+
+$APIkey='xxxxxxxxxxxxxx';
+$match_id = 86392;
+
+$curl_options = array(
+  CURLOPT_URL => "https://apiv3.apifootball.com/?action=get_lineups&match_id=$match_id&APIkey=$APIkey",
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_HEADER => false,
+  CURLOPT_TIMEOUT => 30,
+  CURLOPT_CONNECTTIMEOUT => 5
+);
+
+$curl = curl_init();
+curl_setopt_array( $curl, $curl_options );
+$result = curl_exec( $curl );
+
+$result = (array) json_decode($result);
+
+var_dump($result);
+?>
+
+            
+Statistics
+
+Method
+GET apiv3.apifootball.com/?action=get_statistics
+
+Returns statistics of one event
+
+
+Parameters
+Parameter	Description
+action	API method name
+APIkey	Authorization code generated from your apifootball account
+match_id	Match ID
+
+Request URL
+https://apiv3.apifootball.com/?action=get_statistics&match_id=86392&APIkey=xxxxxxxxxxxxxx
+
+JSON Response
+{
+    "86392": {
+        "statistics": [
+            {
+                "type": "Shots Total",
+                "home": "14",
+                "away": "5"
+            },
+            {
+                "type": "Shots On Goal",
+                "home": "9",
+                "away": "2"
+            },
+            {
+                "type": "Shots Off Goal",
+                "home": "4",
+                "away": "2"
+            },
+            {
+                "type": "Shots Blocked",
+                "home": "1",
+                "away": "1"
+            },
+            {
+                "type": "Shots Inside Box",
+                "home": "13",
+                "away": "2"
+            },
+            {
+                "type": "Shots Outside Box",
+                "home": "1",
+                "away": "3"
+            },
+            {
+                "type": "Fouls",
+                "home": "7",
+                "away": "11"
+            },
+            {
+                "type": "Corners",
+                "home": "6",
+                "away": "1"
+            },
+            {
+                "type": "Offsides",
+                "home": "1",
+                "away": "2"
+            },
+            {
+                "type": "Ball Possession",
+                "home": "53%",
+                "away": "47%"
+            },
+            {
+                "type": "Yellow Cards",
+                "home": "2",
+                "away": "4"
+            },
+            {
+                "type": "Saves",
+                "home": "0",
+                "away": "5"
+            },
+            {
+                "type": "Passes Total",
+                "home": "458",
+                "away": "406"
+            },
+            {
+                "type": "Passes Accurate",
+                "home": "360",
+                "away": "302"
+            }
+        ],
+        "player_statistics": [
+            {
+                "player_name": "Fernando Pacheco",
+                "player_key": "2697551827",
+                "team_name": "home",
+                "player_number": "1",
+                "player_position": "Goalkeepers",
+                "player_is_captain": "True",
+                "player_is_subst": "False",
+                "player_shots_total": "0",
+                "player_shots_on_goal": "0",
+                "player_goals": "0",
+                "player_goals_conceded": "2",
+                "player_minus_goals": "2",
+                "player_assists": "0",
+                "player_offsides": "0",
+                "player_fouls_drawn": "",
+                "player_fouls_commited": "0",
+                "player_tackles": "0",
+                "player_blocks": "0",
+                "player_total_crosses": "0",
+                "player_acc_crosses": "0",
+                "player_interceptions": "0",
+                "player_clearances": "0",
+                "player_dispossesed": "0",
+                "player_saves": "0",
+                "player_punches": "0",
+                "player_saves_inside_box": "0",
+                "player_duels_total": "0",
+                "player_duels_won": "0",
+                "player_aerials_won": "0",
+                "player_dribble_attempts": "0",
+                "player_dribble_succ": "0",
+                "player_dribbled_past": "0",
+                "player_yellowcards": "0",
+                "player_redcards": "0",
+                "player_pen_score": "0",
+                "player_pen_miss": "0",
+                "player_pen_save": "0",
+                "player_pen_committed": "0",
+                "player_pen_won": "0",
+                "player_hit_woodwork": "0",
+                "player_passes": "22",
+                "player_passes_acc": "18",
+                "player_key_passes": "0",
+                "player_minutes_played": "90",
+                "player_rating": "6",
+                "match_id": "86392"
+            },
+            .................
+        ]
+    }
+}
+            
+
+PHP call example
+
+$APIkey='xxxxxxxxxxxxxx';
+$match_id = 86392;
+
+$curl_options = array(
+  CURLOPT_URL => "https://apiv3.apifootball.com/?action=action=get_statistics&match_id=$match_id&APIkey=$APIkey",
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_HEADER => false,
+  CURLOPT_TIMEOUT => 30,
+  CURLOPT_CONNECTTIMEOUT => 5
+);
+
+$curl = curl_init();
+curl_setopt_array( $curl, $curl_options );
+$result = curl_exec( $curl );
+
+$result = (array) json_decode($result);
+
+var_dump($result);
+?>
+
+            
+Odds
+
+Method
+GET apiv3.apifootball.com/?action=get_odds
+
+Returns odds (1x2, BTS, O/U, AH) for events included in your current subscription plan
+
+
+Parameters
+Parameter	Description
+action	API method name
+APIkey	Authorization code generated from your apifootball account
+from	Start date (yyyy-mm-dd)
+to	Stop date (yyyy-mm-dd)
+match_id	Match ID - if set only odds from specific event will be returned (Optional)
+
+Request URL
+https://apiv3.apifootball.com/?action=get_odds&from=2023-05-16&to=2023-05-16&APIkey=xxxxxxxxxxxxxx
+
+JSON Response
+[
+  {
+    "match_id": "58819",
+    "odd_bookmakers": "bwin",
+    "odd_date": "2023-05-16 19:28:36",
+    "odd_1": "10",
+    "odd_x": "6.5",
+    "odd_2": "1.24",
+    "odd_1x": "4",
+    "odd_12": "1.11",
+    "odd_x2": "1.05",
+    "ah-4.5_1": "",
+    "ah-4.5_2": "",
+    "ah-4_1": "",
+    "ah-4_2": "",
+    "ah-3.5_1": "",
+    "ah-3.5_2": "",
+    "ah-3_1": "",
+    "ah-3_2": "",
+    "ah-2.5_1": "",
+    "ah-2.5_2": "",
+    "ah-2_1": "",
+    "ah-2_2": "",
+    "ah-1.5_1": "",
+    "ah-1.5_2": "",
+    "ah-1_1": "",
+    "ah-1_2": "",
+    "ah0_1": "",
+    "ah0_2": "",
+    "ah+0.5_1": "",
+    "ah+1_1": "",
+    "ah+1_2": "",
+    "ah+1.5_1": "",
+    "ah+1.5_2": "",
+    "ah+2_1": "",
+    "ah+2_2": "",
+    "ah+2.5_1": "",
+    "ah+2.5_2": "",
+    "ah+3_1": "",
+    "ah+3_2": "",
+    "ah+3.5_1": "",
+    "ah+3.5_2": "",
+    "ah+4_1": "",
+    "ah+4_2": "",
+    "ah+4.5_1": "",
+    "ah+4.5_2": "",
+    "o+0.5": "1.01",
+    "u+0.5": "20",
+    "o+1": "",
+    "u+1": "",
+    "o+1.5": "1.1",
+    "u+1.5": "6.5",
+    "o+2": "",
+    "u+2": "",
+    "o+2.5": "1.32",
+    "u+2.5": "3.1",
+    "o+3": "",
+    "u+3": "",
+    "o+3.5": "1.8",
+    "u+3.5": "1.88",
+    "o+4": "",
+    "u+4": "",
+    "o+4.5": "2.75",
+    "u+4.5": "1.39",
+    "o+5": "",
+    "u+5": "",
+    "o+5.5": "4.6",
+    "u+5.5": "1.17",
+    "bts_yes": "1.7",
+    "bts_no": "2"
+    },
+    ............
+]
+            
+
+PHP call example
+
+$APIkey='xxxxxxxxxxxxxx';
+$from = '2023-05-16';
+$to = '2023-05-16';
+
+$curl_options = array(
+  CURLOPT_URL => "https://apiv3.apifootball.com/?action=get_odds&from=$from&to=$to&APIkey=$APIkey",
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_HEADER => false,
+  CURLOPT_TIMEOUT => 30,
+  CURLOPT_CONNECTTIMEOUT => 5
+);
+
+$curl = curl_init();
+curl_setopt_array( $curl, $curl_options );
+$result = curl_exec( $curl );
+
+$result = (array) json_decode($result);
+
+var_dump($result);
+?>
+
+            
+Live Odds and Comments
+
+Method
+GET apiv3.apifootball.com/?action=get_live_odds_commnets
+
+Returns live odds and comments for events live included in your current subscription plan
+
+
+Parameters
+Parameter	Description
+action	API method name
+APIkey	Authorization code generated from your apifootball account
+country_id	Country ID - if set only leagues from specific country will be returned (Optional)
+league_id	League ID - if set events from specific league will be returned (Optional)
+match_id	Match ID - if set only odds from specific event will be returned (Optional)
+
+Request URL
+https://apiv3.apifootball.com/?action=get_live_odds_commnets&APIkey=xxxxxxxxxxxxxx
+
+JSON Response
+{
+   "4593": {
+      "match_id":"4593",
+      "country_name":"Cambodia",
+      "league_name":"C-League",
+      "match_date":"2021-09-08",
+      "match_time":"10:30",
+      "match_status":"48",
+      "match_hometeam_name":"Police Commissary",
+      "match_hometeam_score":"0",
+      "match_awayteam_name":"Phnom Penh Crown",
+      "match_awayteam_score":"2",
+      "live_odds":[
+         {
+            "odd_name":"How many goals will Away Team score?",
+            "suspended":"No",
+            "type":"No goal",
+            "value":"1.333",
+            "handicap":"",
+            "upd":"2021-09-08 11:12:12"
+         },
+         {
+            "odd_name":"How many goals will Away Team score?",
+            "suspended":"No",
+            "type":"1",
+            "value":"3.4",
+            "handicap":"",
+            "upd":"2021-09-08 11:12:37"
+         },
+         .............
+       ],
+       "live_comments":[
+         {
+            "time":"44:58",
+            "text":"Kunshan free kick",
+            "state":""
+         },
+         {
+            "time":"45:42",
+            "text":"Beijing Technology attack",
+            "state":""
+         },
+         ..........
+       ]
+     },
+     ..........
+}
+            
+
+PHP call example
+
+        $APIkey='xxxxxxxxxxxxxx';
+
+        $curl_options = array(
+        CURLOPT_URL => "https://apiv3.apifootball.com/?action=get_live_odds_commnets&APIkey=$APIkey",
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_HEADER => false,
+        CURLOPT_TIMEOUT => 30,
+        CURLOPT_CONNECTTIMEOUT => 5
+        );
+
+        $curl = curl_init();
+        curl_setopt_array( $curl, $curl_options );
+        $result = curl_exec( $curl );
+
+        $result = (array) json_decode($result);
+
+        var_dump($result);
+        ?>
+
+            
+H2H
+
+Method
+GET apiv3.apifootball.com/?action=get_H2H
+
+Returns the last games between submiteted teams and the last games of each team with name parameters (firstTeam and secondTeam) or ids parameters (firstTeamId or secondTeamId)
+
+
+Parameters
+Parameter	Description
+action	API method name
+APIkey	Authorization code generated from your apifootball account
+timezone	Default timezone: Europe/Berlin. With this filter you can set the timezone where you want to receive the data. Timezone is in TZ format (exemple: America/New_York). (Optional)
+firstTeam	First team name
+secondTeam	Second team name
+firstTeamId	First team Id
+secondTeamId	Second team Id
+
+Request URL
+https://apiv3.apifootball.com/?action=get_H2H&firstTeamId=7275&secondTeamId=151&APIkey=xxxxxxxxxxxxxx
+
+JSON Response
+{
+    "firstTeam_VS_secondTeam": [
+        {
+            "match_id": "86392",
+            "country_id": "6",
+            "country_name": "Spain",
+            "league_id": "302",
+            "league_name": "La Liga",
+            "match_date": "2021-05-16",
+            "match_status": "Finished",
+            "match_time": "18:30",
+            "match_hometeam_id": "7275",
+            "match_hometeam_name": "Deportivo Alavés",
+            "match_hometeam_score": "4",
+            "match_awayteam_id": "151",
+            "match_awayteam_name": "Granada",
+            "match_awayteam_score": "2",
+            "match_hometeam_halftime_score": "",
+            "match_awayteam_halftime_score": "",
+            "match_live": "0",
+            "team_home_badge": "https://apiv3.apifootball.com/badges/7275_deportivo-alaves.jpg",
+            "team_away_badge": "https://apiv3.apifootball.com/badges/151_granada.jpg",
+            "league_logo": "https://apiv3.apifootball.com/badges/logo_leagues/302_la-liga.png",
+            "country_logo": "https://apiv3.apifootball.com/badges/logo_country/6_spain.png"
+        },
+        .............
+    ],
+    "firstTeam_lastResults": [
+        {
+            "match_id": "86392",
+            "country_id": "6",
+            "country_name": "Spain",
+            "league_id": "302",
+            "league_name": "La Liga",
+            "match_date": "2021-05-16",
+            "match_status": "Finished",
+            "match_time": "18:30",
+            "match_hometeam_id": "7275",
+            "match_hometeam_name": "Deportivo Alavés",
+            "match_hometeam_score": "4",
+            "match_awayteam_id": "151",
+            "match_awayteam_name": "Granada",
+            "match_awayteam_score": "2",
+            "match_hometeam_halftime_score": "",
+            "match_awayteam_halftime_score": "",
+            "match_live": "0",
+            "team_home_badge": "https://apiv3.apifootball.com/badges/7275_deportivo-alaves.jpg",
+            "team_away_badge": "https://apiv3.apifootball.com/badges/151_granada.jpg",
+            "league_logo": "https://apiv3.apifootball.com/badges/logo_leagues/302_la-liga.png",
+            "country_logo": "https://apiv3.apifootball.com/badges/logo_country/6_spain.png"
+        },
+        ................
+    ],
+    "secondTeam_lastResults": [
+        {
+            "match_id": "86392",
+            "country_id": "6",
+            "country_name": "Spain",
+            "league_id": "302",
+            "league_name": "La Liga",
+            "match_date": "2021-05-16",
+            "match_status": "Finished",
+            "match_time": "18:30",
+            "match_hometeam_id": "7275",
+            "match_hometeam_name": "Deportivo Alavés",
+            "match_hometeam_score": "4",
+            "match_awayteam_id": "151",
+            "match_awayteam_name": "Granada",
+            "match_awayteam_score": "2",
+            "match_hometeam_halftime_score": "",
+            "match_awayteam_halftime_score": "",
+            "match_live": "0",
+            "team_home_badge": "https://apiv3.apifootball.com/badges/7275_deportivo-alaves.jpg",
+            "team_away_badge": "https://apiv3.apifootball.com/badges/151_granada.jpg",
+            "league_logo": "https://apiv3.apifootball.com/badges/logo_leagues/302_la-liga.png",
+            "country_logo": "https://apiv3.apifootball.com/badges/logo_country/6_spain.png"
+        },
+        ...................
+    ]
+}            
+
+PHP call example
+
+$APIkey='xxxxxxxxxxxxxx';
+$firstTeamId = 7275;
+$secondTeamId = 151;
+
+$curl_options = array(
+  CURLOPT_URL => "https://apiv3.apifootball.com/?action=get_H2H&firstTeamId=$firstTeamId&secondTeamId=$secondTeamId&APIkey=$APIkey",
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_HEADER => false,
+  CURLOPT_TIMEOUT => 30,
+  CURLOPT_CONNECTTIMEOUT => 5
+);
+
+$curl = curl_init();
+curl_setopt_array( $curl, $curl_options );
+$result = curl_exec( $curl );
+
+$result = (array) json_decode($result);
+
+var_dump($result);
+?>
+
+            
+Predictions
+
+Method
+GET apiv3.apifootball.com/?action=get_predictions
+
+Returns mathematical calculated predictions for the events included in your current subscription plan
+
+
+Parameters
+Parameter	Description
+action	API method name
+APIkey	Authorization code generated from your apifootball account
+from	Start date (yyyy-mm-dd)
+to	Stop date (yyyy-mm-dd)
+country_id	Country ID - if set only leagues from specific country will be returned (Optional)
+league_id	League ID - if set events from specific league will be returned (Optional)
+match_id	Match ID - if set only details from specific match will be returned (Optional)
+
+Request URL
+https://apiv3.apifootball.com/?action=get_predictions&from=2023-04-05&to=2023-04-05&APIkey=xxxxxxxxxxxxxx
+
+JSON Response
+[
+  {
+    "match_id": "112282",
+    "country_id": "44",
+    "country_name": "England",
+    "league_id": "152",
+    "league_name": "Premier League",
+    "match_date": "2023-04-05",
+    "match_status": "Finished",
+    "match_time": "21:00",
+    "match_hometeam_id": "3081",
+    "match_hometeam_name": "West Ham United",
+    "match_hometeam_score": "1",
+    "match_awayteam_name": "Newcastle United",
+    "match_awayteam_id": "3100",
+    "match_awayteam_score": "5",
+    "match_hometeam_halftime_score": "1",
+    "match_awayteam_halftime_score": "2",
+    "match_hometeam_extra_score": "1",
+    "match_awayteam_extra_score": "2",
+    "match_hometeam_penalty_score": "",
+    "match_awayteam_penalty_score": "",
+    "match_hometeam_system": "4-2-3-1",
+    "match_awayteam_system": "4-3-3",
+    "match_live": "0",
+    "prob_HW": "18.00",
+    "prob_D": "34.00",
+    "prob_AW": "48.00",
+    "prob_HW_D": "52.00",
+    "prob_AW_D": "82.00",
+    "prob_HW_AW": "66.00",
+    "prob_O": "21.00",
+    "prob_U": "79.00",
+    "prob_O_1": "46.00",
+    "prob_U_1": "54.00",
+    "prob_O_3": "7.00",
+    "prob_U_3": "93.00",
+    "prob_bts": "26.00",
+    "prob_ots": "74.00",
+    "prob_ah_h_45": "100.00",
+    "prob_ah_a_45": "0.00",
+    "prob_ah_h_35": "99.00",
+    "prob_ah_a_35": "1.00",
+    "prob_ah_h_25": "94.00",
+    "prob_ah_a_25": "6.00",
+    "prob_ah_h_15": "80.00",
+    "prob_ah_a_15": "20.00",
+    "prob_ah_h_05": "52.00",
+    "prob_ah_a_05": "48.00",
+    "prob_ah_h_-05": "18.00",
+    "prob_ah_a_-05": "82.00",
+    "prob_ah_h_-15": "4.00",
+    "prob_ah_a_-15": "96.00",
+    "prob_ah_h_-25": "1.00",
+    "prob_ah_a_-25": "99.00",
+    "prob_ah_h_-35": "0.00",
+    "prob_ah_a_-35": "100.00",
+    "prob_ah_h_-45": "0.00",
+    "prob_ah_a_-45": "100.00"
+  },
+  ........
+ ]
+            
+
+Pobabilities markets
+Probabilities are explained in percentage.
+
+///basic markets probabilities
+prob_HW:23.00 = home team win
+prob_D:21.00 = draw
+prob_AW:56.00 = away team win
+prob_HW_D:44.00 = double chance (home team win or draw)  
+prob_AW_D:77.00 = double chance (away team win or draw)
+prob_HW_AW:79.00 = home team or away team to win
+prob_O:65.00 = over 2.5 goals/match
+prob_U:35.00 = under 2.5 goals/match
+prob_O_1:85.00 = over 1.5 goals/match 
+prob_U_1:15.00 = under 1.5 goals/match 
+prob_O_3:43.00 = over 3.5 goals/match 
+prob_U_3:57.00 = under 3.5 goals/match 
+prob_bts:63.00 = both team to score
+prob_ots:37.00 = only one team to score
+
+///asian handicap markets probabilities
+prob_ah_h_45:98.00 = home team to win starting match from score 4.5 - 0
+prob_ah_a_45:3.00 = away team to win starting match from score 4.5 - 0 
+prob_ah_h_35:93.00 = home team to win starting match from score 3.5 - 0 
+prob_ah_a_35:7.00 = away team to win starting match from score 3.5 - 0 
+prob_ah_h_25:83.00 = home team to win starting match from score 2.5 - 0 
+prob_ah_a_25:17.00 = away team to win starting match from score 2.5 - 0 
+prob_ah_h_15:66.00 = home team to win starting match from score 1.5 - 0 
+prob_ah_a_15:34.00 = away team to win starting match from scoe 1.5 - 0 
+prob_ah_h_05:44.00 = home team to win starting match from score 0.5 - 0 
+prob_ah_a_05:56.00 = away team to win starting match from score 0.5 - 0
+prob_ah_h_-05:23.00 = home team to win starting match from score 0 - 0.5 
+prob_ah_a_-05:77.00 = away team to win starting match from score 0 - 0.5 
+prob_ah_h_-15:10.00 = home team to win starting match from score 0 - 1.5  
+prob_ah_a_-15:91.00 = away team to win starting match from score 0 - 1.5 
+prob_ah_h_-25:3.00 = home team to win starting match from score 0 - 2.5  
+prob_ah_a_-25:97.00 = away team to win starting match from score 0 - 2.5 
+prob_ah_h_-35:1.00 = home team to win starting match from score 0 - 3.5  
+prob_ah_a_-35:99.00 = away team to win starting match from score 0 - 3.5 
+prob_ah_h_-45:0.00 = home team to win starting match from score 0 - 4.5  
+prob_ah_a_-45:100.00 = away team to win starting match from score 0 - 4.5
+            
+
+PHP call example
+
+$APIkey='xxxxxxxxxxxxxx';
+$from = '2023-04-05';
+$to = '2023-04-05';
+
+$curl_options = array(
+  CURLOPT_URL => "https://apiv3.apifootball.com/?action=get_predictions&from=$from&to=$to&APIkey=$APIkey",
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_HEADER => false,
+  CURLOPT_TIMEOUT => 30,
+  CURLOPT_CONNECTTIMEOUT => 5
+);
+
+$curl = curl_init();
+curl_setopt_array( $curl, $curl_options );
+$result = curl_exec( $curl );
+
+$result = (array) json_decode($result);
+
+var_dump($result);
+?>
+
+            
+TopScorers
+
+Method
+GET apiv3.apifootball.com/?action=get_topscorers
+
+Returns topsorers for leagues
+
+
+Parameters
+Parameter	Description
+action	API method name
+APIkey	Authorization code generated from your apifootball account
+league_id	League ID - topscorers from specific league will be returned
+
+Request URL
+https://apiv3.apifootball.com/?action=get_topscorers&league_id=302=xxxxxxxxxxxxxx
+
+JSON Response
+[
+    {
+        "player_place": "1",
+        "player_name": "L. Messi",
+        "player_key": 1135663375,
+        "team_name": "Barcelona",
+        "team_key": "97",
+        "goals": "30",
+        "assists": "9",
+        "penalty_goals": "3"
+    },
+    {
+        "player_place": "2",
+        "player_name": "Gerard Moreno",
+        "player_key": 387294631,
+        "team_name": "Villarreal",
+        "team_key": "162",
+        "goals": "23",
+        "assists": "",
+        "penalty_goals": "10"
+    },
+    ...............
+]
+            
+
+PHP call example
+
+$APIkey='xxxxxxxxxxxxxx';
+$league_id = 148;
+
+$curl_options = array(
+  CURLOPT_URL => "https://apiv3.apifootball.com/?action=get_topscorers&league_id=$league_id&APIkey=$APIkey",
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_HEADER => false,
+  CURLOPT_TIMEOUT => 30,
+  CURLOPT_CONNECTTIMEOUT => 5
+);
+
+$curl = curl_init();
+curl_setopt_array( $curl, $curl_options );
+$result = curl_exec( $curl );
+
+$result = (array) json_decode($result);
+
+var_dump($result);
+?>
+
+            
+Videos
+
+Method
+GET apiv3.apifootball.com/?action=get_videos
+
+Returns videos
+
+
+Parameters
+Parameter	Description
+action	API method name
+APIkey	Authorization code generated from your apifootball account
+match_d	Match ID - if set only details from specific match will be returned (Optional)
+
+Request URL
+https://apiv3.apifootball.com/?action=get_videos&match_id=206376&APIkey=xxxxxxxxxxxxxx
+
+JSON Response
+[
+    {
+        "match_id": "206376",
+        "video_title_full": "Highlights",
+        "video_title": "Highlights",
+        "video_url": "https://www.g-video.tv/5022517.mp4"
+    },
+    .........
+]
+            
+
+PHP call example
+
+$APIkey='xxxxxxxxxxxxxx';
+$league_id = 148;
+
+$curl_options = array(
+  CURLOPT_URL => "https://apiv3.apifootball.com/?action=get_topscorers&league_id=$league_id&APIkey=$APIkey",
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_HEADER => false,
+  CURLOPT_TIMEOUT => 30,
+  CURLOPT_CONNECTTIMEOUT => 5
+);
+
+$curl = curl_init();
+curl_setopt_array( $curl, $curl_options );
+$result = curl_exec( $curl );
+
+$result = (array) json_decode($result);
+
+var_dump($result);
+?>
+
+            
+Livescore
+
+For Livescore just call apiv3.apifootball.com/?action=get_events method and filter for match_live = 1 on todays matches every minute
+Livescore WebSockets
+
+Method
+wss wss://wss.apifootball.com/livescore
+
+Connect with apifootball servers and get push notifications on any changes of score and all match statistics
+
+
+Parameters
+Parameter	Description
+action	API method name
+APIkey	Authorization code generated from your apifootball account
+timezone	Default timezone: Europe/Berlin. With this filter you can set the timezone where you want to receive the data. Timezone is in TZ format (exemple: America/New_York). (Optional)
+country_id	Country ID - if set only leagues from specific country will be returned (Optional)
+league_id	League ID - if set events from specific league will be returned (Optional)
+match_id	Match ID - if set only details from specific match will be returned (Optional)
+
+API football WebSocket Connector
+wss://wss.apifootball.com/livescore?APIkey='+APIkey+'&timezone=+03:00
+
+JSON push notify string (Response)
+[
+    {
+        "match_id": "902316",
+        "country_id": "1",
+        "country_name": "Eurocups",
+        "league_id": "1",
+        "league_name": "European Championship - Final",
+        "match_date": "2021-07-11",
+        "match_status": "After Pen.",
+        "match_time": "21:00",
+        "match_hometeam_id": "3",
+        "match_hometeam_name": "Italy",
+        "match_hometeam_score": "2",
+        "match_awayteam_name": "England",
+        "match_awayteam_id": "16",
+        "match_awayteam_score": "1",
+        "match_hometeam_halftime_score": "0",
+        "match_awayteam_halftime_score": "1",
+        "match_hometeam_extra_score": "0",
+        "match_awayteam_extra_score": "0",
+        "match_hometeam_penalty_score": "3",
+        "match_awayteam_penalty_score": "2",
+        "match_hometeam_ft_score": "1",
+        "match_awayteam_ft_score": "1",
+        "match_hometeam_system": "4-3-3",
+        "match_awayteam_system": "3-4-2-1",
+        "match_live": "0",
+        "match_round": "Final",
+        "match_stadium": "Wembley Stadium (London)",
+        "match_referee": "B. Kuipers",
+        "team_home_badge": "https://apiv3.apifootball.com/badges/3_italy.jpg",
+        "team_away_badge": "https://apiv3.apifootball.com/badges/16_england.jpg",
+        "league_logo": "",
+        "country_logo": "",
+        "fk_stage_key": "4",
+        "stage_name": "Final",
+        "goalscorer": [
+            {
+                "time": "2",
+                "home_scorer": "",
+                "home_scorer_id": "",
+                "home_assist": "",
+                "home_assist_id": "",
+                "score": "0 - 1",
+                "away_scorer": "L. Shaw",
+                "away_scorer_id": "2013220432",
+                "away_assist": "K. Trippier",
+                "away_assist_id": "2722594872",
+                "info": ""
+            },
+            ................
+        ],
+        "cards": [
+            {
+                "time": "47",
+                "home_fault": "N. Barella",
+                "card": "yellow card",
+                "away_fault": "",
+                "info": ""
+            },
+            ...............
+        ],
+        "substitutions": {
+            "home": [
+                {
+                    "time": "54",
+                    "substitution": "N. Barella | B. Cristante"
+                },
+                ..............
+            ],
+            "away": [
+                {
+                    "time": "70",
+                    "substitution": "K. Trippier | B. Saka"
+                },
+                .............
+            ]
+        },
+        "lineup": {
+            "home": {
+                "starting_lineups": [
+                    {
+                        "lineup_player": "Ciro Immobile",
+                        "lineup_number": "17",
+                        "lineup_position": "10",
+                        "player_key": "2681696639"
+                    },
+                    ...............
+                ],
+                "substitutes": [
+                    {
+                        "lineup_player": "Alessandro Bastoni",
+                        "lineup_number": "23",
+                        "lineup_position": "0",
+                        "player_key": "2283533776"
+                    },
+                    .................
+                ],
+                "coach": [
+                    {
+                        "lineup_player": "R. Mancini",
+                        "lineup_number": "",
+                        "lineup_position": "",
+                        "player_key": "3244928587"
+                    }
+                ],
+                "missing_players": []
+            },
+            "away": {
+                "starting_lineups": [
+                    {
+                        "lineup_player": "Declan Rice",
+                        "lineup_number": "4",
+                        "lineup_position": "7",
+                        "player_key": "353204575"
+                    },
+                    ..................
+                ],
+                "substitutes": [
+                    {
+                        "lineup_player": "Aaron Ramsdale",
+                        "lineup_number": "13",
+                        "lineup_position": "0",
+                        "player_key": "2971117080"
+                    },
+                    .................
+                ],
+                "coach": [
+                    {
+                        "lineup_player": "G. Southgate",
+                        "lineup_number": "",
+                        "lineup_position": "",
+                        "player_key": "2968444313"
+                    }
+                ],
+                "missing_players": []
+            }
+        },
+        "statistics": [
+            {
+                "type": "Shots Total",
+                "home": "19",
+                "away": "6"
+            },
+            ....................
+        ],
+        "statistics_1half": [
+            {
+                "type": "Shots Total",
+                "home": "17",
+                "away": "5"
+            },
+            .................
+        ]
+    }
+]
+            
+
+JavaScript WebSocket connect example
+function socketsLive(){
+
+  var APIkey='your_account_APIkey';
+  var socket  = new WebSocket('wss://wss.apifootball.com/livescore?APIkey='+APIkey+'&timezone=+03:00');
+  
+	console.log('Connecting...');	
+	socket.onopen = function(e) {
+		alert('Connected');
+		console.log('Connected');
+		console.log('Waiting data...');
+	}		  
+	socket.onmessage = function(e) {
+		alert( e.data );
+		if (e.data) {
+			var data = JSON.parse(e.data);
+			console.log(data);
+		} else {
+			console.log('No new data!');
+		}
+	}
+	socket.onclose = function(){
+		socket = null;
+		setTimeout(socketsLive, 5000);
+	}
+
+}
+socketsLive();
+            
+Widgets
+
+Here at apifootball.com we're working hard every day to satisfy your deepest needs. And because we care about your time and money spent on building your applications. We are very happy to bring you great news! We've proudly launched an complete set of football API widgets for any kind of sports sites. Enough with money lost on developing from scratch. Enough with tons of hours of hard coding. Stop wasting your time and use one box to box solution for your site! It's easy to integrate as "copy paste", fully customisable (pure HTML, CSS, JavaScript) and it's free on every plan you'll choose. You can have your own fully featured football livescore site in minutes without knowing any programming language. Get your widgets now and let your dreams come true!
+Wordpress Plugin
+
+We offer an free wordpress plugin for every account registered. The livescore wordpress football plugin contains all events from your account plan. It's very easy to install on your own site and it's boosted with features like livescore, in play events (goals and scorers), stats, and bookmakers odds. You can customize the feel and look to your appropriate site color schema.

@@ -1,0 +1,252 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2 class="mb-4"><i class="fas fa-code"></i> API v3 Testing</h2>
+        
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3 class="h5 mb-0">API Endpoints</h3>
+            </div>
+            <div class="card-body">
+                <div class="list-group mb-4">
+                    <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between" data-endpoint="fixtures">
+                        Fixtures
+                        <span class="badge bg-primary">New</span>
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between" data-endpoint="fixtures/rounds">
+                        Fixture Rounds
+                        <span class="badge bg-primary">New</span>
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between" data-endpoint="fixtures/statistics">
+                        Fixture Statistics
+                        <span class="badge bg-primary">New</span>
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between" data-endpoint="players/profiles">
+                        Player Profiles
+                        <span class="badge bg-success">New in v3.9.3</span>
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between" data-endpoint="players/teams">
+                        Player Teams
+                        <span class="badge bg-success">New in v3.9.3</span>
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action" data-endpoint="injuries">Injuries</a>
+                    <a href="#" class="list-group-item list-group-item-action" data-endpoint="teams/statistics">Team Statistics</a>
+                    <a href="#" class="list-group-item list-group-item-action" data-endpoint="sidelined">Sidelined</a>
+                    <a href="#" class="list-group-item list-group-item-action" data-endpoint="trophies">Trophies</a>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="apiEndpoint">API Endpoint</label>
+                            <input type="text" class="form-control" id="apiEndpoint" value="/api/v3/fixtures" readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="parameterForm">
+                    <!-- Parameters will be added dynamically -->
+                </div>
+
+                <button type="button" class="btn btn-primary" id="testApiBtn">
+                    <i class="fas fa-paper-plane"></i> Test API
+                </button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3 class="h5 mb-0">Response</h3>
+            </div>
+            <div class="card-body">
+                <pre id="apiResponse" class="bg-dark text-light p-3" style="max-height: 500px; overflow-y: auto;">Select an endpoint to test</pre>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const endpointLinks = document.querySelectorAll('[data-endpoint]');
+    const apiEndpointInput = document.getElementById('apiEndpoint');
+    const parameterForm = document.getElementById('parameterForm');
+    const testApiBtn = document.getElementById('testApiBtn');
+    const apiResponse = document.getElementById('apiResponse');
+
+    // Endpoint parameters definition
+    const endpointParams = {
+        'fixtures': [
+            {name: 'date', type: 'date', required: false, placeholder: 'YYYY-MM-DD', default: new Date().toISOString().split('T')[0]},
+            {name: 'league', type: 'number', required: false, placeholder: 'League ID (e.g. 39 for Premier League)'},
+            {name: 'team', type: 'number', required: false, placeholder: 'Team ID'},
+            {name: 'season', type: 'number', required: false, placeholder: 'Season (e.g. 2023)', default: '2024'},
+            {name: 'extra', type: 'checkbox', required: false, label: 'Include extra time', default: true},
+            {name: 'standings', type: 'checkbox', required: false, label: 'Include standings info', default: true}
+        ],
+        'fixtures/rounds': [
+            {name: 'league', type: 'number', required: true, placeholder: 'League ID (e.g. 39 for Premier League)'},
+            {name: 'season', type: 'number', required: true, placeholder: 'Season (e.g. 2023)', default: '2024'},
+            {name: 'dates', type: 'checkbox', required: false, label: 'Include round dates', default: true}
+        ],
+        'fixtures/statistics': [
+            {name: 'fixture', type: 'number', required: true, placeholder: 'Fixture ID'},
+            {name: 'team', type: 'number', required: false, placeholder: 'Team ID'},
+            {name: 'half', type: 'select', required: false, options: [{value: '', label: 'Select half'}, {value: 'first', label: 'First Half'}, {value: 'second', label: 'Second Half'}]}
+        ],
+        'players/profiles': [
+            {name: 'id', type: 'number', required: false, placeholder: 'Player ID'},
+            {name: 'season', type: 'number', required: false, placeholder: 'Season (e.g. 2023)', default: '2024'},
+            {name: 'search', type: 'text', required: false, placeholder: 'Player name search'}
+        ],
+        'players/teams': [
+            {name: 'id', type: 'number', required: true, placeholder: 'Player ID'}
+        ],
+        'injuries': [
+            {name: 'fixture', type: 'number', required: false, placeholder: 'Fixture ID'},
+            {name: 'league', type: 'number', required: false, placeholder: 'League ID'},
+            {name: 'season', type: 'number', required: false, placeholder: 'Season (e.g. 2023)', default: '2024'},
+            {name: 'team', type: 'number', required: false, placeholder: 'Team ID'},
+            {name: 'player', type: 'number', required: false, placeholder: 'Player ID'},
+            {name: 'ids', type: 'text', required: false, placeholder: 'Multiple fixture IDs (comma separated)'}
+        ],
+        'teams/statistics': [
+            {name: 'team', type: 'number', required: true, placeholder: 'Team ID'},
+            {name: 'league', type: 'number', required: true, placeholder: 'League ID'},
+            {name: 'season', type: 'number', required: true, placeholder: 'Season (e.g. 2023)', default: '2024'}
+        ],
+        'sidelined': [
+            {name: 'player', type: 'number', required: false, placeholder: 'Player ID'},
+            {name: 'coach', type: 'number', required: false, placeholder: 'Coach ID'},
+            {name: 'players', type: 'text', required: false, placeholder: 'Multiple player IDs (comma separated)'},
+            {name: 'coachs', type: 'text', required: false, placeholder: 'Multiple coach IDs (comma separated)'}
+        ],
+        'trophies': [
+            {name: 'player', type: 'number', required: false, placeholder: 'Player ID'},
+            {name: 'coach', type: 'number', required: false, placeholder: 'Coach ID'},
+            {name: 'players', type: 'text', required: false, placeholder: 'Multiple player IDs (comma separated)'},
+            {name: 'coachs', type: 'text', required: false, placeholder: 'Multiple coach IDs (comma separated)'}
+        ]
+    };
+
+    // Create form fields for the selected endpoint
+    function createFormFields(endpoint) {
+        const params = endpointParams[endpoint] || [];
+        parameterForm.innerHTML = '';
+
+        params.forEach(param => {
+            const formGroup = document.createElement('div');
+            formGroup.className = 'form-group mb-3';
+
+            // Create label
+            const label = document.createElement('label');
+            label.htmlFor = `param-${param.name}`;
+            label.textContent = param.name.charAt(0).toUpperCase() + param.name.slice(1) + (param.required ? ' *' : '');
+            formGroup.appendChild(label);
+
+            // Create input based on type
+            let input;
+
+            if (param.type === 'checkbox') {
+                const checkDiv = document.createElement('div');
+                checkDiv.className = 'form-check';
+                
+                input = document.createElement('input');
+                input.className = 'form-check-input';
+                input.type = 'checkbox';
+                input.id = `param-${param.name}`;
+                input.name = param.name;
+                if (param.default) input.checked = true;
+                
+                const checkLabel = document.createElement('label');
+                checkLabel.className = 'form-check-label';
+                checkLabel.htmlFor = `param-${param.name}`;
+                checkLabel.textContent = param.label || param.name;
+                
+                checkDiv.appendChild(input);
+                checkDiv.appendChild(checkLabel);
+                formGroup.appendChild(checkDiv);
+            } else if (param.type === 'select') {
+                input = document.createElement('select');
+                input.className = 'form-select';
+                input.id = `param-${param.name}`;
+                input.name = param.name;
+                
+                param.options.forEach(option => {
+                    const opt = document.createElement('option');
+                    opt.value = option.value;
+                    opt.textContent = option.label;
+                    input.appendChild(opt);
+                });
+                
+                formGroup.appendChild(input);
+            } else {
+                input = document.createElement('input');
+                input.className = 'form-control';
+                input.type = param.type;
+                input.id = `param-${param.name}`;
+                input.name = param.name;
+                input.placeholder = param.placeholder || '';
+                if (param.default) input.value = param.default;
+                if (param.required) input.required = true;
+                
+                formGroup.appendChild(input);
+            }
+
+            parameterForm.appendChild(formGroup);
+        });
+    }
+
+    // Handle endpoint selection
+    endpointLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const endpoint = this.getAttribute('data-endpoint');
+            apiEndpointInput.value = `/api/v3/${endpoint}`;
+            
+            // Highlight selected endpoint
+            endpointLinks.forEach(el => el.classList.remove('active'));
+            this.classList.add('active');
+            
+            createFormFields(endpoint);
+        });
+    });
+
+    // Test API button click handler
+    testApiBtn.addEventListener('click', function() {
+        const endpoint = apiEndpointInput.value;
+        const params = new URLSearchParams();
+        
+        // Get all form inputs
+        const inputs = parameterForm.querySelectorAll('input, select');
+        inputs.forEach(input => {
+            if (input.type === 'checkbox') {
+                if (input.checked) params.append(input.name, 'true');
+            } else if (input.value) {
+                params.append(input.name, input.value);
+            }
+        });
+        
+        // Show loading
+        apiResponse.textContent = 'Loading...';
+        
+        // Make API request
+        fetch(`${endpoint}?${params.toString()}`)
+            .then(response => response.json())
+            .then(data => {
+                apiResponse.textContent = JSON.stringify(data, null, 2);
+            })
+            .catch(error => {
+                apiResponse.textContent = `Error: ${error.message}`;
+            });
+    });
+
+    // Initialize with fixtures endpoint
+    createFormFields('fixtures');
+});
+</script>
+{% endblock %}

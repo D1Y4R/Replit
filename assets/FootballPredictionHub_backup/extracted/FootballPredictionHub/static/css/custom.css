@@ -1,0 +1,356 @@
+
+/* Search panel styles */
+.search-container {
+    background-color: #212529;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    border: 1px solid #343a40;
+    color: #f8f9fa;
+}
+
+.input-group {
+    margin-bottom: 15px;
+    background-color: #343a40;
+    border-radius: 5px;
+    border: 1px solid #495057;
+}
+
+.input-group .input-group-text {
+    background-color: #343a40;
+    border: none;
+    padding: 12px 15px;
+    color: #f8f9fa;
+}
+
+.input-group .form-control {
+    height: 45px;
+    font-size: 16px;
+    border: none;
+    background-color: #343a40;
+    color: #f8f9fa;
+}
+
+.input-group .form-control:focus {
+    box-shadow: none;
+    border-color: #0d6efd;
+    background-color: #343a40;
+    color: #f8f9fa;
+}
+
+.input-group .input-group-text {
+    background-color: #343a40;
+    border-right: none;
+    padding: 8px 15px;
+    color: #adb5bd;
+}
+
+#leagueSearch, #teamSearch {
+    padding: 8px 15px;
+    border: 1px solid #495057;
+    border-radius: 0 5px 5px 0;
+    background-color: #343a40;
+    color: #f8f9fa;
+}
+
+.input-group .form-control {
+    border-left: none;
+    background-color: #343a40;
+    color: #f8f9fa;
+}
+
+.input-group .form-control:focus {
+    border-color: #495057;
+    box-shadow: none;
+    background-color: #343a40;
+    color: #f8f9fa;
+}
+
+.input-group:focus-within .input-group-text {
+    border-color: #0d6efd;
+}
+
+/* Custom styles to enhance the dark theme */
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--bs-dark);
+}
+
+.footer {
+    margin-top: auto;
+}
+
+.card {
+    background-color: #212529 !important;
+    border: 1px solid #343a40 !important;
+    margin-bottom: 1rem;
+    color: #f8f9fa !important;
+}
+
+.card-header {
+    background-color: #343a40 !important;
+    border-bottom: 1px solid #495057 !important;
+    padding: 0.75rem 1rem;
+    color: white !important;
+}
+
+.card-header h2 {
+    display: flex;
+    align-items: center;
+    margin: 0;
+    color: white !important;
+}
+
+.card-body {
+    padding: 1rem;
+    background-color: #212529 !important;
+    color: #d9d9d9 !important;
+}
+
+/* Form elemanları için özel dark stil */
+.form-control, .form-select, .input-group-text {
+    background-color: #343a40 !important;
+    border-color: #495057 !important;
+    color: #f8f9fa !important;
+}
+
+.form-control:focus, .form-select:focus {
+    background-color: #343a40 !important;
+    color: white !important;
+    border-color: #0d6efd !important;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25) !important;
+}
+
+.form-label {
+    color: #d9d9d9 !important;
+}
+
+/* İnput placeholder rengi */
+::placeholder {
+    color: #adb5bd !important;
+    opacity: 0.8 !important;
+}
+
+/* Modern Dark Theme Styles for Prediction Cards */
+.prediction-box,
+.htft-prediction-box,
+.betting-box,
+.score-box {
+    background-color: #212529 !important;
+    border-radius: 8px !important;
+    border: 1px solid #343a40 !important;
+    color: #f8f9fa !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+    padding: 15px !important;
+    margin-bottom: 15px !important;
+    transition: all 0.3s ease !important;
+}
+
+.prediction-box:hover,
+.htft-prediction-box:hover,
+.betting-box:hover,
+.score-box:hover {
+    transform: translateY(-3px) !important;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4) !important;
+}
+
+.prediction-box h4,
+.htft-prediction-box h4,
+.betting-box h4,
+.score-box h4 {
+    color: #f8f9fa !important;
+    border-bottom: 1px solid #495057 !important;
+    padding-bottom: 10px !important;
+    margin-bottom: 15px !important;
+    font-weight: 600 !important;
+}
+
+/* Badge ve buton stilleri */
+.badge {
+    padding: 0.4em 0.7em !important;
+    font-weight: 600 !important;
+    border-radius: 20px !important;
+}
+
+.btn-dark-custom {
+    background-color: #343a40 !important;
+    color: #f8f9fa !important;
+    border: 1px solid #495057 !important;
+}
+
+.btn-dark-custom:hover {
+    background-color: #495057 !important;
+    color: #fff !important;
+}
+
+/* Yazı stil iyileştirmeleri */
+.text-white {
+    color: #f8f9fa !important;
+}
+
+.text-muted {
+    color: #adb5bd !important;
+}
+
+/* Tahmin kartları için özel stiller */
+.probability-card {
+    background-color: #343a40 !important;
+    border-radius: 10px !important;
+    padding: 12px !important;
+    text-align: center !important;
+    margin-bottom: 10px !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+}
+
+.probability-value {
+    font-size: 1.8rem !important;
+    font-weight: bold !important;
+    color: #fff !important;
+    margin-bottom: 5px !important;
+}
+
+/* League section styles */
+.league-section {
+    border-bottom: 1px solid #495057;
+    padding-bottom: 1rem;
+    background-color: #212529 !important;
+    margin-bottom: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Takım Detayları Modal Stili */
+.team-stats-modal .modal-content {
+    background-color: #212529 !important;
+    color: #f8f9fa !important;
+    border: 1px solid #343a40 !important;
+}
+
+.team-stats-modal .modal-header {
+    background-color: #343a40 !important;
+    border-bottom: 1px solid #495057 !important;
+    color: white !important;
+}
+
+.team-stats-modal .modal-body {
+    background-color: #212529 !important;
+    color: #f8f9fa !important;
+}
+
+.team-stats-modal .list-group-item {
+    background-color: #343a40 !important;
+    color: #f8f9fa !important;
+    border: 1px solid #495057 !important;
+    margin-bottom: 5px;
+    border-radius: 5px;
+}
+
+.team-stats-modal .match-teams {
+    font-size: 1rem;
+    color: #e9ecef !important;
+}
+
+.team-stats-modal .match-score {
+    font-size: 1.2rem;
+    color: #ffc107 !important;
+}
+
+.team-stats-modal .btn-close-white {
+    filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+.league-section:last-child {
+    border-bottom: none;
+}
+
+.league-header {
+    color: #0d6efd;
+    font-weight: 600;
+    padding: 0.75rem 1rem;
+    background-color: #343a40;
+    border-radius: 8px 8px 0 0;
+    border-bottom: 1px solid #495057;
+}
+
+/* Match display styles */
+.team-home, .team-away {
+    font-weight: 500;
+    flex: 1;
+    color: #f8f9fa !important;
+}
+
+.team-home {
+    text-align: right;
+    padding-right: 1rem;
+}
+
+.team-away {
+    text-align: left;
+    padding-left: 1rem;
+}
+
+.score {
+    font-weight: bold;
+    min-width: 100px;
+    text-align: center;
+    color: #f8f9fa !important;
+}
+
+.match-row {
+    background-color: #212529 !important;
+    border: 1px solid #343a40 !important;
+    border-radius: 6px;
+    margin-bottom: 0.5rem;
+    padding: 0.75rem;
+    transition: transform 0.2s;
+}
+
+.match-row:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.match-row .match-time {
+    color: #adb5bd !important;
+}
+
+.match-row .match-actions {
+    margin-top: 0.5rem;
+}
+
+.nav-pills .nav-link {
+    color: #f8f9fa;
+    background-color: #343a40;
+    margin-right: 0.5rem;
+    border: 1px solid #495057;
+    transition: all 0.2s;
+}
+
+.nav-pills .nav-link:hover {
+    background-color: #495057;
+}
+
+.nav-pills .nav-link.active {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    .team-home, .team-away {
+        font-size: 0.9rem;
+    }
+
+    .score {
+        min-width: 80px;
+        font-size: 0.9rem;
+    }
+}

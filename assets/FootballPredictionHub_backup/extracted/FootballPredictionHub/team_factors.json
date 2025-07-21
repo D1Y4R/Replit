@@ -1,0 +1,2612 @@
+{
+  "93": {
+    "name": "Unknown",
+    "home_factor": 0.964,
+    "away_factor": 0.9693939393939393,
+    "home_matches": 10,
+    "away_matches": 11,
+    "home_win_rate": 0.2,
+    "away_win_rate": 0.5454545454545454
+  },
+  "4973": {
+    "name": "Unknown",
+    "home_factor": 0.8226666666666667,
+    "away_factor": 0.8645454545454545,
+    "home_matches": 10,
+    "away_matches": 11,
+    "home_win_rate": 0.3,
+    "away_win_rate": 0.18181818181818182
+  },
+  "7290": {
+    "name": "Unknown",
+    "home_factor": 1.1681481481481482,
+    "away_factor": 1.0548484848484847,
+    "home_matches": 9,
+    "away_matches": 11,
+    "home_win_rate": 0.6666666666666666,
+    "away_win_rate": 0.2727272727272727
+  },
+  "7289": {
+    "name": "Unknown",
+    "home_factor": 0.8566666666666667,
+    "away_factor": 0.9630769230769232,
+    "home_matches": 8,
+    "away_matches": 13,
+    "home_win_rate": 0.25,
+    "away_win_rate": 0.3076923076923077
+  },
+  "4982": {
+    "name": "Unknown",
+    "home_factor": 0.8,
+    "away_factor": 0.8275757575757575,
+    "home_matches": 10,
+    "away_matches": 11,
+    "home_win_rate": 0.2,
+    "away_win_rate": 0.36363636363636365
+  },
+  "4978": {
+    "name": "Unknown",
+    "home_factor": 0.9053333333333333,
+    "away_factor": 0.721,
+    "home_matches": 10,
+    "away_matches": 10,
+    "home_win_rate": 0.3,
+    "away_win_rate": 0.1
+  },
+  "7644": {
+    "name": "Unknown",
+    "home_factor": 1.0633333333333332,
+    "away_factor": 0.9096296296296296,
+    "home_matches": 12,
+    "away_matches": 9,
+    "home_win_rate": 0.5,
+    "away_win_rate": 0.3333333333333333
+  },
+  "103": {
+    "name": "Unknown",
+    "home_factor": 1.1944444444444444,
+    "away_factor": 0.9548148148148148,
+    "home_matches": 12,
+    "away_matches": 9,
+    "home_win_rate": 0.5833333333333334,
+    "away_win_rate": 0.2222222222222222
+  },
+  "3796": {
+    "name": "Unknown",
+    "home_factor": 1.2454545454545454,
+    "away_factor": 0.8706666666666667,
+    "home_matches": 11,
+    "away_matches": 10,
+    "home_win_rate": 0.6363636363636364,
+    "away_win_rate": 0.4
+  },
+  "3805": {
+    "name": "Unknown",
+    "home_factor": 0.8748148148148147,
+    "away_factor": 0.7909090909090909,
+    "home_matches": 9,
+    "away_matches": 11,
+    "home_win_rate": 0.2222222222222222,
+    "away_win_rate": 0.18181818181818182
+  },
+  "307": {
+    "name": "Unknown",
+    "home_factor": 0.9977777777777779,
+    "away_factor": 1.0643333333333334,
+    "home_matches": 9,
+    "away_matches": 10,
+    "home_win_rate": 0.4444444444444444,
+    "away_win_rate": 0.4
+  },
+  "8678": {
+    "name": "Unknown",
+    "home_factor": 0.8781818181818181,
+    "away_factor": 0.7674074074074073,
+    "home_matches": 11,
+    "away_matches": 9,
+    "home_win_rate": 0.2727272727272727,
+    "away_win_rate": 0.1111111111111111
+  },
+  "5624": {
+    "name": "Unknown",
+    "home_factor": 1.2377777777777776,
+    "away_factor": 0.9375,
+    "home_matches": 9,
+    "away_matches": 12,
+    "home_win_rate": 0.6666666666666666,
+    "away_win_rate": 0.25
+  },
+  "5590": {
+    "name": "Unknown",
+    "home_factor": 0.9826666666666666,
+    "away_factor": 1.049090909090909,
+    "home_matches": 10,
+    "away_matches": 11,
+    "home_win_rate": 0.4,
+    "away_win_rate": 0.45454545454545453
+  },
+  "5596": {
+    "name": "Unknown",
+    "home_factor": 1.1770370370370369,
+    "away_factor": 1.114074074074074,
+    "home_matches": 9,
+    "away_matches": 9,
+    "home_win_rate": 0.4444444444444444,
+    "away_win_rate": 0.6666666666666666
+  },
+  "5642": {
+    "name": "Unknown",
+    "home_factor": 1.1096969696969696,
+    "away_factor": 1.1194444444444445,
+    "home_matches": 11,
+    "away_matches": 6,
+    "home_win_rate": 0.45454545454545453,
+    "away_win_rate": 0.5
+  },
+  "5593": {
+    "name": "Unknown",
+    "home_factor": 1.0005128205128204,
+    "away_factor": 0.7983333333333333,
+    "home_matches": 13,
+    "away_matches": 8,
+    "home_win_rate": 0.46153846153846156,
+    "away_win_rate": 0.125
+  },
+  "5600": {
+    "name": "Unknown",
+    "home_factor": 1.2333333333333332,
+    "away_factor": 0.8516666666666666,
+    "home_matches": 5,
+    "away_matches": 12,
+    "home_win_rate": 0.6,
+    "away_win_rate": 0.16666666666666666
+  },
+  "5588": {
+    "name": "Unknown",
+    "home_factor": 0.9484848484848485,
+    "away_factor": 1.0908333333333333,
+    "home_matches": 11,
+    "away_matches": 8,
+    "home_win_rate": 0.36363636363636365,
+    "away_win_rate": 0.5
+  },
+  "5660": {
+    "name": "Unknown",
+    "home_factor": 1.0983333333333332,
+    "away_factor": 1.1016666666666666,
+    "home_matches": 8,
+    "away_matches": 10,
+    "home_win_rate": 0.5,
+    "away_win_rate": 0.6
+  },
+  "5703": {
+    "name": "Unknown",
+    "home_factor": 1.3485714285714285,
+    "away_factor": 1.2,
+    "home_matches": 14,
+    "away_matches": 5,
+    "home_win_rate": 0.6428571428571429,
+    "away_win_rate": 0.6
+  },
+  "5607": {
+    "name": "Unknown",
+    "home_factor": 0.8733333333333333,
+    "away_factor": 0.8109523809523809,
+    "home_matches": 9,
+    "away_matches": 7,
+    "home_win_rate": 0.2222222222222222,
+    "away_win_rate": 0.2857142857142857
+  },
+  "5614": {
+    "name": "Unknown",
+    "home_factor": 0.9545454545454544,
+    "away_factor": 0.9580952380952381,
+    "home_matches": 11,
+    "away_matches": 7,
+    "home_win_rate": 0.18181818181818182,
+    "away_win_rate": 0.42857142857142855
+  },
+  "5629": {
+    "name": "Unknown",
+    "home_factor": 1.1206060606060606,
+    "away_factor": 0.9956666666666667,
+    "home_matches": 11,
+    "away_matches": 10,
+    "home_win_rate": 0.6363636363636364,
+    "away_win_rate": 0.3
+  },
+  "5594": {
+    "name": "Unknown",
+    "home_factor": 1.0903030303030303,
+    "away_factor": 1.2,
+    "home_matches": 11,
+    "away_matches": 10,
+    "home_win_rate": 0.45454545454545453,
+    "away_win_rate": 0.7
+  },
+  "5602": {
+    "name": "Unknown",
+    "home_factor": 1.0911111111111111,
+    "away_factor": 0.7555555555555555,
+    "home_matches": 15,
+    "away_matches": 6,
+    "home_win_rate": 0.5333333333333333,
+    "away_win_rate": 0.0
+  },
+  "2470": {
+    "name": "Unknown",
+    "home_factor": 1.0977777777777777,
+    "away_factor": 1.0344444444444445,
+    "home_matches": 12,
+    "away_matches": 9,
+    "home_win_rate": 0.5,
+    "away_win_rate": 0.4444444444444444
+  },
+  "2476": {
+    "name": "Unknown",
+    "home_factor": 0.8,
+    "away_factor": 0.8992592592592593,
+    "home_matches": 11,
+    "away_matches": 9,
+    "home_win_rate": 0.18181818181818182,
+    "away_win_rate": 0.2222222222222222
+  },
+  "7706": {
+    "name": "Unknown",
+    "home_factor": 0.9199999999999999,
+    "away_factor": 0.9788888888888889,
+    "home_matches": 12,
+    "away_matches": 9,
+    "home_win_rate": 0.25,
+    "away_win_rate": 0.4444444444444444
+  },
+  "7708": {
+    "name": "Unknown",
+    "home_factor": 0.9148148148148147,
+    "away_factor": 0.875,
+    "home_matches": 9,
+    "away_matches": 12,
+    "home_win_rate": 0.3333333333333333,
+    "away_win_rate": 0.25
+  },
+  "7627": {
+    "name": "Unknown",
+    "home_factor": 1.0837037037037036,
+    "away_factor": 1.0569444444444445,
+    "home_matches": 9,
+    "away_matches": 12,
+    "home_win_rate": 0.5555555555555556,
+    "away_win_rate": 0.5
+  },
+  "7646": {
+    "name": "Unknown",
+    "home_factor": 1.04,
+    "away_factor": 0.787878787878788,
+    "home_matches": 10,
+    "away_matches": 11,
+    "home_win_rate": 0.4,
+    "away_win_rate": 0.18181818181818182
+  },
+  "5613": {
+    "name": "Unknown",
+    "home_factor": 1.4392592592592592,
+    "away_factor": 1.0236363636363637,
+    "home_matches": 9,
+    "away_matches": 11,
+    "home_win_rate": 0.5555555555555556,
+    "away_win_rate": 0.2727272727272727
+  },
+  "5609": {
+    "name": "Unknown",
+    "home_factor": 1.0674074074074074,
+    "away_factor": 0.9896666666666667,
+    "home_matches": 9,
+    "away_matches": 10,
+    "home_win_rate": 0.4444444444444444,
+    "away_win_rate": 0.2
+  },
+  "10942": {
+    "name": "Unknown",
+    "home_factor": 1.337333333333333,
+    "away_factor": 1.1912121212121212,
+    "home_matches": 10,
+    "away_matches": 11,
+    "home_win_rate": 0.5,
+    "away_win_rate": 0.36363636363636365
+  },
+  "31426": {
+    "name": "Unknown",
+    "home_factor": 1.1562962962962962,
+    "away_factor": 1.1458333333333335,
+    "home_matches": 9,
+    "away_matches": 12,
+    "home_win_rate": 0.4444444444444444,
+    "away_win_rate": 0.3333333333333333
+  },
+  "8301": {
+    "name": "Unknown",
+    "home_factor": 1.0696969696969696,
+    "away_factor": 0.824,
+    "home_matches": 11,
+    "away_matches": 10,
+    "home_win_rate": 0.5454545454545454,
+    "away_win_rate": 0.2
+  },
+  "25149": {
+    "name": "Unknown",
+    "home_factor": 0.98,
+    "away_factor": 0.7766666666666667,
+    "home_matches": 10,
+    "away_matches": 11,
+    "home_win_rate": 0.4,
+    "away_win_rate": 0.18181818181818182
+  },
+  "5632": {
+    "name": "Unknown",
+    "home_factor": 1.5,
+    "away_factor": 1.2,
+    "home_matches": 10,
+    "away_matches": 9,
+    "home_win_rate": 0.8,
+    "away_win_rate": 0.7777777777777778
+  },
+  "10968": {
+    "name": "Unknown",
+    "home_factor": 0.9626666666666666,
+    "away_factor": 1.106060606060606,
+    "home_matches": 10,
+    "away_matches": 11,
+    "home_win_rate": 0.4,
+    "away_win_rate": 0.2727272727272727
+  },
+  "5679": {
+    "name": "Unknown",
+    "home_factor": 1.2672727272727273,
+    "away_factor": 1.2,
+    "home_matches": 11,
+    "away_matches": 10,
+    "home_win_rate": 0.5454545454545454,
+    "away_win_rate": 0.5
+  },
+  "10945": {
+    "name": "Unknown",
+    "home_factor": 1.076969696969697,
+    "away_factor": 0.743,
+    "home_matches": 11,
+    "away_matches": 10,
+    "home_win_rate": 0.36363636363636365,
+    "away_win_rate": 0.0
+  },
+  "10947": {
+    "name": "Unknown",
+    "home_factor": 1.270909090909091,
+    "away_factor": 1.0303333333333333,
+    "home_matches": 11,
+    "away_matches": 10,
+    "home_win_rate": 0.5454545454545454,
+    "away_win_rate": 0.2
+  },
+  "24120": {
+    "name": "Unknown",
+    "home_factor": 1.1613333333333333,
+    "away_factor": 1.1542424242424243,
+    "home_matches": 10,
+    "away_matches": 11,
+    "home_win_rate": 0.4,
+    "away_win_rate": 0.36363636363636365
+  },
+  "24122": {
+    "name": "Unknown",
+    "home_factor": 1.1688888888888886,
+    "away_factor": 0.7988888888888889,
+    "home_matches": 12,
+    "away_matches": 9,
+    "home_win_rate": 0.4166666666666667,
+    "away_win_rate": 0.1111111111111111
+  },
+  "5641": {
+    "name": "Unknown",
+    "home_factor": 1.0,
+    "away_factor": 1.0,
+    "home_matches": 0,
+    "away_matches": 1,
+    "home_win_rate": 0.0,
+    "away_win_rate": 0.0
+  },
+  "2495": {
+    "name": "Unknown",
+    "home_factor": 1.1346666666666665,
+    "away_factor": 1.0143333333333333,
+    "home_matches": 10,
+    "away_matches": 10,
+    "home_win_rate": 0.5,
+    "away_win_rate": 0.5
+  },
+  "2493": {
+    "name": "Unknown",
+    "home_factor": 1.1377777777777778,
+    "away_factor": 1.038888888888889,
+    "home_matches": 6,
+    "away_matches": 12,
+    "home_win_rate": 0.3333333333333333,
+    "away_win_rate": 0.4166666666666667
+  },
+  "7340": {
+    "name": "Unknown",
+    "home_factor": 0.9813333333333334,
+    "away_factor": 0.854074074074074,
+    "home_matches": 10,
+    "away_matches": 9,
+    "home_win_rate": 0.4,
+    "away_win_rate": 0.2222222222222222
+  },
+  "7357": {
+    "name": "Unknown",
+    "home_factor": 1.085185185185185,
+    "away_factor": 0.9554545454545454,
+    "home_matches": 9,
+    "away_matches": 11,
+    "home_win_rate": 0.5555555555555556,
+    "away_win_rate": 0.36363636363636365
+  },
+  "7332": {
+    "name": "Unknown",
+    "home_factor": 0.9013333333333333,
+    "away_factor": 0.9643333333333333,
+    "home_matches": 10,
+    "away_matches": 10,
+    "home_win_rate": 0.4,
+    "away_win_rate": 0.5
+  },
+  "7360": {
+    "name": "Unknown",
+    "home_factor": 1.0515151515151513,
+    "away_factor": 0.6553333333333333,
+    "home_matches": 11,
+    "away_matches": 10,
+    "home_win_rate": 0.5454545454545454,
+    "away_win_rate": 0.2
+  },
+  "11178": {
+    "name": "Unknown",
+    "home_factor": 1.3666666666666667,
+    "away_factor": 0.9166666666666667,
+    "home_matches": 8,
+    "away_matches": 6,
+    "home_win_rate": 0.625,
+    "away_win_rate": 0.16666666666666666
+  },
+  "39208": {
+    "name": "Unknown",
+    "home_factor": 1.0,
+    "away_factor": 1.0,
+    "home_matches": 1,
+    "away_matches": 2,
+    "home_win_rate": 0.0,
+    "away_win_rate": 0.0
+  },
+  "11169": {
+    "name": "Unknown",
+    "home_factor": 1.0466666666666664,
+    "away_factor": 0.9372222222222222,
+    "home_matches": 9,
+    "away_matches": 6,
+    "home_win_rate": 0.3333333333333333,
+    "away_win_rate": 0.5
+  },
+  "12325": {
+    "name": "Unknown",
+    "home_factor": 1.0,
+    "away_factor": 1.0,
+    "home_matches": 1,
+    "away_matches": 1,
+    "home_win_rate": 0.0,
+    "away_win_rate": 0.0
+  },
+  "31051": {
+    "name": "Unknown",
+    "home_factor": 1.0,
+    "away_factor": 1.0,
+    "home_matches": 0,
+    "away_matches": 1,
+    "home_win_rate": 0.0,
+    "away_win_rate": 0.0
+  },
+  "38433": {
+    "name": "Unknown",
+    "home_factor": 1.0,
+    "away_factor": 1.0,
+    "home_matches": 1,
+    "away_matches": 1,
+    "home_win_rate": 1.0,
+    "away_win_rate": 1.0
+  },
+  "30543": {
+    "name": "Unknown",
+    "home_factor": 1.17,
+    "away_factor": 0.8566666666666667,
+    "home_matches": 8,
+    "away_matches": 4,
+    "home_win_rate": 0.5,
+    "away_win_rate": 0.25
+  },
+  "39197": {
+    "name": "Unknown",
+    "home_factor": 1.0,
+    "away_factor": 1.0,
+    "home_matches": 0,
+    "away_matches": 1,
+    "home_win_rate": 0.0,
+    "away_win_rate": 0.0
+  },
+  "39201": {
+    "name": "Unknown",
+    "home_factor": 1.0,
+    "away_factor": 1.0,
+    "home_matches": 1,
+    "away_matches": 0,
+    "home_win_rate": 0.0,
+    "away_win_rate": 0.0
+  },
+  "31514": {
+    "name": "Unknown",
+    "home_factor": 1.0,
+    "away_factor": 1.0,
+    "home_matches": 0,
+    "away_matches": 2,
+    "home_win_rate": 0.0,
+    "away_win_rate": 1.0
+  },
+  "31494": {
+    "name": "Unknown",
+    "home_factor": 1.0,
+    "away_factor": 1.0,
+    "home_matches": 1,
+    "away_matches": 0,
+    "home_win_rate": 1.0,
+    "away_win_rate": 0.0
+  },
+  "8926": {
+    "name": "Unknown",
+    "home_factor": 1.0,
+    "away_factor": 1.0,
+    "home_matches": 0,
+    "away_matches": 1,
+    "home_win_rate": 0.0,
+    "away_win_rate": 0.0
+  },
+  "25602": {
+    "name": "Unknown",
+    "home_factor": 1.0,
+    "away_factor": 1.0,
+    "home_matches": 2,
+    "away_matches": 1,
+    "home_win_rate": 0.0,
+    "away_win_rate": 0.0
+  },
+  "31334": {
+    "name": "Unknown",
+    "home_factor": 1.0,
+    "away_factor": 1.0,
+    "home_matches": 1,
+    "away_matches": 1,
+    "home_win_rate": 0.0,
+    "away_win_rate": 1.0
+  },
+  "24732": {
+    "name": "Unknown",
+    "home_factor": 1.0,
+    "away_factor": 1.0,
+    "home_matches": 2,
+    "away_matches": 2,
+    "home_win_rate": 0.0,
+    "away_win_rate": 0.0
+  },
+  "8918": {
+    "name": "Unknown",
+    "home_factor": 1.0,
+    "away_factor": 1.0,
+    "home_matches": 0,
+    "away_matches": 1,
+    "home_win_rate": 0.0,
+    "away_win_rate": 1.0
+  },
+  "36996": {
+    "name": "Unknown",
+    "home_factor": 1.1945454545454546,
+    "away_factor": 1.0344444444444445,
+    "home_matches": 11,
+    "away_matches": 9,
+    "home_win_rate": 0.5454545454545454,
+    "away_win_rate": 0.5555555555555556
+  },
+  "36995": {
+    "name": "Unknown",
+    "home_factor": 1.2614814814814814,
+    "away_factor": 0.9427777777777777,
+    "home_matches": 9,
+    "away_matches": 12,
+    "home_win_rate": 0.5555555555555556,
+    "away_win_rate": 0.16666666666666666
+  },
+  "37011": {
+    "name": "Unknown",
+    "home_factor": 0.9013333333333333,
+    "away_factor": 1.1766666666666667,
+    "home_matches": 10,
+    "away_matches": 9,
+    "home_win_rate": 0.4,
+    "away_win_rate": 0.5555555555555556
+  },
+  "37009": {
+    "name": "Unknown",
+    "home_factor": 0.948,
+    "away_factor": 0.7851515151515152,
+    "home_matches": 10,
+    "away_matches": 11,
+    "home_win_rate": 0.2,
+    "away_win_rate": 0.18181818181818182
+  },
+  "9705": {
+    "name": "Unknown",
+    "home_factor": 1.1866666666666665,
+    "away_factor": 0.8706666666666667,
+    "home_matches": 6,
+    "away_matches": 5,
+    "home_win_rate": 0.8333333333333334,
+    "away_win_rate": 0.4
+  },
+  "9709": {
+    "name": "Unknown",
+    "home_factor": 1.412380952380952,
+    "away_factor": 1.091904761904762,
+    "home_matches": 7,
+    "away_matches": 7,
+    "home_win_rate": 0.8571428571428571,
+    "away_win_rate": 0.5714285714285714
+  },
+  "10010": {
+    "name": "Unknown",
+    "home_factor": 0.8,
+    "away_factor": 0.8022222222222222,
+    "home_matches": 11,
+    "away_matches": 9,
+    "home_win_rate": 0.18181818181818182,
+    "away_win_rate": 0.1111111111111111
+  },
+  "7417": {
+    "name": "Unknown",
+    "home_factor": 1.1493333333333333,
+    "away_factor": 1.2,
+    "home_matches": 10,
+    "away_matches": 11,
+    "home_win_rate": 0.7,
+    "away_win_rate": 0.5454545454545454
+  },
+  "7427": {
+    "name": "Unknown",
+    "home_factor": 0.8777777777777778,
+    "away_factor": 0.8577777777777778,
+    "home_matches": 12,
+    "away_matches": 9,
+    "home_win_rate": 0.16666666666666666,
+    "away_win_rate": 0.2222222222222222
+  },
+  "7421": {
+    "name": "Unknown",
+    "home_factor": 0.8,
+    "away_factor": 0.7605555555555555,
+    "home_matches": 9,
+    "away_matches": 12,
+    "home_win_rate": 0.1111111111111111,
+    "away_win_rate": 0.16666666666666666
+  },
+  "10005": {
+    "name": "Unknown",
+    "home_factor": 1.1488888888888886,
+    "away_factor": 0.849,
+    "home_matches": 9,
+    "away_matches": 10,
+    "home_win_rate": 0.5555555555555556,
+    "away_win_rate": 0.2
+  },
+  "7424": {
+    "name": "Unknown",
+    "home_factor": 1.0007407407407407,
+    "away_factor": 0.8099999999999999,
+    "home_matches": 9,
+    "away_matches": 12,
+    "home_win_rate": 0.4444444444444444,
+    "away_win_rate": 0.16666666666666666
+  },
+  "7425": {
+    "name": "Unknown",
+    "home_factor": 1.18,
+    "away_factor": 0.8192592592592592,
+    "home_matches": 12,
+    "away_matches": 9,
+    "home_win_rate": 0.5,
+    "away_win_rate": 0.4444444444444444
+  },
+  "7428": {
+    "name": "Unknown",
+    "home_factor": 1.096,
+    "away_factor": 1.0263636363636364,
+    "home_matches": 10,
+    "away_matches": 11,
+    "home_win_rate": 0.5,
+    "away_win_rate": 0.36363636363636365
+  },
+  "9126": {
+    "name": "Unknown",
+    "home_factor": 1.2822222222222222,
+    "away_factor": 1.0518181818181818,
+    "home_matches": 9,
+    "away_matches": 11,
+    "home_win_rate": 0.5555555555555556,
+    "away_win_rate": 0.36363636363636365
+  },
+  "34153": {
+    "name": "Unknown",
+    "home_factor": 0.8,
+    "away_factor": 0.8366666666666666,
+    "home_matches": 9,
+    "away_matches": 9,
+    "home_win_rate": 0.1111111111111111,
+    "away_win_rate": 0.3333333333333333
+  },
+  "9118": {
+    "name": "Unknown",
+    "home_factor": 1.4466666666666668,
+    "away_factor": 1.065925925925926,
+    "home_matches": 11,
+    "away_matches": 9,
+    "home_win_rate": 0.6363636363636364,
+    "away_win_rate": 0.3333333333333333
+  },
+  "30424": {
+    "name": "Unknown",
+    "home_factor": 1.039259259259259,
+    "away_factor": 0.926969696969697,
+    "home_matches": 9,
+    "away_matches": 11,
+    "home_win_rate": 0.5555555555555556,
+    "away_win_rate": 0.36363636363636365
+  },
+  "5383": {
+    "name": "Unknown",
+    "home_factor": 1.092222222222222,
+    "away_factor": 0.8333333333333334,
+    "home_matches": 12,
+    "away_matches": 9,
+    "home_win_rate": 0.5833333333333334,
+    "away_win_rate": 0.2222222222222222
+  },
+  "39028": {
+    "name": "Unknown",
+    "home_factor": 1.0,
+    "away_factor": 1.0,
+    "home_matches": 1,
+    "away_matches": 1,
+    "home_win_rate": 1.0,
+    "away_win_rate": 0.0
+  },
+  "7400": {
+    "name": "Unknown",
+    "home_factor": 0.984,
+    "away_factor": 0.952,
+    "home_matches": 10,
+    "away_matches": 10,
+    "home_win_rate": 0.3,
+    "away_win_rate": 0.3
+  },
+  "8364": {
+    "name": "Unknown",
+    "home_factor": 1.0925925925925926,
+    "away_factor": 0.9608333333333334,
+    "home_matches": 9,
+    "away_matches": 12,
+    "home_win_rate": 0.3333333333333333,
+    "away_win_rate": 0.3333333333333333
+  },
+  "5516": {
+    "name": "Unknown",
+    "home_factor": 1.0386666666666666,
+    "away_factor": 0.6972727272727273,
+    "home_matches": 10,
+    "away_matches": 11,
+    "home_win_rate": 0.5,
+    "away_win_rate": 0.09090909090909091
+  },
+  "5462": {
+    "name": "Unknown",
+    "home_factor": 1.464,
+    "away_factor": 1.1,
+    "home_matches": 10,
+    "away_matches": 11,
+    "home_win_rate": 0.9,
+    "away_win_rate": 0.5454545454545454
+  },
+  "30450": {
+    "name": "Unknown",
+    "home_factor": 0.9103703703703703,
+    "away_factor": 0.8619444444444444,
+    "home_matches": 9,
+    "away_matches": 12,
+    "home_win_rate": 0.4444444444444444,
+    "away_win_rate": 0.25
+  },
+  "8718": {
+    "name": "Unknown",
+    "home_factor": 0.9618181818181819,
+    "away_factor": 0.7956666666666667,
+    "home_matches": 11,
+    "away_matches": 10,
+    "home_win_rate": 0.45454545454545453,
+    "away_win_rate": 0.4
+  },
+  "8721": {
+    "name": "Unknown",
+    "home_factor": 0.8,
+    "away_factor": 0.6599999999999999,
+    "home_matches": 12,
+    "away_matches": 9,
+    "home_win_rate": 0.16666666666666666,
+    "away_win_rate": 0.0
+  },
+  "8716": {
+    "name": "Unknown",
+    "home_factor": 1.2633333333333332,
+    "away_factor": 0.9028205128205127,
+    "home_matches": 8,
+    "away_matches": 13,
+    "home_win_rate": 0.75,
+    "away_win_rate": 0.38461538461538464
+  },
+  "6281": {
+    "name": "Unknown",
+    "home_factor": 1.0586666666666664,
+    "away_factor": 0.9025925925925926,
+    "home_matches": 10,
+    "away_matches": 9,
+    "home_win_rate": 0.5,
+    "away_win_rate": 0.4444444444444444
+  },
+  "184": {
+    "name": "Unknown",
+    "home_factor": 1.0795555555555556,
+    "away_factor": 1.067222222222222,
+    "home_matches": 15,
+    "away_matches": 6,
+    "home_win_rate": 0.4666666666666667,
+    "away_win_rate": 0.6666666666666666
+  },
+  "8684": {
+    "name": "Unknown",
+    "home_factor": 1.5,
+    "away_factor": 1.2,
+    "home_matches": 9,
+    "away_matches": 12,
+    "home_win_rate": 1.0,
+    "away_win_rate": 0.9166666666666666
+  },
+  "8695": {
+    "name": "Unknown",
+    "home_factor": 1.0903030303030303,
+    "away_factor": 1.2,
+    "home_matches": 11,
+    "away_matches": 10,
+    "home_win_rate": 0.45454545454545453,
+    "away_win_rate": 0.6
+  },
+  "5334": {
+    "name": "Unknown",
+    "home_factor": 1.0386666666666666,
+    "away_factor": 1.187878787878788,
+    "home_matches": 10,
+    "away_matches": 11,
+    "home_win_rate": 0.5,
+    "away_win_rate": 0.7272727272727273
+  },
+  "5324": {
+    "name": "Unknown",
+    "home_factor": 0.8,
+    "away_factor": 0.8669047619047618,
+    "home_matches": 6,
+    "away_matches": 14,
+    "home_win_rate": 0.3333333333333333,
+    "away_win_rate": 0.21428571428571427
+  },
+  "141": {
+    "name": "Unknown",
+    "home_factor": 1.1933333333333331,
+    "away_factor": 1.1173333333333333,
+    "home_matches": 10,
+    "away_matches": 10,
+    "home_win_rate": 0.6,
+    "away_win_rate": 0.5
+  },
+  "3085": {
+    "name": "Unknown",
+    "home_factor": 0.9824242424242424,
+    "away_factor": 1.1454166666666667,
+    "home_matches": 11,
+    "away_matches": 8,
+    "home_win_rate": 0.36363636363636365,
+    "away_win_rate": 0.625
+  },
+  "39165": {
+    "name": "Unknown",
+    "home_factor": 1.0,
+    "away_factor": 1.0,
+    "home_matches": 1,
+    "away_matches": 1,
+    "home_win_rate": 1.0,
+    "away_win_rate": 1.0
+  },
+  "39176": {
+    "name": "Unknown",
+    "home_factor": 1.0,
+    "away_factor": 1.0,
+    "home_matches": 2,
+    "away_matches": 1,
+    "home_win_rate": 1.0,
+    "away_win_rate": 0.0
+  },
+  "3077": {
+    "name": "Unknown",
+    "home_factor": 0.8533333333333333,
+    "away_factor": 0.9919444444444445,
+    "home_matches": 8,
+    "away_matches": 12,
+    "home_win_rate": 0.375,
+    "away_win_rate": 0.5
+  },
+  "3081": {
+    "name": "Unknown",
+    "home_factor": 0.8653333333333333,
+    "away_factor": 0.8418181818181818,
+    "home_matches": 10,
+    "away_matches": 11,
+    "home_win_rate": 0.3,
+    "away_win_rate": 0.2727272727272727
+  },
+  "3089": {
+    "name": "Unknown",
+    "home_factor": 1.297037037037037,
+    "away_factor": 1.2,
+    "home_matches": 9,
+    "away_matches": 8,
+    "home_win_rate": 0.7777777777777778,
+    "away_win_rate": 0.625
+  },
+  "102": {
+    "name": "Unknown",
+    "home_factor": 1.0386666666666666,
+    "away_factor": 0.9737500000000001,
+    "home_matches": 10,
+    "away_matches": 8,
+    "home_win_rate": 0.5,
+    "away_win_rate": 0.375
+  },
+  "6015": {
+    "name": "Unknown",
+    "home_factor": 0.8,
+    "away_factor": 0.7116666666666667,
+    "home_matches": 10,
+    "away_matches": 10,
+    "home_win_rate": 0.1,
+    "away_win_rate": 0.1
+  },
+  "5996": {
+    "name": "Unknown",
+    "home_factor": 0.8,
+    "away_factor": 0.7674074074074073,
+    "home_matches": 11,
+    "away_matches": 9,
+    "home_win_rate": 0.2727272727272727,
+    "away_win_rate": 0.2222222222222222
+  },
+  "39167": {
+    "name": "Unknown",
+    "home_factor": 1.0,
+    "away_factor": 1.0,
+    "home_matches": 3,
+    "away_matches": 1,
+    "home_win_rate": 0.6666666666666666,
+    "away_win_rate": 0.0
+  },
+  "36318": {
+    "name": "Unknown",
+    "home_factor": 1.2523809523809524,
+    "away_factor": 0.9894444444444443,
+    "home_matches": 7,
+    "away_matches": 6,
+    "home_win_rate": 0.5714285714285714,
+    "away_win_rate": 0.3333333333333333
+  },
+  "6744": {
+    "name": "Unknown",
+    "home_factor": 1.4718518518518517,
+    "away_factor": 1.1084848484848484,
+    "home_matches": 9,
+    "away_matches": 11,
+    "home_win_rate": 0.8888888888888888,
+    "away_win_rate": 0.6363636363636364
+  },
+  "7611": {
+    "name": "Unknown",
+    "home_factor": 1.388,
+    "away_factor": 1.0403030303030303,
+    "home_matches": 10,
+    "away_matches": 11,
+    "home_win_rate": 0.7,
+    "away_win_rate": 0.6363636363636364
+  },
+  "585": {
+    "name": "Unknown",
+    "home_factor": 1.1739393939393938,
+    "away_factor": 1.0236666666666667,
+    "home_matches": 11,
+    "away_matches": 10,
+    "home_win_rate": 0.6363636363636364,
+    "away_win_rate": 0.5
+  },
+  "7299": {
+    "name": "Unknown",
+    "home_factor": 0.9016666666666666,
+    "away_factor": 1.0204166666666667,
+    "home_matches": 8,
+    "away_matches": 8,
+    "home_win_rate": 0.375,
+    "away_win_rate": 0.625
+  },
+  "805": {
+    "name": "Unknown",
+    "home_factor": 1.016,
+    "away_factor": 1.0933333333333333,
+    "home_matches": 10,
+    "away_matches": 9,
+    "home_win_rate": 0.5,
+    "away_win_rate": 0.5555555555555556
+  },
+  "6747": {
+    "name": "Unknown",
+    "home_factor": 1.5,
+    "away_factor": 0.9423333333333334,
+    "home_matches": 7,
+    "away_matches": 10,
+    "home_win_rate": 1.0,
+    "away_win_rate": 0.6
+  },
+  "8913": {
+    "name": "Unknown",
+    "home_factor": 1.0,
+    "away_factor": 1.0,
+    "home_matches": 1,
+    "away_matches": 0,
+    "home_win_rate": 1.0,
+    "away_win_rate": 0.0
+  },
+  "39205": {
+    "name": "Unknown",
+    "home_factor": 1.0,
+    "away_factor": 1.0,
+    "home_matches": 0,
+    "away_matches": 1,
+    "home_win_rate": 0.0,
+    "away_win_rate": 0.0
+  },
+  "5583": {
+    "name": "Unknown",
+    "home_factor": 0.9388888888888888,
+    "away_factor": 1.0240740740740741,
+    "home_matches": 12,
+    "away_matches": 9,
+    "home_win_rate": 0.3333333333333333,
+    "away_win_rate": 0.4444444444444444
+  },
+  "9862": {
+    "name": "Unknown",
+    "home_factor": 1.2493333333333332,
+    "away_factor": 0.9363333333333335,
+    "home_matches": 10,
+    "away_matches": 10,
+    "home_win_rate": 0.7,
+    "away_win_rate": 0.3
+  },
+  "5570": {
+    "name": "Unknown",
+    "home_factor": 0.8384615384615385,
+    "away_factor": 1.1183333333333332,
+    "home_matches": 13,
+    "away_matches": 8,
+    "home_win_rate": 0.15384615384615385,
+    "away_win_rate": 0.375
+  },
+  "5573": {
+    "name": "Unknown",
+    "home_factor": 0.9340740740740741,
+    "away_factor": 0.8845454545454545,
+    "home_matches": 9,
+    "away_matches": 11,
+    "home_win_rate": 0.4444444444444444,
+    "away_win_rate": 0.18181818181818182
+  },
+  "2255": {
+    "name": "Unknown",
+    "home_factor": 1.1518518518518517,
+    "away_factor": 0.7989999999999999,
+    "home_matches": 9,
+    "away_matches": 10,
+    "home_win_rate": 0.5555555555555556,
+    "away_win_rate": 0.2
+  },
+  "19588": {
+    "name": "Unknown",
+    "home_factor": 1.0766666666666667,
+    "away_factor": 0.9894444444444443,
+    "home_matches": 8,
+    "away_matches": 12,
+    "home_win_rate": 0.25,
+    "away_win_rate": 0.4166666666666667
+  },
+  "2234": {
+    "name": "Unknown",
+    "home_factor": 1.22,
+    "away_factor": 0.9738888888888889,
+    "home_matches": 8,
+    "away_matches": 12,
+    "home_win_rate": 0.5,
+    "away_win_rate": 0.3333333333333333
+  },
+  "2241": {
+    "name": "Unknown",
+    "home_factor": 0.9016666666666666,
+    "away_factor": 0.7142424242424241,
+    "home_matches": 8,
+    "away_matches": 11,
+    "home_win_rate": 0.375,
+    "away_win_rate": 0.09090909090909091
+  },
+  "76": {
+    "name": "Unknown",
+    "home_factor": 1.3874074074074072,
+    "away_factor": 1.0923333333333334,
+    "home_matches": 9,
+    "away_matches": 10,
+    "home_win_rate": 0.7777777777777778,
+    "away_win_rate": 0.6
+  },
+  "153": {
+    "name": "Unknown",
+    "home_factor": 1.1588888888888889,
+    "away_factor": 0.7554166666666666,
+    "home_matches": 12,
+    "away_matches": 8,
+    "home_win_rate": 0.6666666666666666,
+    "away_win_rate": 0.125
+  },
+  "4979": {
+    "name": "Unknown",
+    "home_factor": 0.8,
+    "away_factor": 0.821,
+    "home_matches": 9,
+    "away_matches": 10,
+    "home_win_rate": 0.0,
+    "away_win_rate": 0.1
+  },
+  "4983": {
+    "name": "Unknown",
+    "home_factor": 1.3157575757575757,
+    "away_factor": 0.9923333333333333,
+    "home_matches": 11,
+    "away_matches": 10,
+    "home_win_rate": 0.7272727272727273,
+    "away_win_rate": 0.5
+  },
+  "3808": {
+    "name": "Unknown",
+    "home_factor": 1.0,
+    "away_factor": 1.0438888888888889,
+    "home_matches": 8,
+    "away_matches": 12,
+    "home_win_rate": 0.5,
+    "away_win_rate": 0.5833333333333334
+  },
+  "100": {
+    "name": "Unknown",
+    "home_factor": 1.4883333333333333,
+    "away_factor": 1.2,
+    "home_matches": 8,
+    "away_matches": 12,
+    "home_win_rate": 0.75,
+    "away_win_rate": 1.0
+  },
+  "8850": {
+    "name": "Unknown",
+    "home_factor": 1.1593939393939394,
+    "away_factor": 1.105,
+    "home_matches": 11,
+    "away_matches": 10,
+    "home_win_rate": 0.5454545454545454,
+    "away_win_rate": 0.4
+  },
+  "8866": {
+    "name": "Unknown",
+    "home_factor": 0.8,
+    "away_factor": 0.8506060606060606,
+    "home_matches": 10,
+    "away_matches": 11,
+    "home_win_rate": 0.0,
+    "away_win_rate": 0.09090909090909091
+  },
+  "7688": {
+    "name": "Unknown",
+    "home_factor": 1.2284848484848485,
+    "away_factor": 1.0033333333333332,
+    "home_matches": 11,
+    "away_matches": 9,
+    "home_win_rate": 0.6363636363636364,
+    "away_win_rate": 0.3333333333333333
+  },
+  "19599": {
+    "name": "Unknown",
+    "home_factor": 0.8,
+    "away_factor": 0.899,
+    "home_matches": 11,
+    "away_matches": 10,
+    "home_win_rate": 0.2727272727272727,
+    "away_win_rate": 0.3
+  },
+  "7694": {
+    "name": "Unknown",
+    "home_factor": 1.3093333333333332,
+    "away_factor": 1.2,
+    "home_matches": 10,
+    "away_matches": 9,
+    "home_win_rate": 0.7,
+    "away_win_rate": 0.6666666666666666
+  },
+  "192": {
+    "name": "Unknown",
+    "home_factor": 1.1059259259259258,
+    "away_factor": 1.1824242424242424,
+    "home_matches": 9,
+    "away_matches": 11,
+    "home_win_rate": 0.4444444444444444,
+    "away_win_rate": 0.5454545454545454
+  },
+  "7689": {
+    "name": "Unknown",
+    "home_factor": 1.4248484848484848,
+    "away_factor": 0.8751851851851851,
+    "home_matches": 11,
+    "away_matches": 9,
+    "home_win_rate": 0.7272727272727273,
+    "away_win_rate": 0.1111111111111111
+  },
+  "7650": {
+    "name": "Unknown",
+    "home_factor": 0.9325925925925925,
+    "away_factor": 0.9809090909090908,
+    "home_matches": 9,
+    "away_matches": 11,
+    "home_win_rate": 0.4444444444444444,
+    "away_win_rate": 0.36363636363636365
+  },
+  "73": {
+    "name": "Unknown",
+    "home_factor": 1.1916666666666667,
+    "away_factor": 1.1427272727272726,
+    "home_matches": 8,
+    "away_matches": 11,
+    "home_win_rate": 0.625,
+    "away_win_rate": 0.45454545454545453
+  },
+  "97": {
+    "name": "Unknown",
+    "home_factor": 1.5,
+    "away_factor": 1.2,
+    "home_matches": 10,
+    "away_matches": 10,
+    "home_win_rate": 0.8,
+    "away_win_rate": 0.9
+  },
+  "610": {
+    "name": "Unknown",
+    "home_factor": 1.0,
+    "away_factor": 1.0,
+    "home_matches": 0,
+    "away_matches": 12,
+    "home_win_rate": 0.0,
+    "away_win_rate": 0.5
+  },
+  "1005": {
+    "name": "Unknown",
+    "home_factor": 1.0,
+    "away_factor": 1.0,
+    "home_matches": 0,
+    "away_matches": 21,
+    "home_win_rate": 0.0,
+    "away_win_rate": 0.047619047619047616
+  },
+  "3071": {
+    "name": "Unknown",
+    "home_factor": 0.9374603174603173,
+    "away_factor": 1.2,
+    "home_matches": 21,
+    "away_matches": 19,
+    "home_win_rate": 0.3333333333333333,
+    "away_win_rate": 0.5263157894736842
+  },
+  "3121": {
+    "name": "Unknown",
+    "home_factor": 0.8,
+    "away_factor": 0.9664912280701754,
+    "home_matches": 21,
+    "away_matches": 19,
+    "home_win_rate": 0.19047619047619047,
+    "away_win_rate": 0.3157894736842105
+  },
+  "3079": {
+    "name": "Unknown",
+    "home_factor": 0.9548148148148148,
+    "away_factor": 1.1643333333333334,
+    "home_matches": 18,
+    "away_matches": 20,
+    "home_win_rate": 0.4444444444444444,
+    "away_win_rate": 0.4
+  },
+  "3088": {
+    "name": "Unknown",
+    "home_factor": 1.2746031746031747,
+    "away_factor": 1.0923333333333334,
+    "home_matches": 21,
+    "away_matches": 20,
+    "home_win_rate": 0.6666666666666666,
+    "away_win_rate": 0.6
+  },
+  "80": {
+    "name": "Unknown",
+    "home_factor": 1.392121212121212,
+    "away_factor": 1.1143333333333332,
+    "home_matches": 11,
+    "away_matches": 10,
+    "home_win_rate": 0.6363636363636364,
+    "away_win_rate": 0.5
+  },
+  "155": {
+    "name": "Unknown",
+    "home_factor": 0.8,
+    "away_factor": 0.668,
+    "home_matches": 11,
+    "away_matches": 10,
+    "home_win_rate": 0.18181818181818182,
+    "away_win_rate": 0.1
+  },
+  "3100": {
+    "name": "Unknown",
+    "home_factor": 1.3444444444444446,
+    "away_factor": 1.2,
+    "home_matches": 9,
+    "away_matches": 11,
+    "home_win_rate": 0.7777777777777778,
+    "away_win_rate": 0.8181818181818182
+  },
+  "3086": {
+    "name": "Unknown",
+    "home_factor": 0.8093333333333333,
+    "away_factor": 1.0433333333333334,
+    "home_matches": 10,
+    "away_matches": 11,
+    "home_win_rate": 0.2,
+    "away_win_rate": 0.45454545454545453
+  },
+  "3072": {
+    "name": "Unknown",
+    "home_factor": 0.8,
+    "away_factor": 0.764074074074074,
+    "home_matches": 12,
+    "away_matches": 9,
+    "home_win_rate": 0.08333333333333333,
+    "away_win_rate": 0.1111111111111111
+  },
+  "3429": {
+    "name": "Unknown",
+    "home_factor": 1.1146666666666665,
+    "away_factor": 1.165151515151515,
+    "home_matches": 10,
+    "away_matches": 11,
+    "home_win_rate": 0.6,
+    "away_win_rate": 0.7272727272727273
+  },
+  "84": {
+    "name": "Unknown",
+    "home_factor": 1.4096296296296296,
+    "away_factor": 0.98,
+    "home_matches": 9,
+    "away_matches": 10,
+    "home_win_rate": 0.7777777777777778,
+    "away_win_rate": 0.4
+  },
+  "3073": {
+    "name": "Unknown",
+    "home_factor": 1.001111111111111,
+    "away_factor": 0.7603703703703704,
+    "home_matches": 12,
+    "away_matches": 9,
+    "home_win_rate": 0.3333333333333333,
+    "away_win_rate": 0.2222222222222222
+  },
+  "147": {
+    "name": "Unknown",
+    "home_factor": 1.2746666666666666,
+    "away_factor": 1.2,
+    "home_matches": 10,
+    "away_matches": 9,
+    "home_win_rate": 0.6,
+    "away_win_rate": 0.7777777777777778
+  },
+  "6052": {
+    "name": "Unknown",
+    "home_factor": 0.8,
+    "away_factor": 0.877,
+    "home_matches": 10,
+    "away_matches": 10,
+    "home_win_rate": 0.1,
+    "away_win_rate": 0.2
+  },
+  "224": {
+    "name": "Unknown",
+    "home_factor": 1.0721212121212123,
+    "away_factor": 0.8956666666666667,
+    "home_matches": 11,
+    "away_matches": 10,
+    "home_win_rate": 0.45454545454545453,
+    "away_win_rate": 0.4
+  },
+  "4300": {
+    "name": "Unknown",
+    "home_factor": 0.95,
+    "away_factor": 0.8818518518518518,
+    "home_matches": 12,
+    "away_matches": 9,
+    "home_win_rate": 0.5,
+    "away_win_rate": 0.3333333333333333
+  },
+  "158": {
+    "name": "Unknown",
+    "home_factor": 1.2306666666666666,
+    "away_factor": 0.9986666666666666,
+    "home_matches": 10,
+    "away_matches": 10,
+    "home_win_rate": 0.7,
+    "away_win_rate": 0.5
+  },
+  "82": {
+    "name": "Unknown",
+    "home_factor": 1.3484848484848482,
+    "away_factor": 1.0016666666666667,
+    "home_matches": 11,
+    "away_matches": 10,
+    "home_win_rate": 0.8181818181818182,
+    "away_win_rate": 0.6
+  },
+  "4493": {
+    "name": "Unknown",
+    "home_factor": 0.9311111111111111,
+    "away_factor": 0.7241666666666666,
+    "home_matches": 12,
+    "away_matches": 8,
+    "home_win_rate": 0.4166666666666667,
+    "away_win_rate": 0.125
+  },
+  "4502": {
+    "name": "Unknown",
+    "home_factor": 0.8274074074074073,
+    "away_factor": 0.746,
+    "home_matches": 9,
+    "away_matches": 10,
+    "home_win_rate": 0.3333333333333333,
+    "away_win_rate": 0.1
+  },
+  "88": {
+    "name": "Unknown",
+    "home_factor": 1.386060606060606,
+    "away_factor": 0.7896666666666666,
+    "home_matches": 11,
+    "away_matches": 10,
+    "home_win_rate": 0.8181818181818182,
+    "away_win_rate": 0.2
+  },
+  "164": {
+    "name": "Unknown",
+    "home_factor": 1.0214814814814814,
+    "away_factor": 0.9166666666666667,
+    "home_matches": 9,
+    "away_matches": 12,
+    "home_win_rate": 0.4444444444444444,
+    "away_win_rate": 0.3333333333333333
+  },
+  "556": {
+    "name": "Unknown",
+    "home_factor": 0.9986666666666666,
+    "away_factor": 0.8190909090909091,
+    "home_matches": 20,
+    "away_matches": 22,
+    "home_win_rate": 0.4,
+    "away_win_rate": 0.2727272727272727
+  },
+  "1003": {
+    "name": "Unknown",
+    "home_factor": 0.8,
+    "away_factor": 0.8503703703703703,
+    "home_matches": 20,
+    "away_matches": 18,
+    "home_win_rate": 0.2,
+    "away_win_rate": 0.4444444444444444
+  },
+  "187": {
+    "name": "Unknown",
+    "home_factor": 1.0866666666666667,
+    "away_factor": 0.9299999999999999,
+    "home_matches": 11,
+    "away_matches": 10,
+    "home_win_rate": 0.5454545454545454,
+    "away_win_rate": 0.4
+  },
+  "7701": {
+    "name": "Unknown",
+    "home_factor": 1.116,
+    "away_factor": 1.049090909090909,
+    "home_matches": 10,
+    "away_matches": 11,
+    "home_win_rate": 0.5,
+    "away_win_rate": 0.36363636363636365
+  },
+  "1956": {
+    "name": "Unknown",
+    "home_factor": 1.2346666666666666,
+    "away_factor": 1.0203703703703704,
+    "home_matches": 10,
+    "away_matches": 9,
+    "home_win_rate": 0.6,
+    "away_win_rate": 0.6666666666666666
+  },
+  "1955": {
+    "name": "Unknown",
+    "home_factor": 1.0386666666666666,
+    "away_factor": 0.88,
+    "home_matches": 10,
+    "away_matches": 8,
+    "home_win_rate": 0.4,
+    "away_win_rate": 0.375
+  },
+  "177": {
+    "name": "Unknown",
+    "home_factor": 1.1903703703703703,
+    "away_factor": 1.0986666666666665,
+    "home_matches": 9,
+    "away_matches": 10,
+    "home_win_rate": 0.6666666666666666,
+    "away_win_rate": 0.4
+  },
+  "178": {
+    "name": "Unknown",
+    "home_factor": 1.0866666666666667,
+    "away_factor": 0.8676666666666667,
+    "home_matches": 9,
+    "away_matches": 10,
+    "home_win_rate": 0.4444444444444444,
+    "away_win_rate": 0.3
+  },
+  "176": {
+    "name": "Unknown",
+    "home_factor": 1.1733333333333331,
+    "away_factor": 1.1837037037037037,
+    "home_matches": 10,
+    "away_matches": 9,
+    "home_win_rate": 0.6,
+    "away_win_rate": 0.4444444444444444
+  },
+  "7419": {
+    "name": "Unknown",
+    "home_factor": 0.8853333333333333,
+    "away_factor": 0.9229166666666666,
+    "home_matches": 10,
+    "away_matches": 8,
+    "home_win_rate": 0.2,
+    "away_win_rate": 0.375
+  },
+  "7411": {
+    "name": "Unknown",
+    "home_factor": 1.2693333333333334,
+    "away_factor": 1.1456666666666666,
+    "home_matches": 10,
+    "away_matches": 10,
+    "home_win_rate": 0.7,
+    "away_win_rate": 0.4
+  },
+  "198": {
+    "name": "Unknown",
+    "home_factor": 1.0561904761904761,
+    "away_factor": 0.7612820512820512,
+    "home_matches": 7,
+    "away_matches": 13,
+    "home_win_rate": 0.42857142857142855,
+    "away_win_rate": 0.23076923076923078
+  },
+  "120": {
+    "name": "Unknown",
+    "home_factor": 1.4695238095238095,
+    "away_factor": 1.0446153846153847,
+    "home_matches": 7,
+    "away_matches": 13,
+    "home_win_rate": 0.8571428571428571,
+    "away_win_rate": 0.38461538461538464
+  },
+  "6187": {
+    "name": "Unknown",
+    "home_factor": 1.2866666666666666,
+    "away_factor": 0.9736666666666667,
+    "home_matches": 10,
+    "away_matches": 10,
+    "home_win_rate": 0.8,
+    "away_win_rate": 0.5
+  },
+  "119": {
+    "name": "Unknown",
+    "home_factor": 1.0716666666666665,
+    "away_factor": 1.0344444444444445,
+    "home_matches": 8,
+    "away_matches": 9,
+    "home_win_rate": 0.5,
+    "away_win_rate": 0.4444444444444444
+  },
+  "19656": {
+    "name": "Unknown",
+    "home_factor": 0.8,
+    "away_factor": 0.7395833333333334,
+    "home_matches": 11,
+    "away_matches": 8,
+    "home_win_rate": 0.09090909090909091,
+    "away_win_rate": 0.25
+  },
+  "2164": {
+    "name": "Unknown",
+    "home_factor": 1.1739393939393938,
+    "away_factor": 1.0485185185185184,
+    "home_matches": 11,
+    "away_matches": 9,
+    "home_win_rate": 0.6363636363636364,
+    "away_win_rate": 0.3333333333333333
+  },
+  "2162": {
+    "name": "Unknown",
+    "home_factor": 1.1655555555555555,
+    "away_factor": 0.927142857142857,
+    "home_matches": 12,
+    "away_matches": 7,
+    "home_win_rate": 0.5,
+    "away_win_rate": 0.14285714285714285
+  },
+  "18904": {
+    "name": "Unknown",
+    "home_factor": 1.1933333333333331,
+    "away_factor": 1.036,
+    "home_matches": 10,
+    "away_matches": 10,
+    "home_win_rate": 0.5,
+    "away_win_rate": 0.7
+  },
+  "6310": {
+    "name": "Unknown",
+    "home_factor": 0.9993939393939394,
+    "away_factor": 1.1003703703703702,
+    "home_matches": 11,
+    "away_matches": 9,
+    "home_win_rate": 0.45454545454545453,
+    "away_win_rate": 0.4444444444444444
+  },
+  "12632": {
+    "name": "Unknown",
+    "home_factor": 1.132,
+    "away_factor": 0.9893333333333334,
+    "home_matches": 10,
+    "away_matches": 10,
+    "home_win_rate": 0.6,
+    "away_win_rate": 0.5
+  },
+  "18906": {
+    "name": "Unknown",
+    "home_factor": 0.8653333333333333,
+    "away_factor": 0.824,
+    "home_matches": 10,
+    "away_matches": 10,
+    "home_win_rate": 0.2,
+    "away_win_rate": 0.2
+  },
+  "6323": {
+    "name": "Unknown",
+    "home_factor": 0.9413333333333334,
+    "away_factor": 1.1203333333333334,
+    "home_matches": 10,
+    "away_matches": 10,
+    "home_win_rate": 0.4,
+    "away_win_rate": 0.7
+  },
+  "6335": {
+    "name": "Unknown",
+    "home_factor": 0.956,
+    "away_factor": 0.718,
+    "home_matches": 10,
+    "away_matches": 10,
+    "home_win_rate": 0.5,
+    "away_win_rate": 0.0
+  },
+  "464": {
+    "name": "Unknown",
+    "home_factor": 1.0828571428571427,
+    "away_factor": 0.9706666666666668,
+    "home_matches": 7,
+    "away_matches": 10,
+    "home_win_rate": 0.5714285714285714,
+    "away_win_rate": 0.3
+  },
+  "430": {
+    "name": "Unknown",
+    "home_factor": 1.2146666666666666,
+    "away_factor": 0.8676666666666667,
+    "home_matches": 10,
+    "away_matches": 10,
+    "home_win_rate": 0.6,
+    "away_win_rate": 0.2
+  },
+  "20041": {
+    "name": "Unknown",
+    "home_factor": 0.8,
+    "away_factor": 0.770952380952381,
+    "home_matches": 13,
+    "away_matches": 7,
+    "home_win_rate": 0.15384615384615385,
+    "away_win_rate": 0.14285714285714285
+  },
+  "5103": {
+    "name": "Unknown",
+    "home_factor": 0.8826666666666666,
+    "away_factor": 0.7259259259259259,
+    "home_matches": 10,
+    "away_matches": 9,
+    "home_win_rate": 0.3,
+    "away_win_rate": 0.0
+  },
+  "2077": {
+    "name": "Unknown",
+    "home_factor": 0.8255555555555555,
+    "away_factor": 0.6579166666666666,
+    "home_matches": 12,
+    "away_matches": 8,
+    "home_win_rate": 0.16666666666666666,
+    "away_win_rate": 0.0
+  },
+  "211": {
+    "name": "Unknown",
+    "home_factor": 0.805185185185185,
+    "away_factor": 0.7896666666666666,
+    "home_matches": 9,
+    "away_matches": 10,
+    "home_win_rate": 0.3333333333333333,
+    "away_win_rate": 0.2
+  },
+  "2167": {
+    "name": "Unknown",
+    "home_factor": 1.0333333333333332,
+    "away_factor": 0.9822222222222222,
+    "home_matches": 11,
+    "away_matches": 9,
+    "home_win_rate": 0.45454545454545453,
+    "away_win_rate": 0.5555555555555556
+  },
+  "2095": {
+    "name": "Unknown",
+    "home_factor": 0.9419047619047618,
+    "away_factor": 0.7348717948717949,
+    "home_matches": 7,
+    "away_matches": 13,
+    "home_win_rate": 0.42857142857142855,
+    "away_win_rate": 0.23076923076923078
+  },
+  "9888": {
+    "name": "Unknown",
+    "home_factor": 1.0,
+    "away_factor": 1.0,
+    "home_matches": 0,
+    "away_matches": 6,
+    "home_win_rate": 0.0,
+    "away_win_rate": 0.0
+  },
+  "7531": {
+    "name": "Unknown",
+    "home_factor": 1.0,
+    "away_factor": 1.0,
+    "home_matches": 0,
+    "away_matches": 21,
+    "home_win_rate": 0.0,
+    "away_win_rate": 0.38095238095238093
+  },
+  "8686": {
+    "name": "Unknown",
+    "home_factor": 1.0533333333333332,
+    "away_factor": 1.2,
+    "home_matches": 8,
+    "away_matches": 12,
+    "home_win_rate": 0.375,
+    "away_win_rate": 0.4166666666666667
+  },
+  "5313": {
+    "name": "Unknown",
+    "home_factor": 1.0185185185185184,
+    "away_factor": 1.161111111111111,
+    "home_matches": 9,
+    "away_matches": 12,
+    "home_win_rate": 0.5555555555555556,
+    "away_win_rate": 0.5
+  },
+  "9889": {
+    "name": "Unknown",
+    "home_factor": 1.0,
+    "away_factor": 1.0,
+    "home_matches": 0,
+    "away_matches": 9,
+    "home_win_rate": 0.0,
+    "away_win_rate": 0.2222222222222222
+  },
+  "7532": {
+    "name": "Unknown",
+    "home_factor": 1.0,
+    "away_factor": 1.0,
+    "home_matches": 0,
+    "away_matches": 17,
+    "home_win_rate": 0.0,
+    "away_win_rate": 0.29411764705882354
+  },
+  "9979": {
+    "name": "Unknown",
+    "home_factor": 1.0,
+    "away_factor": 1.0,
+    "home_matches": 0,
+    "away_matches": 1,
+    "home_win_rate": 0.0,
+    "away_win_rate": 1.0
+  },
+  "7811": {
+    "name": "Unknown",
+    "home_factor": 1.0,
+    "away_factor": 1.0,
+    "home_matches": 0,
+    "away_matches": 19,
+    "home_win_rate": 0.0,
+    "away_win_rate": 0.3157894736842105
+  },
+  "5198": {
+    "name": "Unknown",
+    "home_factor": 1.2533333333333332,
+    "away_factor": 0.9724242424242424,
+    "home_matches": 10,
+    "away_matches": 11,
+    "home_win_rate": 0.6,
+    "away_win_rate": 0.36363636363636365
+  },
+  "188": {
+    "name": "Unknown",
+    "home_factor": 1.353333333333333,
+    "away_factor": 1.2,
+    "home_matches": 10,
+    "away_matches": 11,
+    "home_win_rate": 0.6,
+    "away_win_rate": 0.7272727272727273
+  },
+  "7654": {
+    "name": "Unknown",
+    "home_factor": 1.172,
+    "away_factor": 0.849,
+    "home_matches": 10,
+    "away_matches": 10,
+    "home_win_rate": 0.6,
+    "away_win_rate": 0.2
+  },
+  "7745": {
+    "name": "Unknown",
+    "home_factor": 0.9812121212121212,
+    "away_factor": 0.8956666666666667,
+    "home_matches": 11,
+    "away_matches": 10,
+    "home_win_rate": 0.45454545454545453,
+    "away_win_rate": 0.4
+  },
+  "990": {
+    "name": "Unknown",
+    "home_factor": 0.9333333333333333,
+    "away_factor": 0.9374074074074072,
+    "home_matches": 12,
+    "away_matches": 9,
+    "home_win_rate": 0.4166666666666667,
+    "away_win_rate": 0.3333333333333333
+  },
+  "555": {
+    "name": "Unknown",
+    "home_factor": 1.2706666666666666,
+    "away_factor": 0.9685185185185186,
+    "home_matches": 10,
+    "away_matches": 9,
+    "home_win_rate": 0.6,
+    "away_win_rate": 0.4444444444444444
+  },
+  "7264": {
+    "name": "Unknown",
+    "home_factor": 1.0,
+    "away_factor": 0.9425,
+    "home_matches": 8,
+    "away_matches": 12,
+    "home_win_rate": 0.375,
+    "away_win_rate": 0.4166666666666667
+  },
+  "7268": {
+    "name": "Unknown",
+    "home_factor": 0.9199999999999999,
+    "away_factor": 0.8053333333333333,
+    "home_matches": 10,
+    "away_matches": 10,
+    "home_win_rate": 0.3,
+    "away_win_rate": 0.2
+  },
+  "7263": {
+    "name": "Unknown",
+    "home_factor": 0.8303703703703703,
+    "away_factor": 0.7116666666666667,
+    "home_matches": 9,
+    "away_matches": 10,
+    "home_win_rate": 0.2222222222222222,
+    "away_win_rate": 0.1
+  },
+  "7275": {
+    "name": "Unknown",
+    "home_factor": 0.8,
+    "away_factor": 0.9676666666666667,
+    "home_matches": 9,
+    "away_matches": 10,
+    "home_win_rate": 0.2222222222222222,
+    "away_win_rate": 0.2
+  },
+  "3822": {
+    "name": "Unknown",
+    "home_factor": 1.2985185185185184,
+    "away_factor": 1.0175757575757576,
+    "home_matches": 9,
+    "away_matches": 11,
+    "home_win_rate": 0.7777777777777778,
+    "away_win_rate": 0.5454545454545454
+  },
+  "7685": {
+    "name": "Unknown",
+    "home_factor": 1.2127272727272727,
+    "away_factor": 0.8459999999999999,
+    "home_matches": 11,
+    "away_matches": 10,
+    "home_win_rate": 0.5454545454545454,
+    "away_win_rate": 0.2
+  },
+  "163": {
+    "name": "Unknown",
+    "home_factor": 0.9496969696969697,
+    "away_factor": 0.8303333333333334,
+    "home_matches": 11,
+    "away_matches": 10,
+    "home_win_rate": 0.2727272727272727,
+    "away_win_rate": 0.2
+  },
+  "7272": {
+    "name": "Unknown",
+    "home_factor": 0.9386666666666665,
+    "away_factor": 0.9956666666666667,
+    "home_matches": 10,
+    "away_matches": 10,
+    "home_win_rate": 0.5,
+    "away_win_rate": 0.3
+  },
+  "7261": {
+    "name": "Unknown",
+    "home_factor": 1.056,
+    "away_factor": 1.161,
+    "home_matches": 10,
+    "away_matches": 10,
+    "home_win_rate": 0.5,
+    "away_win_rate": 0.7
+  },
+  "7695": {
+    "name": "Unknown",
+    "home_factor": 1.1533333333333333,
+    "away_factor": 0.7085185185185184,
+    "home_matches": 10,
+    "away_matches": 9,
+    "home_win_rate": 0.6,
+    "away_win_rate": 0.1111111111111111
+  },
+  "7665": {
+    "name": "Unknown",
+    "home_factor": 1.214074074074074,
+    "away_factor": 0.7603703703703704,
+    "home_matches": 9,
+    "away_matches": 9,
+    "home_win_rate": 0.6666666666666666,
+    "away_win_rate": 0.2222222222222222
+  },
+  "6053": {
+    "name": "Unknown",
+    "home_factor": 1.1503703703703703,
+    "away_factor": 0.8927272727272727,
+    "home_matches": 9,
+    "away_matches": 11,
+    "home_win_rate": 0.5555555555555556,
+    "away_win_rate": 0.45454545454545453
+  },
+  "6014": {
+    "name": "Unknown",
+    "home_factor": 1.1545454545454545,
+    "away_factor": 1.0414814814814815,
+    "home_matches": 11,
+    "away_matches": 9,
+    "home_win_rate": 0.6363636363636364,
+    "away_win_rate": 0.3333333333333333
+  },
+  "5488": {
+    "name": "Unknown",
+    "home_factor": 1.04,
+    "away_factor": 0.745,
+    "home_matches": 8,
+    "away_matches": 12,
+    "home_win_rate": 0.625,
+    "away_win_rate": 0.08333333333333333
+  },
+  "150": {
+    "name": "Unknown",
+    "home_factor": 1.089090909090909,
+    "away_factor": 1.1323809523809523,
+    "home_matches": 11,
+    "away_matches": 7,
+    "home_win_rate": 0.45454545454545453,
+    "away_win_rate": 0.2857142857142857
+  },
+  "3814": {
+    "name": "Unknown",
+    "home_factor": 1.3207407407407405,
+    "away_factor": 1.0673333333333335,
+    "home_matches": 9,
+    "away_matches": 10,
+    "home_win_rate": 0.7777777777777778,
+    "away_win_rate": 0.6
+  },
+  "3807": {
+    "name": "Unknown",
+    "home_factor": 0.9311111111111111,
+    "away_factor": 0.8787878787878789,
+    "home_matches": 9,
+    "away_matches": 11,
+    "home_win_rate": 0.4444444444444444,
+    "away_win_rate": 0.18181818181818182
+  },
+  "14085": {
+    "name": "Unknown",
+    "home_factor": 1.1493333333333333,
+    "away_factor": 0.746,
+    "home_matches": 10,
+    "away_matches": 10,
+    "home_win_rate": 0.7,
+    "away_win_rate": 0.1
+  },
+  "3787": {
+    "name": "Unknown",
+    "home_factor": 0.8393939393939394,
+    "away_factor": 0.888888888888889,
+    "home_matches": 11,
+    "away_matches": 9,
+    "home_win_rate": 0.36363636363636365,
+    "away_win_rate": 0.2222222222222222
+  },
+  "3932": {
+    "name": "Unknown",
+    "home_factor": 1.1666666666666667,
+    "away_factor": 0.9337037037037037,
+    "home_matches": 8,
+    "away_matches": 9,
+    "home_win_rate": 0.625,
+    "away_win_rate": 0.5555555555555556
+  },
+  "4268": {
+    "name": "Unknown",
+    "home_factor": 0.8079999999999999,
+    "away_factor": 0.9548148148148148,
+    "home_matches": 10,
+    "away_matches": 9,
+    "home_win_rate": 0.2,
+    "away_win_rate": 0.3333333333333333
+  },
+  "3815": {
+    "name": "Unknown",
+    "home_factor": 1.3014814814814815,
+    "away_factor": 1.0706666666666667,
+    "home_matches": 9,
+    "away_matches": 10,
+    "home_win_rate": 0.6666666666666666,
+    "away_win_rate": 0.4
+  },
+  "160": {
+    "name": "Unknown",
+    "home_factor": 1.2362962962962962,
+    "away_factor": 0.8055555555555556,
+    "home_matches": 9,
+    "away_matches": 9,
+    "home_win_rate": 0.6666666666666666,
+    "away_win_rate": 0.2222222222222222
+  },
+  "159": {
+    "name": "Unknown",
+    "home_factor": 1.0746666666666667,
+    "away_factor": 0.952,
+    "home_matches": 10,
+    "away_matches": 10,
+    "home_win_rate": 0.5,
+    "away_win_rate": 0.4
+  },
+  "4974": {
+    "name": "Unknown",
+    "home_factor": 1.1933333333333331,
+    "away_factor": 0.8196296296296296,
+    "home_matches": 11,
+    "away_matches": 9,
+    "home_win_rate": 0.6363636363636364,
+    "away_win_rate": 0.1111111111111111
+  },
+  "5470": {
+    "name": "Unknown",
+    "home_factor": 0.8,
+    "away_factor": 0.7266666666666666,
+    "home_matches": 8,
+    "away_matches": 12,
+    "home_win_rate": 0.25,
+    "away_win_rate": 0.16666666666666666
+  },
+  "5484": {
+    "name": "Unknown",
+    "home_factor": 0.9613333333333334,
+    "away_factor": 0.8403703703703703,
+    "home_matches": 10,
+    "away_matches": 9,
+    "home_win_rate": 0.4,
+    "away_win_rate": 0.1111111111111111
+  },
+  "6005": {
+    "name": "Unknown",
+    "home_factor": 1.0214814814814814,
+    "away_factor": 0.9554545454545454,
+    "home_matches": 9,
+    "away_matches": 11,
+    "home_win_rate": 0.3333333333333333,
+    "away_win_rate": 0.18181818181818182
+  },
+  "5998": {
+    "name": "Unknown",
+    "home_factor": 0.8881481481481481,
+    "away_factor": 0.8486666666666667,
+    "home_matches": 9,
+    "away_matches": 10,
+    "home_win_rate": 0.4444444444444444,
+    "away_win_rate": 0.5
+  },
+  "79": {
+    "name": "Unknown",
+    "home_factor": 1.382962962962963,
+    "away_factor": 1.0152777777777777,
+    "home_matches": 9,
+    "away_matches": 12,
+    "home_win_rate": 0.8888888888888888,
+    "away_win_rate": 0.5
+  },
+  "7266": {
+    "name": "Unknown",
+    "home_factor": 0.8093333333333333,
+    "away_factor": 0.877,
+    "home_matches": 10,
+    "away_matches": 10,
+    "home_win_rate": 0.2,
+    "away_win_rate": 0.3
+  },
+  "7269": {
+    "name": "Unknown",
+    "home_factor": 0.9316666666666666,
+    "away_factor": 0.8284615384615386,
+    "home_matches": 8,
+    "away_matches": 13,
+    "home_win_rate": 0.125,
+    "away_win_rate": 0.23076923076923078
+  },
+  "7702": {
+    "name": "Unknown",
+    "home_factor": 1.1555555555555557,
+    "away_factor": 0.7918518518518518,
+    "home_matches": 12,
+    "away_matches": 9,
+    "home_win_rate": 0.75,
+    "away_win_rate": 0.1111111111111111
+  },
+  "7699": {
+    "name": "Unknown",
+    "home_factor": 1.1311111111111112,
+    "away_factor": 0.9452777777777777,
+    "home_matches": 9,
+    "away_matches": 12,
+    "home_win_rate": 0.4444444444444444,
+    "away_win_rate": 0.25
+  },
+  "24": {
+    "name": "Unknown",
+    "home_factor": 0.8066666666666666,
+    "away_factor": 0.7485714285714286,
+    "home_matches": 6,
+    "away_matches": 7,
+    "home_win_rate": 0.16666666666666666,
+    "away_win_rate": 0.2857142857142857
+  },
+  "37": {
+    "name": "Unknown",
+    "home_factor": 0.9755555555555556,
+    "away_factor": 0.9216666666666666,
+    "home_matches": 9,
+    "away_matches": 12,
+    "home_win_rate": 0.4444444444444444,
+    "away_win_rate": 0.3333333333333333
+  },
+  "3096": {
+    "name": "Unknown",
+    "home_factor": 0.8,
+    "away_factor": 0.7303333333333334,
+    "home_matches": 10,
+    "away_matches": 10,
+    "home_win_rate": 0.3,
+    "away_win_rate": 0.2
+  },
+  "3099": {
+    "name": "Unknown",
+    "home_factor": 0.8955555555555555,
+    "away_factor": 0.9956666666666667,
+    "home_matches": 9,
+    "away_matches": 10,
+    "home_win_rate": 0.2222222222222222,
+    "away_win_rate": 0.4
+  },
+  "152": {
+    "name": "Unknown",
+    "home_factor": 1.1014814814814815,
+    "away_factor": 1.041388888888889,
+    "home_matches": 9,
+    "away_matches": 12,
+    "home_win_rate": 0.6666666666666666,
+    "away_win_rate": 0.4166666666666667
+  },
+  "7625": {
+    "name": "Unknown",
+    "home_factor": 0.8,
+    "away_factor": 1.0893333333333333,
+    "home_matches": 10,
+    "away_matches": 10,
+    "home_win_rate": 0.2,
+    "away_win_rate": 0.5
+  },
+  "7631": {
+    "name": "Unknown",
+    "home_factor": 1.0946666666666667,
+    "away_factor": 0.7881481481481482,
+    "home_matches": 10,
+    "away_matches": 9,
+    "home_win_rate": 0.5,
+    "away_win_rate": 0.2222222222222222
+  },
+  "7670": {
+    "name": "Unknown",
+    "home_factor": 1.1256410256410256,
+    "away_factor": 0.9854166666666666,
+    "home_matches": 13,
+    "away_matches": 8,
+    "home_win_rate": 0.38461538461538464,
+    "away_win_rate": 0.5
+  },
+  "7637": {
+    "name": "Unknown",
+    "home_factor": 0.8,
+    "away_factor": 0.8533333333333333,
+    "home_matches": 10,
+    "away_matches": 11,
+    "home_win_rate": 0.3,
+    "away_win_rate": 0.18181818181818182
+  },
+  "19600": {
+    "name": "Unknown",
+    "home_factor": 0.9812121212121212,
+    "away_factor": 0.749,
+    "home_matches": 11,
+    "away_matches": 10,
+    "home_win_rate": 0.45454545454545453,
+    "away_win_rate": 0.2
+  },
+  "7669": {
+    "name": "Unknown",
+    "home_factor": 1.5,
+    "away_factor": 0.8405128205128205,
+    "home_matches": 8,
+    "away_matches": 13,
+    "home_win_rate": 1.0,
+    "away_win_rate": 0.3076923076923077
+  },
+  "6713": {
+    "name": "Unknown",
+    "home_factor": 0.8757575757575757,
+    "away_factor": 0.7362962962962962,
+    "home_matches": 11,
+    "away_matches": 9,
+    "home_win_rate": 0.36363636363636365,
+    "away_win_rate": 0.1111111111111111
+  },
+  "6718": {
+    "name": "Unknown",
+    "home_factor": 1.216,
+    "away_factor": 0.8333333333333334,
+    "home_matches": 10,
+    "away_matches": 9,
+    "home_win_rate": 0.5,
+    "away_win_rate": 0.2222222222222222
+  },
+  "3961": {
+    "name": "Unknown",
+    "home_factor": 1.0373333333333332,
+    "away_factor": 0.8426666666666667,
+    "home_matches": 10,
+    "away_matches": 10,
+    "home_win_rate": 0.4,
+    "away_win_rate": 0.3
+  },
+  "4280": {
+    "name": "Unknown",
+    "home_factor": 0.8,
+    "away_factor": 0.8023333333333333,
+    "home_matches": 9,
+    "away_matches": 10,
+    "home_win_rate": 0.1111111111111111,
+    "away_win_rate": 0.0
+  },
+  "4007": {
+    "name": "Unknown",
+    "home_factor": 1.152,
+    "away_factor": 0.8303333333333334,
+    "home_matches": 10,
+    "away_matches": 10,
+    "home_win_rate": 0.7,
+    "away_win_rate": 0.1
+  },
+  "4274": {
+    "name": "Unknown",
+    "home_factor": 1.1266666666666665,
+    "away_factor": 0.9072727272727272,
+    "home_matches": 9,
+    "away_matches": 11,
+    "home_win_rate": 0.6666666666666666,
+    "away_win_rate": 0.18181818181818182
+  },
+  "4269": {
+    "name": "Unknown",
+    "home_factor": 1.3744444444444444,
+    "away_factor": 0.9854166666666666,
+    "home_matches": 12,
+    "away_matches": 8,
+    "home_win_rate": 0.6666666666666666,
+    "away_win_rate": 0.5
+  },
+  "3940": {
+    "name": "Unknown",
+    "home_factor": 0.8453333333333333,
+    "away_factor": 0.927,
+    "home_matches": 10,
+    "away_matches": 10,
+    "home_win_rate": 0.3,
+    "away_win_rate": 0.3
+  },
+  "3084": {
+    "name": "Unknown",
+    "home_factor": 1.1533333333333333,
+    "away_factor": 0.8229629629629629,
+    "home_matches": 11,
+    "away_matches": 9,
+    "home_win_rate": 0.7272727272727273,
+    "away_win_rate": 0.1111111111111111
+  },
+  "3423": {
+    "name": "Unknown",
+    "home_factor": 1.1333333333333333,
+    "away_factor": 0.7366666666666666,
+    "home_matches": 10,
+    "away_matches": 10,
+    "home_win_rate": 0.6,
+    "away_win_rate": 0.0
+  },
+  "3093": {
+    "name": "Unknown",
+    "home_factor": 1.0709090909090908,
+    "away_factor": 0.7674074074074073,
+    "home_matches": 11,
+    "away_matches": 9,
+    "home_win_rate": 0.45454545454545453,
+    "away_win_rate": 0.2222222222222222
+  },
+  "3111": {
+    "name": "Unknown",
+    "home_factor": 1.1119999999999999,
+    "away_factor": 0.912962962962963,
+    "home_matches": 10,
+    "away_matches": 9,
+    "home_win_rate": 0.6,
+    "away_win_rate": 0.4444444444444444
+  },
+  "3424": {
+    "name": "Unknown",
+    "home_factor": 0.9773333333333332,
+    "away_factor": 0.7674074074074073,
+    "home_matches": 10,
+    "away_matches": 9,
+    "home_win_rate": 0.4,
+    "away_win_rate": 0.2222222222222222
+  },
+  "3090": {
+    "name": "Unknown",
+    "home_factor": 0.9562962962962962,
+    "away_factor": 0.8083333333333333,
+    "home_matches": 9,
+    "away_matches": 10,
+    "home_win_rate": 0.3333333333333333,
+    "away_win_rate": 0.2
+  },
+  "3074": {
+    "name": "Unknown",
+    "home_factor": 0.963030303030303,
+    "away_factor": 1.041111111111111,
+    "home_matches": 11,
+    "away_matches": 9,
+    "home_win_rate": 0.45454545454545453,
+    "away_win_rate": 0.7777777777777778
+  },
+  "3083": {
+    "name": "Unknown",
+    "home_factor": 0.9548148148148148,
+    "away_factor": 0.906969696969697,
+    "home_matches": 9,
+    "away_matches": 11,
+    "home_win_rate": 0.4444444444444444,
+    "away_win_rate": 0.45454545454545453
+  },
+  "3425": {
+    "name": "Unknown",
+    "home_factor": 0.96,
+    "away_factor": 0.9176666666666666,
+    "home_matches": 10,
+    "away_matches": 10,
+    "home_win_rate": 0.4,
+    "away_win_rate": 0.3
+  },
+  "3103": {
+    "name": "Unknown",
+    "home_factor": 1.232,
+    "away_factor": 1.1173333333333333,
+    "home_matches": 10,
+    "away_matches": 10,
+    "home_win_rate": 0.6,
+    "away_win_rate": 0.5
+  },
+  "72": {
+    "name": "Unknown",
+    "home_factor": 1.426060606060606,
+    "away_factor": 1.0862962962962963,
+    "home_matches": 11,
+    "away_matches": 9,
+    "home_win_rate": 0.7272727272727273,
+    "away_win_rate": 0.6666666666666666
+  },
+  "3426": {
+    "name": "Unknown",
+    "home_factor": 0.8226666666666667,
+    "away_factor": 0.7537037037037037,
+    "home_matches": 10,
+    "away_matches": 9,
+    "home_win_rate": 0.4,
+    "away_win_rate": 0.1111111111111111
+  },
+  "3075": {
+    "name": "Unknown",
+    "home_factor": 1.102962962962963,
+    "away_factor": 1.011,
+    "home_matches": 9,
+    "away_matches": 10,
+    "home_win_rate": 0.5555555555555556,
+    "away_win_rate": 0.6
+  },
+  "3427": {
+    "name": "Unknown",
+    "home_factor": 0.8,
+    "away_factor": 0.824,
+    "home_matches": 10,
+    "away_matches": 10,
+    "home_win_rate": 0.3,
+    "away_win_rate": 0.2
+  },
+  "3119": {
+    "name": "Unknown",
+    "home_factor": 0.9148148148148147,
+    "away_factor": 0.8736666666666666,
+    "home_matches": 9,
+    "away_matches": 10,
+    "home_win_rate": 0.3333333333333333,
+    "away_win_rate": 0.5
+  },
+  "3097": {
+    "name": "Unknown",
+    "home_factor": 0.9311111111111111,
+    "away_factor": 0.8022222222222222,
+    "home_matches": 9,
+    "away_matches": 9,
+    "home_win_rate": 0.4444444444444444,
+    "away_win_rate": 0.1111111111111111
+  },
+  "3091": {
+    "name": "Unknown",
+    "home_factor": 0.8,
+    "away_factor": 0.7312121212121212,
+    "home_matches": 9,
+    "away_matches": 11,
+    "home_win_rate": 0.2222222222222222,
+    "away_win_rate": 0.18181818181818182
+  },
+  "3253": {
+    "name": "Unknown",
+    "home_factor": 1.223809523809524,
+    "away_factor": 1.2,
+    "home_matches": 7,
+    "away_matches": 8,
+    "home_win_rate": 0.5714285714285714,
+    "away_win_rate": 0.75
+  },
+  "3300": {
+    "name": "Unknown",
+    "home_factor": 0.9860606060606061,
+    "away_factor": 0.9216666666666666,
+    "home_matches": 11,
+    "away_matches": 6,
+    "home_win_rate": 0.36363636363636365,
+    "away_win_rate": 0.3333333333333333
+  },
+  "4253": {
+    "name": "Unknown",
+    "home_factor": 1.2614814814814814,
+    "away_factor": 1.0433333333333334,
+    "home_matches": 9,
+    "away_matches": 11,
+    "home_win_rate": 0.5555555555555556,
+    "away_win_rate": 0.45454545454545453
+  },
+  "3952": {
+    "name": "Unknown",
+    "home_factor": 1.1955555555555555,
+    "away_factor": 1.2,
+    "home_matches": 12,
+    "away_matches": 8,
+    "home_win_rate": 0.5,
+    "away_win_rate": 0.375
+  }
+}

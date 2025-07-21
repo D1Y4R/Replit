@@ -1,0 +1,1409 @@
+APIfootball
+ About Us Contact UsLoginRegister
+Our Coverage
+Leagues Overview
+
+We have a variety of solutions for a variety of coverage suited to the budgets and needs of many developers all over the world. You can found on this page the full list of countries and leagues we cover in APIfootball data feed. You can go visit our plans page to find out what leagues is covered in which plan.
+
+We have proudly launched football API v2, if you are looking for API v1 coverage please click here
+
+WORLDWIDE Plan
+
+ Africa
+ Albania
+ Algeria
+ Andorra
+ Angola
+ Antigua And Barbuda
+ Argentina
+ Armenia
+ Aruba
+ Asia
+ Australia
+ Austria
+ Azerbaijan
+ Bahrain
+ Bangladesh
+ Barbados
+ Belarus
+ Belgium
+ Belize
+ Benin
+ Bermuda
+ Bhutan
+ Bolivia
+ Bosnia and Herzegovina
+ Bosnia and Herzegovina and Herzegovina
+ Botswana
+ Brazil
+ Bulgaria
+ Burkina Faso
+ Burundi
+ Cambodia
+ Cameroon
+ Canada
+ Chile
+ China
+ China PR
+ Chinese Taipei
+ Colombia
+ Congo
+ Congo DR
+ Costa Rica
+ Croatia
+ Cuba
+ Curacao
+ Cyprus
+ Czech Republic
+ Denmark
+ Dominican Republic
+ Ecuador
+ Egypt
+ El Salvador
+ England
+ Estonia
+ Eswatini
+ Ethiopia
+ eurocups
+ Europe
+ Faroe Islands
+ Fiji
+ Finland
+ France
+ Gabon
+ Gambia
+ Georgia
+ Germany
+ Ghana
+ Gibraltar
+ Greece
+ Grenada
+ Guadeloupe
+ Guatemala
+ Guinea
+ Haiti
+ Honduras
+ Hong Kong
+ Honkg Kong
+ Hungary
+ Iceland
+ India
+ Indonesia
+ intl
+ Iran
+ Iraq
+ Ireland
+ Israel
+ Italy
+ Ivory Coast
+ Jamaica
+ Japan
+ Jordan
+ Kazakhstan
+ Kenya
+ Korea Republic
+ Kosovo
+ Kuwait
+ Kyrgyz Republic
+ Kyrgyzstan
+ Laos
+ Latvia
+ Lebanon
+ Lesotho
+ Liberia
+ Libya
+ Liechtenstein
+ Lithuania
+ Luxembourg
+ Macao
+ Malawi
+ Malaysia
+ Maldives
+ Mali
+ Malta
+ Mauritania
+ Mauritius
+ Mexico
+ Moldova
+ Mongolia
+ Montenegro
+ Morocco
+ Myanmar
+ N/C America
+ Nepal
+ Netherlands
+ New Zealand
+ Nicaragua
+ Nigeria
+ North Macedonia
+ Northern Ireland
+ Norway
+ Oman
+ Pakistan
+ Palestine
+ Panama
+ Paraguay
+ Peru
+ Philippines
+ Poland
+ Portugal
+ Qatar
+ Republic of Ireland
+ Romania
+ Russia
+ Rwanda
+ San Marino
+ Saudi Arabia
+ Scotland
+ Senegal
+ Serbia
+ Singapore
+ Slovakia
+ Slovenia
+ Somalia
+ South Africa
+ South America
+ Spain
+ Sudan
+ Surinam
+ Sweden
+ Switzerland
+ Syria
+ Tajikistan
+ Tanzania
+ Thailand
+ Togo
+ Trinidad and Tobago
+ Tunisia
+ Turkey
+ Turkmenistan
+ Uganda
+ Ukraine
+ United Arab Emirates
+ Uruguay
+ USA
+ Uzbekistan
+ Venezuela
+ Vietnam
+ Waff Championship
+ Wales
+ World
+ World cup
+ Worldcup
+ Yemen
+ Zambia
+ Zimbabwe
+ Africa
+#688: COSAFA Cup
+#858: Africa Champions Cup
+#872: African Championship U18
+#898: African Championship
+#899: African Championship Women
+#993: African Championship U16
+#1000: African Championship U16 Women
+#1037: African Championship U18 Women
+#1055: Africa Cup 3x3
+#1056: Africa Cup 3x3 Women
+#1058: Africa Champions Cup Women
+#1131: BAL
+#1149: AfroBasket
+#1150: AfroBasket Women
+ Albania
+#31: Superliga
+#32: 1st Division
+#33: 2nd Division
+#509: Cup
+#537: Super Cup
+ Algeria
+#34: Ligue 1
+#35: Ligue 2
+#436: Reserve League
+#529: Coupe Nationale
+#578: Super Cup
+#671: Coupe de la Ligue
+ Andorra
+#36: 2a Divisió
+#37: 1a Divisió
+#548: Copa Constitució
+#565: Super Cup
+ Angola
+#38: Girabola
+ Antigua And Barbuda
+#8025: Premier Division
+ Argentina
+#39: Torneo Federal A
+#40: Prim B Metro
+#41: Primera Nacional
+#42: Primera C
+#43: Primera D
+#44: Liga Profesional Argentina
+#442: Trofeo de Campeones
+#515: Copa Argentina
+#525: Super Copa
+#662: Copa de la Superliga
+#1188: Prim B Metro
+#1189: Primera Nacional
+#7096: Torneo Proyección
+#8037: Torneo Promocional Amateur
+#8143: Super Copa International
+ Armenia
+#45: Premier League
+#46: First League
+#518: Cup
+#590: Super Cup
+ Aruba
+#47: Division di Honor
+ Asia
+#1007: The Super 8
+#7805: EASL
+#7105: Women's Asian Cup Qualification
+#1054: Asia Championship U18 Women
+#1053: Asia Championship U18 B Women
+#1039: Asian Games 3x3 Women
+#1038: Asian Games 3x3
+#1025: Asia Championship U16
+#1024: Asia Cup 3x3 U18 Women
+#1023: Asia Cup 3x3 U18
+#1017: Asia Cup 3x3
+#1016: Asia Cup 3x3 Women
+#1015: Asia Championship U16 B Women
+#1014: Asia Championship U16 Women
+#788: Asia Champions Cup
+#994: Asia Cup Women
+#976: EABA Championship
+#973: SEABA Championship
+#957: SEABA Championship Women
+#954: Asia Challenge
+#935: Southeast Asian Games Women
+#934: Southeast Asian Games
+#922: Asian Games
+#921: Asian Games Women
+#874: Asia Cup
+#873: Asia Championship U18
+#789: ABL
+ Australia
+#608: Tasmania NPL
+#8161: South Australia NPL
+#8061: Tasmania Northern Championship
+#8059: Tasmania Southern Championship
+#8058: NNSW League 1
+#8056: Western Australia State League 1
+#8055: Capital Territory NPL 2
+#713: Australia Cup
+#681: NSW League One
+#680: South Australia State League 1
+#679: Victoria PL 1
+#678: Queensland Premier League
+#48: South Australia NPL
+#581: Victoria NPL
+#501: A-League Women
+#486: Queensland NPL
+#421: Capital Territory NPL
+#375: Northern NSW NPL
+#374: FQPL 3 Metro
+#373: Northern Territory Premier League
+#51: Western Australia NPL
+#50: New South Wales NPL
+#49: A-League Men
+ Austria
+#52: Landesliga
+#53: 2. Liga
+#54: Cup
+#55: Regionalliga
+#56: Bundesliga
+#625: Frauenliga
+ Azerbaijan
+#57: Premyer Liqa
+#58: Birinci Dasta
+#506: Cup
+ Bahrain
+#59: Premier League
+#539: Federation Cup
+#649: King's Cup
+#8075: Super Cup
+ Bangladesh
+#60: Premier League
+#443: Federation Cup
+ Barbados
+#403: Premier League
+#8032: Premier League
+ Belarus
+#61: Premier League
+#62: 1. Division
+#348: Super Cup
+#376: 2. Division
+#416: Cup
+#451: Reserve League
+ Belgium
+#63: First Division A
+#64: Cup
+#65: Challenger Pro League
+#66: Third Amateur Division
+#67: Second Amateur Division
+#381: Super Cup
+#438: Reserve Pro League
+#487: Provincial
+#574: Super League
+#586: First Amateur Division
+ Belize
+#488: Premier League
+ Benin
+#549: Championnat National
+ Bermuda
+#68: Premier League
+ Bhutan
+#489: Super League
+#7984: Premier League
+ Bolivia
+#69: Primera División
+#467: Nacional B
+#7966: Copa de la División Profesional
+#8018: Nacional B
+#8145: Torneo Amistoso de Verano
+ Bosnia and Herzegovina
+#71: 1st League
+#474: Cup
+ Bosnia and Herzegovina and Herzegovina
+#70: Premijer Liga
+ Botswana
+#490: Premier League
+ Brazil
+#72: Gaúcho 2
+#73: Piauiense
+#74: Sul-Matogrossense
+#75: Serie B
+#76: Potiguar 1
+#77: Acreano
+#78: Paranaense 2
+#79: Serie C
+#80: Serie D
+#81: Amazonense 1
+#82: Mineiro 1
+#83: Carioca Série A
+#84: Carioca B1
+#85: Sergipano 1
+#86: Paulista A2
+#87: Paraense A1
+#88: Goiano 1
+#89: Matogrossense 1
+#90: Tocantinense
+#91: Pernambucano 1
+#92: Rondoniense
+#93: Alagoano 1
+#94: Baiano 2
+#95: Baiano 1
+#96: Paulista A3
+#97: Paraibano 1
+#98: Catarinense 1
+#99: Serie A
+#100: Paranaense 1
+#101: Roraimense
+#102: Gaúcho 1
+#103: Maranhense 1
+#104: Cearense 1
+#105: Brasiliense A
+#106: Paulista A1
+#107: Amapaense
+#108: Capixaba A
+#349: Copa do Brasil
+#433: Brasileiro U20 A
+#448: Supercopa do Brasil
+#465: Brasileiro de Aspirantes
+#468: Copa Paulista
+#491: Mineiro 2
+#492: Cearense 2
+#504: Copa do Nordeste
+#568: Copa Verde
+#579: Primeira Liga
+#632: São Paulo Youth Cup
+#636: Copa do Brasil U20
+#660: Brasileiro Feminino A1
+#682: Carioca A2
+#5494: Brasileiro Women
+#7544: Catarinense 2
+#7983: Goiano 2
+#7986: Copa Rio
+#7987: Copa Santa Catarina
+#7988: Paraibano 2
+#8029: Recopa Catarinense
+#8031: Paulista A4
+#8033: Copa Alagoas
+#8039: Goiano U20
+#8040: Paranaense U20
+#8044: Baiano U20
+#8049: Catarinense U20
+#8051: Copa Rio U20
+#8054: Paulista U20
+#8060: Pernambucano U20
+#8064: Matogrossense 2
+#8065: Paulista Série B
+#8066: Copa Espírito Santo
+#8067: Brasiliense U20
+#8072: Carioca C
+#8073: Mineiro U20
+#8074: Sergipano U20
+#8076: Alagoano U20
+#8077: Catarinense 2
+#8078: Cearense U20
+#8083: Paraense A3
+#8084: Carioca U20
+#8085: Paraibano U20
+#8086: Cearense 3
+#8087: Pernambucano 2
+#8098: Carioca A2
+#8100: Brasileiro U17
+#8106: Goiano 3
+#8107: Amazonense 2
+#8109: Sergipano 2
+#8110: Paranaense 3
+#8111: Potiguar U20
+#8114: Brasiliense B
+#8115: Mineiro 3
+#8116: Estadual Junior U20
+#8118: Alagoano 2
+#8119: Capixaba B
+#8120: Paraense A2
+#8121: Maranhense 2
+#8123: Pernambucano 3
+#8124: Potiguar 2
+#8125: Gaúcho 3
+#8127: Catarinense 3
+#8128: Carioca B2
+#8130: Paraense U20
+#8131: Copa Gaúcha
+#8136: Copa Fares Lopes
+#8152: Copa do Brasil U17
+#8154: Brasileiro U20 B
+#8155: Copa Grão Pará
+ Bulgaria
+#109: Second League
+#110: Third League
+#111: First League
+#387: Super Cup
+#424: Cup
+ Burkina Faso
+#554: Ligue 1
+ Burundi
+#545: Ligue A
+ Cambodia
+#493: Premier League
+#8149: Hun Sen Cup
+ Cameroon
+#112: Elite One
+#444: Elite Two
+#8138: Super Cup
+ Canada
+#113: Canadian Soccer League
+#114: PCSL
+#407: Canadian Championship
+#659: Canadian Premier League
+#7541: League 1 Ontario
+#8150: Northern Super League
+ Chile
+#115: Primera División
+#116: Primera B
+#414: Copa Chile
+#533: Super Cup
+#599: Segunda División
+ China
+#7999: Super Cup
+ China PR
+#117: China League One
+#118: Chinese Super League
+#520: FA Cup
+#7546: China League Two
+ Chinese Taipei
+#119: Taiwan Football Premier League
+ Colombia
+#120: Primera A
+#466: Liga Femenina
+#475: Copa Colombia
+#517: Primera B
+#527: Superliga
+ Congo
+#560: Ligue 1
+ Congo DR
+#417: Ligue 1
+ Costa Rica
+#121: Primera División
+#122: Liga de Ascenso
+#705: Supercopa
+#8003: Copa Costa Rica
+#8101: Recopa
+ Croatia
+#124: HNL
+#125: Cup
+#126: Third NL
+#127: First NL
+#7957: Super Cup
+#7961: Second NL
+ Cuba
+#7095: Primera Division
+ Curacao
+#457: Curaçao Promé Divishon
+ Cyprus
+#128: 3. Division
+#129: 2. Division
+#130: 1. Division
+#427: Cup
+#691: Super Cup
+ Czech Republic
+#131: 3. liga
+#132: 4. liga
+#133: FNL
+#134: Czech Liga
+#350: Cup
+#380: Super Cup
+#460: 1. Liga Women
+#588: 1. Liga U19
+ Denmark
+#135: Superliga
+#136: 2. Division
+#137: Denmark Series
+#138: 1. Division
+#351: DBU Pokalen
+#482: Kvindeliga
+#698: 3. Division
+ Dominican Republic
+#400: Liga Mayor
+#8147: Copa LDF
+ Ecuador
+#139: Liga Pro Serie B
+#140: Liga Pro
+#685: Supercopa de Ecuador
+#7537: Copa Ecuador
+ Egypt
+#141: Premier League
+#508: Cup
+#524: Super Cup
+#701: Second Division A
+#7092: League Cup
+ El Salvador
+#142: Primera Division
+ England
+#377: Community Shield
+#8129: National League Cup
+#8019: FA Youth Cup
+#7978: Premier League Summer Series
+#716: Premier League Cup
+#655: FA Women's League Cup
+#652: WSL 2
+#651: Women's Super League
+#650: Women's FA Cup
+#622: U18 Premier League
+#614: Professional Development League
+#593: Premier League 2
+#458: Women’s FA Community Shield
+#143: Non League Div One
+#154: League One
+#153: Championship
+#152: Premier League
+#151: National League
+#150: National League N - S
+#149: Non League Premier
+#148: EFL Trophy
+#147: League Cup
+#146: FA Cup
+#145: League Two
+#144: FA Trophy
+ Estonia
+#155: Esiliiga A
+#156: Meistriliiga
+#426: Cup
+#8089: Esiliiga B
+ Eswatini
+#668: Premier League
+ Ethiopia
+#556: Premier League
+ eurocups
+#1: UEFA European Championship
+#354: UEFA European Championship Qualifiers
+#372: UEFA Super Cup
+#538: UEFA Youth League
+#633: UEFA Nations League
+#707: UEFA U19 Championship Qualification
+#719: U20 Elite League
+ Europe
+#3: UEFA Champions League
+#4: UEFA Europa League
+#24: UEFA World Cup Qualifiers
+#511: UEFA U21 Championship
+#575: Premier League (Crimea)
+#611: UEFA U19 Championship
+#683: UEFA Conference League
+#7551: UEFA U19 Championship Women
+ Faroe Islands
+#157: Meistaradeildin
+#158: 1. Deild
+#621: Løgmanssteypid
+#8162: Super Cup
+ Fiji
+#159: National Football League
+ Finland
+#160: Kakkonen
+#161: Suomen Cup
+#352: Veikkausliiga
+#353: Ykkönen
+#447: Kakkosen Cup
+#453: Kansallinen Liiga
+#7089: League Cup
+#7094: Ykköscup
+#8034: Ykköscup
+#8062: Ykkönen
+ France
+#6: Première Ligue
+#162: National 3
+#163: National 2
+#164: Ligue 2
+#165: Coupe de France
+#166: Coupe de la Ligue
+#167: National 1
+#168: Ligue 1
+#389: Trophée des Champions
+ Gabon
+#7993: Championnat D1
+ Gambia
+#552: GFA League
+ Georgia
+#169: Erovnuli Liga 2
+#170: Erovnuli Liga
+#409: David Kipiani Cup
+#618: Super Cup
+#8071: Liga 3
+ Germany
+#7: Frauen Bundesliga
+#171: 2. Bundesliga
+#172: DFB Pokal
+#173: Regionalliga
+#174: Oberliga
+#175: Bundesliga
+#176: 3. Liga
+#379: Super Cup
+#485: U19 Bundesliga
+#629: DFB Junioren Pokal
+#7960: 2. Bundesliga Women
+#7994: DFB Pokal Women
+#8112: Supercup der Frauen
+ Ghana
+#177: Premier League
+#7967: Cup
+#8117: Super Cup
+ Gibraltar
+#345: Premier Division
+#675: Rock Cup
+#7990: Super Cup
+ Greece
+#178: Super League 1
+#179: Cup
+#180: Gamma Ethniki
+#181: Football League
+#439: Super League 2
+ Grenada
+#8048: Premier Division
+ Guadeloupe
+#388: Division d'Honneur
+ Guatemala
+#182: Liga Nacional
+#183: Primera Division
+ Guinea
+#553: Ligue 1
+ Haiti
+#184: Ligue Haïtienne
+#728: Ligue Haïtienne
+ Honduras
+#185: Liga Nacional
+ Hong Kong
+#186: Premier League
+#187: HKFA 1st Division
+#640: FA Cup
+#648: Senior Shield
+#8133: Sapling Cup
+ Honkg Kong
+#8026: HKPL Cup
+ Hungary
+#188: NB II
+#189: Magyar Kupa
+#190: NB III
+#191: NB I
+ Iceland
+#192: Besta deild
+#357: League Cup
+#395: 1. Deild
+#413: Cup
+#432: Besta deild Women
+#494: 2. Deild
+#547: Reykjavik Cup
+#580: Fotbolti.net Cup A
+#585: Super Cup
+ India
+#193: I-League
+#464: I-League 2
+#566: Indian Super League
+#598: Santosh Trophy
+#637: AIFF Super Cup
+#725: Santosh Trophy
+#7965: I-League 2
+#8009: Calcutta Premier Division
+#8027: AIFF Super Cup
+#8157: AIFF Super Cup
+ Indonesia
+#194: Liga 1
+#410: Liga 2
+#656: Piala Indonesia
+#7552: Piala Presiden
+ intl
+#2: UEFA Women's Champions League
+#5: Concacaf Champions Cup
+#9: AFC Challenge Cup
+#10: AFC Champions League Elite
+#11: AFC Champions League Two
+#12: ASEAN Championship
+#16: FIFA Confederations Cup
+#17: CONMEBOL Copa America
+#18: CONMEBOL Libertadores
+#29: CAF Africa Cup of Nations
+#30: CAF Super Cup
+#346: CAF Champions League
+#347: AFC Asian Cup
+#385: CONMEBOL Sudamericana
+#386: CONMEBOL Recopa
+#390: CAF Confederation Cup
+#402: CECAFA Senior Challenge Cup
+#404: OFC Champions League
+#405: Caribbean Cup
+#418: Asian Cup Qualification
+#431: Leagues Cup
+#440: Friendlies Women
+#441: COSAFA U20 Championship
+#477: Asian Games
+#478: Gulf Cup of Nations
+#479: AFF Championship
+#480: CAF African Nations Championship
+#484: CONMEBOL U20
+#499: UEFA Women's Championship
+#500: Olympics Men
+#522: Olympics Women
+#526: EAFF E-1 Football Championship
+#528: Concacaf U20
+#535: Premier League Asia Trophy
+#570: AFC U23 Asian Cup
+#571: Pacific Games
+#572: International Champions Cup
+#597: Copa Centroamericana
+#600: SAFF Championship
+#619: Africa U20 Cup of Nations
+#624: Concacaf League
+#634: CONMEBOL Libertadores U20
+#635: Concacaf Nations League Qualification
+#638: China Cup
+#646: Arab Club Champions Cup
+#661: Concacaf Caribbean Club Shield
+#664: Concacaf Nations League
+#665: OFC Nations Cup
+#666: UEFA U21 Championship Qualification
+#676: Women's Olympic Qualifying Asia
+#684: Arab Cup
+#687: Baltic Cup
+#689: Concacaf Gold Cup Qualification
+#690: Concacaf Caribbean Cup
+#703: AFC U23 Asian Cup Qualification
+#706: UEFA U17 Championship Qualification
+#714: CECAFA Club Cup
+#723: Campeones Cup
+#7090: The Atlantic Cup
+#7093: Tipsport Malta Cup
+#7098: Africa Cup of Nations Qualification
+#7099: UEFA U17 Championship
+#7101: Youth Viareggio Cup
+#7102: Algarve Cup
+#7104: Concacaf Women's U17
+#7106: Southeast Asian Games
+#7109: SheBelieves Cup
+#7110: ASEAN U23 Championship
+#7534: Emirates Cup
+#7535: Tournoi Maurice Revello
+#7536: Kirin Cup
+#7538: EAFF E-1 Football Championship
+#7540: CONMEBOL-UEFA Finalissima
+#7545: U20 Arab Championship
+#7547: CAF Women's Africa Cup of Nations
+#7548: FIFA U20 Women's World Cup
+#7549: Mediterranean Games
+#7550: ASEAN U19 Championship
+#7553: CONMEBOL Copa America Femenina
+#7555: Concacaf Women's World Cup Qualifiers
+#7958: Africa U23 Cup of Nations Qualification
+#7962: South American Youth Games
+#7963: CONMEBOL Libertadores Femenina
+#7968: AFC U20 Asian Cup
+#7972: Tournoi Maurice Revello
+#7973: CAFA Nations Cup
+#7974: AFC U17 Asian Cup
+#7975: All-Island Cup
+#7979: UEFA-CONMEBOL Club Challenge
+#7981: Concacaf Central American Cup
+#7982: Concacaf Caribbean Club Shield
+#7985: UEFA Women's Nations League
+#7989: Premier League International Cup
+#7992: Women's WC Qualification Intercontinental Play-offs
+#7996: King's Cup
+#7997: FIFA U17 Women's World Cup
+#7998: Club Friendlies Women
+#8000: CONMEBOL U17
+#8001: Concacaf Women's U20
+#8004: Concacaf U17
+#8006: CAF U23 Cup of Nations
+#8007: COTIF Tournament
+#8008: Islamic Solidarity Games
+#8011: CAC Games
+#8012: Women's International Champions Cup
+#8016: CAF U17 Cup of Nations
+#8020: CONMEBOL Pre-Olympic Tournament
+#8022: African Football League
+#8024: Concacaf W Gold Cup Qualification
+#8028: Concacaf W Gold Cup
+#8036: Concacaf U20 Qualification
+#8038: Women's Olympic Qualifying Asia
+#8042: AFC U20 Women's Asian Cup
+#8043: African Games
+#8046: CONMEBOL U17 Femenino
+#8050: WAFF Championship U23
+#8052: UEFA Women's Championship Qualification
+#8053: Qatar-UAE Super Cup
+#8057: UAE-Qatar Super Shield
+#8068: AFC U17 Women's Asian Cup
+#8070: Olympics Intercontinental Play-offs
+#8091: Pan American Games
+#8093: OFC U19 Championship
+#8095: Women's Olympic Qualifying Asia
+#8096: UEFA U17 Championship Women
+#8097: CONMEBOL U20 Femenino
+#8099: Women's Olympic Qualifying CAF
+#8103: ASEAN Club Championship
+#8105: AFC Challenge League
+#8108: Concacaf W Champions Cup
+#8113: AFC Women's Champions League
+#8122: AFC U20 Asian Cup Qualification
+#8132: CECAFA U20 Championship
+#8134: AFC U17 Asian Cup Qualification
+#8135: AGCFF Gulf Champions League
+#8137: CAF Women's Champions League
+#8140: EAFF Football Championship Qualification
+#8142: African Nations Championship Qualification
+#8146: Concacaf Women's U20 Qualification
+#8156: AFC U17 Asian Cup
+#8158: FIFA Club World Cup Play-In
+ Iran
+#195: Persian Gulf Pro League
+#196: Azadegan League
+#576: Hazfi Cup
+#7108: Super Cup
+ Iraq
+#495: Iraqi League
+ Ireland
+#197: FAI Cup
+#199: League Cup
+#561: FAI President's Cup
+#8151: Women's President's Cup
+ Israel
+#201: Liga Leumit
+#202: Ligat Ha'al
+#203: Toto Cup Ligat Al
+#358: State Cup
+#573: Super Cup
+#610: Liga Alef
+ Italy
+#8: Serie A Women
+#204: Serie D
+#205: Coppa Italia
+#206: Serie B
+#207: Serie A
+#359: Serie C
+#384: Super Cup
+#612: Coppa Italia Primavera
+#613: Super Cup Primavera
+#628: Campionato Primavera 1
+#630: Campionato Primavera 2
+#695: Coppa Italia Serie D
+#720: Coppa Italia Serie C
+#8144: Coppa Italia Women
+ Ivory Coast
+#123: Ligue 1
+ Jamaica
+#208: Premier League
+ Japan
+#209: J1 League
+#210: J-League Cup
+#211: Japan Football League
+#212: J2 League
+#360: Emperor Cup
+#361: Super Cup
+#601: J3 League
+#686: WE League
+ Jordan
+#213: League
+#503: Shield Cup
+#672: Super Cup
+#708: Cup
+ Kazakhstan
+#214: Premier League
+#215: 1. Division
+#514: Cup
+#562: Super Cup
+ Kenya
+#216: FKF Premier League
+#7543: Super League
+#7971: Shield Cup
+ Korea Republic
+#217: K3 League
+#218: K League 2
+#219: K League 1
+#371: K League Cup
+#419: Korea Cup
+#639: WK-League
+ Kosovo
+#544: Superliga
+#594: Super Cup
+#616: Cup
+ Kuwait
+#220: Premier League
+#221: Division 1
+#393: Emir Cup
+#396: Crown Prince Cup
+#505: Super Cup
+ Kyrgyz Republic
+#583: Premier League
+ Kyrgyzstan
+ Laos
+#456: Lao League
+ Latvia
+#222: 1. Liga
+#223: Virsliga
+#422: Cup
+#8160: Super Cup
+ Lebanon
+#224: Premier League
+#7969: Cup
+#7977: Federation Cup
+ Lesotho
+#8002: Premier League
+ Liberia
+#546: LFA First Division
+ Libya
+#225: Premier League
+ Liechtenstein
+#542: Cup
+ Lithuania
+#226: 1 Lyga
+#227: A Lyga
+#423: Cup
+#673: Super Cup
+ Luxembourg
+#228: National Division
+#541: Cup
+ Macao
+#8015: Primeira Divisão
+ Malawi
+#564: Super League
+ Malaysia
+#231: Premier League
+#232: Super League
+#591: Malaysia Cup
+#7100: FA Cup
+#8139: MFL Cup
+ Maldives
+#620: Dhivehi Premier League
+ Mali
+#558: Première Division
+ Malta
+#233: Challenge League
+#234: Premier League
+#408: FA Trophy
+#8090: Super Cup
+#8148: Challenge Cup
+ Mauritania
+#559: Premier League
+ Mauritius
+#557: Mauritian League
+ Mexico
+#235: Liga MX
+#236: Liga de Expansión MX
+#437: Liga Premier Serie A
+#455: Copa por México
+#521: Copa MX
+#643: Liga MX Femenil
+#692: Supercopa MX
+#694: Liga Premier Serie B
+#697: U20 League
+#7976: U23 League
+ Moldova
+#237: Super Liga
+#238: Liga 1
+#512: Cupa
+ Mongolia
+#446: Premier League
+#8104: Super Cup
+ Montenegro
+#240: Second League
+#398: First League
+#510: Cup
+ Morocco
+#239: Botola Pro
+#241: Botola 2
+#411: Cup
+ Myanmar
+#589: National League
+ N/C America
+#15: Concacaf Gold Cup
+ Nepal
+#496: A Division
+ Netherlands
+#242: Derde Divisie
+#243: KNVB Beker
+#244: Eredivisie
+#245: Eerste Divisie
+#391: Super Cup
+#459: U21 Divisie 1
+#463: U18 Divisie 1
+#481: Eredivisie Women
+#584: Tweede Divisie
+#721: Reserve League
+#1194: KNVB Beker
+#7970: U21 Divisie 1
+#8041: U18 Divisie 1
+#8126: U19 Divisie 1
+ New Zealand
+#246: Premiership
+#8014: National League
+#8088: Chatham Cup
+ Nicaragua
+#247: Primera Division
+#450: Liga Primera U20
+#8159: Copa Nicaragua
+ Nigeria
+#248: NPFL
+ North Macedonia
+#229: Second League
+#230: First League
+#658: Cup
+ Northern Ireland
+#249: Irish Cup
+#250: Championship
+#251: Premiership
+#507: League Cup
+#606: Premier Intermediate League
+#8005: Charity Shield
+#8069: Premiership Women
+ Norway
+#252: NM Cupen
+#253: Eliteserien
+#362: 1. Division
+#363: 2. Division
+#412: Super Cup
+#471: Nasjonal U19 Champions League
+#498: Toppserien
+#641: 3. Division
+#7539: 1. Division Women
+ Oman
+#254: Professional League
+#513: Sultan Cup
+#7995: Super Cup
+ Pakistan
+#693: Premier League
+#711: Premier League
+ Palestine
+#617: West Bank Premier League
+ Panama
+#406: LPF
+ Paraguay
+#255: Division Profesional
+#256: Division Intermedia
+#435: Copa Paraguay
+#7964: Supercopa
+ Peru
+#257: Primera División
+#258: Segunda División
+#430: Copa Bicentenario
+#445: Supercopa
+#563: Copa Inca
+#710: Copa Perú
+#712: Copa Perú
+ Philippines
+#623: PFL
+#696: Copa Paulino Alcantara
+ Poland
+#259: Ekstraklasa
+#260: Cup
+#261: II Liga
+#262: III Liga
+#263: I Liga
+#587: Super Cup
+#627: Central Youth League
+#8010: Ekstraliga Women
+ Portugal
+#264: Campeonato de Portugal Prio
+#265: Taça de Portugal
+#266: Primeira Liga
+#267: Segunda Liga
+#268: Super Cup
+#476: Taça da Liga
+#644: Liga Revelação U23
+#669: Taça Revelação U23
+#699: Liga 3
+#7991: Júniores U19
+#8013: 1a Divisão Women
+ Qatar
+#269: Stars League
+#394: Emir Cup
+#397: Second Division
+#472: Qatar Cup
+#647: QSL Cup
+#670: QFA Cup
+ Republic of Ireland
+#198: First Division
+#200: Premier Division
+ Romania
+#270: Liga III
+#271: Liga II
+#272: Liga I
+#382: Supercupa
+#429: Cupa României
+#645: Liga 1 Feminin
+ Russia
+#273: Second League B
+#274: First League
+#275: Cup
+#344: Premier League
+#364: Super Cup
+#534: Youth Championship
+#663: Superliga Women
+#7980: Second League A
+ Rwanda
+#550: Premier League
+ San Marino
+#276: Campionato
+#543: Coppa Titano
+#715: Super Cup
+ Saudi Arabia
+#277: Division 1
+#278: Saudi League
+#536: Super Cup
+#604: King's Cup
+#605: Crown Prince Cup
+ Scotland
+#279: Premiership
+#280: Scottish Cup
+#281: League Cup
+#282: Championship
+#283: Challenge Cup
+#284: League Two
+#285: League One
+#286: Highland - Lowland
+#8021: SWPL Cup
+#8045: SWF Scottish Cup
+ Senegal
+#497: Ligue 1
+ Serbia
+#287: Prva Liga
+#288: Super Liga
+#399: Srpska Liga
+#428: Cup
+ Singapore
+#289: Premier League
+#290: League Cup
+#7959: Cup
+ Slovakia
+#291: 3. liga
+#292: Cup
+#293: 1. liga
+#420: 2. liga
+#462: I Liga Women
+ Slovenia
+#294: 2. SNL
+#295: Cup
+#296: 1. SNL
+#609: 3. SNL
+ Somalia
+#567: Somali Premier League
+ South Africa
+#297: Play-offs 1-2
+#365: League Cup
+#392: 8 Cup
+#469: Diski Challenge
+#530: 1st Division
+#531: Cup
+#7554: Diski Shield
+ South America
+#27: CONMEBOL World Cup Qualifiers
+#794: South American Championship
+#862: South American League
+#919: South American Championship Women
+#987: South American Championship U17 Women
+#991: South American Championship U17
+#7921: South American Championship U18
+ Spain
+#13: Primera División Femenina
+#298: Tercera División RFEF
+#299: Primera División RFEF
+#300: Copa del Rey
+#301: Segunda División
+#302: La Liga
+#383: Super Cup
+#615: Copa Federacion
+#700: Segunda División RFEF
+#8030: Supercopa Femenina
+ Sudan
+#303: Sudani Premier League
+ Surinam
+#304: Suriname Major League
+ Sweden
+#14: Damallsvenskan
+#305: Superettan
+#306: Svenska Cupen
+#307: Allsvenskan
+#366: Ettan
+#367: Division 2
+#502: Svenska Cupen Women
+#607: Elitettan
+ Switzerland
+#308: Super League
+#309: Schweizer Pokal
+#310: 2. Liga Interregional
+#311: 1. Liga Classic
+#312: Challenge League
+#523: 1. Liga Promotion
+#626: Super League Women
+#8023: Erste Liga Cup
+ Syria
+#313: Premier League
+ Tajikistan
+#569: Vysshaya Liga
+ Tanzania
+#551: Ligi kuu Bara
+ Thailand
+#314: Thai League 1
+#602: Thai League 2
+#631: FA Cup
+#642: FA Cup
+#718: Thai Champions Cup
+#7091: League Cup
+ Togo
+#8094: Championnat National
+ Trinidad and Tobago
+#315: TT Premier League
+ Tunisia
+#316: Ligue 2
+#317: Ligue 1
+#519: Cup
+ Turkey
+#318: 2. Lig
+#319: 1. Lig
+#320: Cup
+#321: 3. Lig
+#322: Süper Lig
+#323: Super Cup
+#532: 3. Lig
+ Turkmenistan
+#452: Youth League
+#582: Ýokary Liga
+ Uganda
+#555: Premier League
+ Ukraine
+#324: Persha Liga
+#325: Premier League
+#326: Cup
+#327: Druha Liga
+#378: Super Cup
+#592: U21 League
+#8035: U19 League
+ United Arab Emirates
+#328: Pro League
+#483: Division 1
+#516: Presidents Cup
+#595: League Cup
+#7103: Super Cup
+ Uruguay
+#333: Primera División
+#334: Segunda División
+#677: Super Copa
+#7542: Copa Uruguay
+ USA
+#674: NWSL
+#8102: USL Super League
+#8082: USL W League
+#8081: NWSL x Liga MXF Summer Cup
+#8080: NPSL
+#8079: WPSL
+#8063: USL Cup
+#7107: NASL
+#7097: MLS Next Pro
+#722: MLS All-Star
+#329: USL League Two
+#653: USL League One
+#461: NWSL Fall Series
+#454: NWSL Challenge Cup
+#449: NISA
+#368: US Open Cup
+#332: MLS
+#331: USL 2
+#330: USL Championship
+ Uzbekistan
+#335: Super League
+#603: Cup
+#657: Super Cup
+#8047: Pro League A
+ Venezuela
+#336: Segunda División
+#337: Primera División
+#8092: Copa Venezuela
+#8153: Supercopa
+ Vietnam
+#338: V.League 2
+#339: V.League 1
+#401: Cup
+#470: Super Cup
+ Waff Championship
+#434: WAFF Championship
+ Wales
+#340: FAW Championship
+#341: Premier League
+#369: Welsh Cup
+#370: League Cup
+ World
+#355: Club Friendlies
+#356: Friendlies
+#473: Olympic Qualifying Concacaf
+#8141: FIFA Club World Cup
+ World cup
+#20: FIFA Women's World Cup
+ Worldcup
+#19: FIFA Intercontinental Cup
+#21: CAF World Cup Qualifiers
+#22: AFC World Cup Qualifiers
+#23: Concacaf World Cup Qualifiers
+#25: WC Qualification Intercontinental Play-offs
+#26: OFC World Cup Qualifiers
+#28: World Cup
+#415: FIFA U17 World Cup
+#425: FIFA U20 World Cup
+#704: Women's WC Qualification Europe
+#717: Women's Asian Cup Qualification
+ Yemen
+#8017: Yemeni League
+ Zambia
+#342: Super League
+ Zimbabwe
+#343: Premier Soccer League
+
+
+Get in Touch
+Newsletter
+Keep up on our always evolving product features and technology. Enter your e-mail and subscribe to our newsletter.
+
+Email Address
+Contact Us
+Email: contact@apifootball.com
+
+© Copyright 2025. All Rights Reserved.
+
+Terms of Use Privacy Policy Contact

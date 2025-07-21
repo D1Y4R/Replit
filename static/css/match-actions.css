@@ -1,0 +1,72 @@
+/* Maç satırı stillendirmesi */
+.match-row {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 10px 15px;
+    border-bottom: 1px solid #343a40;
+    align-items: center;
+    transition: all 0.2s;
+    background-color: #212529;
+    border-radius: 6px;
+    margin-bottom: 5px;
+}
+
+.match-row:hover {
+    background-color: #343a40;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.match-row.live {
+    background-color: rgba(40, 167, 69, 0.15);
+    border-left: 3px solid #28a745;
+}
+
+/* Maç aksiyonları için stil */
+.match-actions {
+    display: flex;
+    margin-left: auto;
+    gap: 6px;
+    margin-top: 8px;
+    width: 100%;
+    justify-content: flex-end;
+}
+
+/* Butonlar için stil */
+.match-actions .btn {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.6rem;
+    border-radius: 4px;
+    background-color: #343a40;
+    border-color: #495057;
+    color: #f8f9fa;
+    transition: all 0.2s;
+}
+
+.match-actions .btn:hover {
+    background-color: #495057;
+    border-color: #495057;
+    transform: translateY(-1px);
+}
+
+.match-actions .btn-primary {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+.match-actions .btn-primary:hover {
+    background-color: #0b5ed7;
+    border-color: #0a58ca;
+}
+
+/* Mobil cihazlar için düzenleme */
+@media (max-width: 576px) {
+    .match-actions {
+        justify-content: center;
+    }
+    
+    .match-actions .btn {
+        flex: 1;
+        text-align: center;
+    }
+}

@@ -1,0 +1,578 @@
+function updatePredictionUI(data) {
+    // Ana tahmin detaylarını güncelle
+    if (data && data.predictions) {
+        // Gol beklentileri
+        $('#homeExpectedGoals').text(data.predictions.expected_goals.home.toFixed(2));
+        $('#awayExpectedGoals').text(data.predictions.expected_goals.away.toFixed(2));
+        $('#totalExpectedGoals').text((data.predictions.expected_goals.home + data.predictions.expected_goals.away).toFixed(2));
+
+        // Maç sonucu olasılıkları
+        $('#homeWinProb').text(data.predictions.home_win_probability.toFixed(2) + '%');
+        $('#drawProb').text(data.predictions.draw_probability.toFixed(2) + '%');
+        $('#awayWinProb').text(data.predictions.away_win_probability.toFixed(2) + '%');
+
+        // En olası sonuç
+        let outcomeText = '';
+        switch (data.predictions.most_likely_outcome) {
+            case 'HOME_WIN': outcomeText = 'Ev Sahibi Kazanır'; break;
+            case 'DRAW': outcomeText = 'Beraberlik'; break;
+            case 'AWAY_WIN': outcomeText = 'Deplasman Kazanır'; break;
+        }
+        $('#mostLikelyOutcome').text(outcomeText);
+
+        // Bahis tahminleri
+        if (data.predictions.betting_predictions) {
+            const betting = data.predictions.betting_predictions;
+
+            // KG Var/Yok
+            const formattedBothTeamsToScore = formatPrediction('both_teams_to_score', betting.both_teams_to_score.prediction);
+            $('#bttsValue').text(formattedBothTeamsToScore);
+            $('#bttsProb').text(betting.both_teams_to_score.probability.toFixed(2) + '%');
+
+            // 2.5 Üst/Alt
+            const formattedOver25 = formatPrediction('over_2_5_goals', betting.over_2_5_goals.prediction);
+            $('#over25Value').text(formattedOver25);
+            $('#over25Prob').text(betting.over_2_5_goals.probability.toFixed(2) + '%');
+
+            // 3.5 Üst/Alt
+            const formattedOver35 = formatPrediction('over_3_5_goals', betting.over_3_5_goals.prediction);
+            $('#over35Value').text(formattedOver35);
+            $('#over35Prob').text(betting.over_3_5_goals.probability.toFixed(2) + '%');
+
+            // Kesin skor
+            $('#exactScoreValue').text(betting.exact_score.prediction);
+            $('#exactScoreProb').text(betting.exact_score.probability.toFixed(2) + '%');
+        }
+
+        // Gelişmiş model sonuçlarını güncelle
+        updateAdvancedModelsTable(data);
+    }
+}
+
+function updateAdvancedModelsTable(data) {
+    if (!data || !data.predictions) return;
+
+    // Standart tahmin modeli (Monte Carlo)
+    const standardHomeGoals = data.predictions.raw_metrics.expected_home_goals;
+    const standardAwayGoals = data.predictions.raw_metrics.expected_away_goals;
+    $('#standardHomeGoals').text(standardHomeGoals.toFixed(2));
+    $('#standardAwayGoals').text(standardAwayGoals.toFixed(2));
+    $('#standardPrediction').text(getPredictionText(standardHomeGoals, standardAwayGoals));
+
+    // Sinir ağı tahminleri
+    if (data.predictions.neural_predictions) {
+        const neuralHomeGoals = data.predictions.neural_predictions.home_goals;
+        const neuralAwayGoals = data.predictions.neural_predictions.away_goals;
+        $('#neuralHomeGoals').text(neuralHomeGoals.toFixed(2));
+        $('#neuralAwayGoals').text(neuralAwayGoals.toFixed(2));
+        $('#neuralPrediction').text(getPredictionText(neuralHomeGoals, neuralAwayGoals));
+    }
+
+    // Zero-Inflated Poisson ve Ensemble modeli
+    if (data.predictions.advanced_models && data.predictions.advanced_models.zero_inflated_poisson) {
+        const zipHomeGoals = data.predictions.advanced_models.zero_inflated_poisson.expected_goals.home;
+        const zipAwayGoals = data.predictions.advanced_models.zero_inflated_poisson.expected_goals.away;
+        $('#zipHomeGoals').text(zipHomeGoals.toFixed(2));
+        $('#zipAwayGoals').text(zipAwayGoals.toFixed(2));
+        $('#zipPrediction').text(getPredictionText(zipHomeGoals, zipAwayGoals));
+
+        // Kombinasyon sonucu
+        if (data.predictions.advanced_models.final_combined_prediction) {
+            const combinedHomeGoals = data.predictions.advanced_models.final_combined_prediction.home_goals;
+            const combinedAwayGoals = data.predictions.advanced_models.final_combined_prediction.away_goals;
+            $('#combinedHomeGoals').text(combinedHomeGoals.toFixed(2));
+            $('#combinedAwayGoals').text(combinedAwayGoals.toFixed(2));
+            $('#combinedPrediction').text(getPredictionText(combinedHomeGoals, combinedAwayGoals));
+        }
+    } else {
+        // Gelişmiş modeller yoksa bu satırı gizle
+        $('tr:contains("Zero-Inflated Poisson/Ensemble")').hide();
+        // Kombinasyon satırını da güncelle
+        const combinedHomeGoals = data.predictions.expected_goals.home;
+        const combinedAwayGoals = data.predictions.expected_goals.away;
+        $('#combinedHomeGoals').text(combinedHomeGoals.toFixed(2));
+        $('#combinedAwayGoals').text(combinedAwayGoals.toFixed(2));
+        $('#combinedPrediction').text(getPredictionText(combinedHomeGoals, combinedAwayGoals));
+    }
+}
+
+function getPredictionText(homeGoals, awayGoals) {
+    const diff = homeGoals - awayGoals;
+    if (diff > 0.5) return 'Ev Sahibi Kazanır';
+    if (diff < -0.5) return 'Deplasman Kazanır';
+    return 'Beraberlik';
+}
+
+// Tahmin detayları için modal göster
+$(document).on('click', '.predict-match-btn', function() {
+    const homeTeamId = $(this).data('home-id');
+    const awayTeamId = $(this).data('away-id');
+    const homeTeamName = $(this).data('home-name');
+    const awayTeamName = $(this).data('away-name');
+
+    // Tahmin göster
+    showPrediction(homeTeamId, awayTeamId, homeTeamName, awayTeamName);
+});
+
+// Zorla yeni tahmin yapma işlevi kaldırıldı
+
+
+// Tahmin göster (belirli bir maç için)
+function showPrediction(homeTeamId, awayTeamId, homeTeamName, awayTeamName) {
+    console.log("showPrediction çağrıldı:", homeTeamId, awayTeamId, homeTeamName, awayTeamName);
+
+    // Tahmin modalını göster
+    $('#predictionModal').modal('show');
+
+    // Modal başlığını güncelle
+    $('#matchTitle').text(`${homeTeamName} vs ${awayTeamName}`);
+
+    // Takım adlarını form bölümleri için de güncelle
+    $('#homeTeamNameForm').text(homeTeamName);
+    $('#awayTeamNameForm').text(awayTeamName);
+
+    // Yükleniyor göster, içeriği gizle
+    $('#predictionLoading').show();
+    $('#predictionContent').hide();
+    $('#predictionError').hide();
+
+    // Refresh butonu için veri ekle
+    $('#refreshPredictionBtn').data('home-id', homeTeamId)
+                             .data('away-id', awayTeamId)
+                             .data('home-name', homeTeamName)
+                             .data('away-name', awayTeamName)
+                             .off('click')
+                             .on('click', function() {
+                                 refreshPrediction(homeTeamId, awayTeamId, homeTeamName, awayTeamName);
+                             });
+
+    // API isteği yap - force_update parametresi her zaman false
+    const url = `/api/predict-match/${homeTeamId}/${awayTeamId}?home_name=${encodeURIComponent(homeTeamName)}&away_name=${encodeURIComponent(awayTeamName)}&force_update=false`;
+    console.log("API isteği yapılıyor:", url);
+
+    $.ajax({
+        url: url,
+        type: 'GET',
+        dataType: 'json',
+        success: function(data) {
+            console.log("API yanıtı alındı, durum kodu:", 200);
+            console.log("Tahmin verisi alındı, uzunluk:", JSON.stringify(data).length);
+            $('#predictionLoading').hide();
+            $('#predictionContent').show();
+            // Tahmin sonuçlarını göster
+            const formattedBothTeamsToScore = formatPrediction('both_teams_to_score', data.predictions.betting_predictions.both_teams_to_score.prediction);
+            const formattedOver25 = formatPrediction('over_2_5_goals', data.predictions.betting_predictions.over_2_5_goals.prediction);
+            const formattedOver35 = formatPrediction('over_3_5_goals', data.predictions.betting_predictions.over_3_5_goals.prediction);
+
+            $('#predictionContent').html(`
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="alert alert-info">
+                            <h4>${homeTeamName} vs ${awayTeamName} Tahmini</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>KG Var/Yok:</strong> ${formattedBothTeamsToScore}</p>
+                        <p><strong>2.5 Üst/Alt:</strong> ${formattedOver25}</p>
+                        <p><strong>3.5 Üst/Alt:</strong> ${formattedOver35}</p>
+                    </div>
+                    <div class="col-md-6">
+                        </div>
+                </div>
+            `);
+            updatePredictionUI(data);
+        },
+        error: function(error) {
+            console.error("Tahmin alınırken hata:", error);
+            $('#predictionLoading').hide();
+            $('#predictionContent').show();
+            $('#predictionError').text('Tahmin alınırken hata oluştu: ' + error.responseJSON?.error || 'Sunucu hatası').show();
+        }
+    });
+}
+
+function formatPrediction(type, prediction) {
+    // Placeholder: Bu fonksiyonun gerçek uygulaması eklenmelidir.
+    return prediction;
+}
+
+function refreshPrediction(homeTeamId, awayTeamId, homeTeamName, awayTeamName) {
+    // ... (Bu fonksiyonun içeriği değişmeden kalıyor)
+}
+
+// Sürpriz butonu işlevi: İlk Yarı/İkinci Yarı gol istatistiklerini göster
+window.showTeamHalfTimeStats = function(homeId, awayId, homeName, awayName) {
+    console.log("Sürpriz butonu işlevi çağrıldı:", {
+        homeTeam: {id: homeId, name: homeName},
+        awayTeam: {id: awayId, name: awayName}
+    });
+    
+    // Takım ID'lerini sayısal değere dönüştür
+    homeId = parseInt(homeId, 10) || 0;
+    awayId = parseInt(awayId, 10) || 0;
+    
+    // Modal başlığını güncelle ve göster
+    $('#predictionModalLabel').text(`${homeName} vs ${awayName} - Yarı İstatistikleri`);
+    $('#predictionModal').modal('show');
+    
+    // Yükleniyor göster, içeriği gizle
+    $('#predictionLoading').show();
+    $('#predictionContent').hide();
+    $('#predictionError').hide();
+    
+    // Eğer takım ID'leri yoksa kullanıcıya bildir
+    if (homeId === 0 || awayId === 0) {
+        console.warn("TAKİM ID'LERİ BULUNAMADI:", {homeId, awayId});
+        
+        $('#predictionLoading').hide();
+        $('#predictionContent').html(`
+            <div class="alert alert-warning">
+                <h4>Takım ID'leri bulunamadı</h4>
+                <p>Bu maç için yarı istatistikleri gösterilemiyor çünkü takım ID'leri API'den alınamadı.</p>
+                <p>Lütfen başka bir maç seçin veya daha sonra tekrar deneyin.</p>
+            </div>
+        `).show();
+        return;
+    }
+    
+    // Önce normal tahmin fonksiyonundan veriyi çekelim - ilk yarı skorları için
+    const url = `/api/predict-match/${homeId}/${awayId}?home_name=${encodeURIComponent(homeName)}&away_name=${encodeURIComponent(awayName)}&force_update=false`;
+
+    $.ajax({
+        url: url,
+        type: 'GET',
+        dataType: 'json',
+        success: function(data) {
+            console.log("Tahmin verileri alındı - Yarı skorları analizi için:", data);
+            
+            // Eğer veri yoksa ya da bozuk veri dönerse
+            if (!data || !data.home_team || !data.away_team) {
+                $('#predictionLoading').hide();
+                $('#predictionContent').html(`
+                    <div class="alert alert-warning">
+                        <h4>${homeName} vs ${awayName} - Veri Bulunamadı</h4>
+                        <p>Bu maç için yarı istatistikleri alınamadı.</p>
+                        <p>Lütfen daha sonra tekrar deneyin veya başka bir maç seçin.</p>
+                    </div>
+                `).show();
+                return;
+            }
+            
+            // Takımların son maçlarındaki ilk yarı/ikinci yarı gol verilerini hazırla
+            const homeStats = processTeamHalfTimeStatsFromPrediction(data.home_team, homeName);
+            const awayStats = processTeamHalfTimeStatsFromPrediction(data.away_team, awayName);
+            
+            // Bu fonksiyon tahmin verilerinden ilk yarı ve ikinci yarı istatistikleri çıkarır
+            function processTeamHalfTimeStatsFromPrediction(teamData, teamName) {
+                console.log("İşlenen takım verisi:", teamData);
+                
+                // Eğer takım verisi yoksa veya eksikse
+                if (!teamData || !teamData.form || !teamData.form.detailed_data || !teamData.form.detailed_data.all) {
+                    return {
+                        status: "Veri bulunamadı",
+                        matches: [],
+                        message: "Bu takım için maç verisi bulunamadı",
+                        team_id: teamData?.id || 0
+                    };
+                }
+                
+                // Son maçların verileri
+                const matches = teamData.form.detailed_data.all;
+                const processedMatches = [];
+                
+                // İstatistik sayaçları
+                let homeFirstHalfGoalsFor = 0;
+                let homeFirstHalfGoalsAgainst = 0;
+                let awayFirstHalfGoalsFor = 0;
+                let awayFirstHalfGoalsAgainst = 0;
+                
+                let homeSecondHalfGoalsFor = 0;
+                let homeSecondHalfGoalsAgainst = 0;
+                let awaySecondHalfGoalsFor = 0;
+                let awaySecondHalfGoalsAgainst = 0;
+                
+                // Maç sayaçları
+                let homeMatchCount = 0;
+                let awayMatchCount = 0;
+                
+                // Her maç için istatistikleri topla
+                for (const match of matches) {
+                    // İlk yarı gollerini al
+                    const htGoalsFor = match.ht_goals_scored || 0;
+                    const htGoalsAgainst = match.ht_goals_conceded || 0;
+                    
+                    // Toplam gollerini al
+                    const ftGoalsFor = match.goals_scored || 0; 
+                    const ftGoalsAgainst = match.goals_conceded || 0;
+                    
+                    // İkinci yarı gollerini hesapla (toplam - ilk yarı)
+                    const secondHalfGoalsFor = ftGoalsFor - htGoalsFor;
+                    const secondHalfGoalsAgainst = ftGoalsAgainst - htGoalsAgainst;
+                    
+                    // Ev sahibi/deplasman ayrımına göre istatistikleri topla
+                    if (match.is_home) {
+                        homeFirstHalfGoalsFor += htGoalsFor;
+                        homeFirstHalfGoalsAgainst += htGoalsAgainst;
+                        homeSecondHalfGoalsFor += secondHalfGoalsFor;
+                        homeSecondHalfGoalsAgainst += secondHalfGoalsAgainst;
+                        homeMatchCount++;
+                    } else {
+                        awayFirstHalfGoalsFor += htGoalsFor;
+                        awayFirstHalfGoalsAgainst += htGoalsAgainst;
+                        awaySecondHalfGoalsFor += secondHalfGoalsFor;
+                        awaySecondHalfGoalsAgainst += secondHalfGoalsAgainst;
+                        awayMatchCount++;
+                    }
+                    
+                    // İşlenmiş maç verisi
+                    processedMatches.push({
+                        match_id: match.match_id || 'unknown',
+                        date: match.date || 'unknown',
+                        opponent: match.opponent || 'unknown',
+                        is_home: match.is_home,
+                        first_half: {
+                            goals_scored: htGoalsFor,
+                            goals_conceded: htGoalsAgainst
+                        },
+                        second_half: {
+                            goals_scored: secondHalfGoalsFor,
+                            goals_conceded: secondHalfGoalsAgainst
+                        },
+                        full_time: {
+                            goals_scored: ftGoalsFor,
+                            goals_conceded: ftGoalsAgainst
+                        }
+                    });
+                }
+                
+                // Toplam maç sayısı
+                const totalMatches = homeMatchCount + awayMatchCount;
+                
+                // İlk ve ikinci yarı toplam golleri
+                const totalFirstHalfGoalsFor = homeFirstHalfGoalsFor + awayFirstHalfGoalsFor;
+                const totalFirstHalfGoalsAgainst = homeFirstHalfGoalsAgainst + awayFirstHalfGoalsAgainst;
+                const totalSecondHalfGoalsFor = homeSecondHalfGoalsFor + awaySecondHalfGoalsFor;
+                const totalSecondHalfGoalsAgainst = homeSecondHalfGoalsAgainst + awaySecondHalfGoalsAgainst;
+                
+                // Ortalamalar (maç sayısı sıfır değilse)
+                const avgFirstHalfGoalsFor = totalMatches > 0 ? totalFirstHalfGoalsFor / totalMatches : 0;
+                const avgFirstHalfGoalsAgainst = totalMatches > 0 ? totalFirstHalfGoalsAgainst / totalMatches : 0;
+                const avgSecondHalfGoalsFor = totalMatches > 0 ? totalSecondHalfGoalsFor / totalMatches : 0;
+                const avgSecondHalfGoalsAgainst = totalMatches > 0 ? totalSecondHalfGoalsAgainst / totalMatches : 0;
+                
+                // Sonuç formatını hazırla
+                return {
+                    team_id: teamData.id || 0,
+                    team_name: teamName,
+                    total_matches_analyzed: totalMatches,
+                    status: "OK",
+                    matches: processedMatches,
+                    statistics: {
+                        first_half: {
+                            total_goals: totalFirstHalfGoalsFor,
+                            avg_goals_per_match: parseFloat(avgFirstHalfGoalsFor.toFixed(2)),
+                            home_goals: homeFirstHalfGoalsFor,
+                            away_goals: awayFirstHalfGoalsFor
+                        },
+                        second_half: {
+                            total_goals: totalSecondHalfGoalsFor,
+                            avg_goals_per_match: parseFloat(avgSecondHalfGoalsFor.toFixed(2)),
+                            home_goals: homeSecondHalfGoalsFor,
+                            away_goals: awaySecondHalfGoalsFor
+                        },
+                        full_time: {
+                            total_goals: totalFirstHalfGoalsFor + totalSecondHalfGoalsFor,
+                            avg_goals_per_match: parseFloat((avgFirstHalfGoalsFor + avgSecondHalfGoalsFor).toFixed(2))
+                        }
+                    }
+                };
+            }
+            
+            console.log("İşlenmiş yarı istatistikleri:", {homeStats, awayStats});
+        
+        $('#predictionLoading').hide();
+        $('#predictionContent').show();
+        
+        // Her iki takım için veri bulunamadıysa uyarı göster
+        if ((homeStats.status === "Veri bulunamadı" || homeStats.matches?.length === 0) && 
+            (awayStats.status === "Veri bulunamadı" || awayStats.matches?.length === 0)) {
+            $('#predictionContent').html(`
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="alert alert-warning">
+                            <h4>${homeName} vs ${awayName} - Veri Bulunamadı</h4>
+                            <p>Her iki takım için ilk yarı/ikinci yarı istatistikleri bulunamadı. Bu durum şu nedenlerden kaynaklanabilir:</p>
+                            <ul>
+                                <li>Takımların son dönemdeki maç verileri eksik olabilir</li>
+                                <li>Veri sağlayıcılarında bu takımlar için detaylı istatistikler mevcut değil</li>
+                                <li>Geçici bir bağlantı sorunu olabilir</li>
+                            </ul>
+                            <p>Lütfen daha sonra tekrar deneyin veya başka takımlar seçin.</p>
+                        </div>
+                    </div>
+                </div>
+            `);
+            return;
+        }
+        
+        // Takımlar için sonuçları göster
+        let content = `
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="alert alert-info">
+                        <h4>${homeName} vs ${awayName} - Yarı İstatistikleri</h4>
+                        <p>Son 21 maçtaki ilk ve ikinci yarı gol istatistikleri</p>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        // Ev sahibi takım istatistikleri
+        if (homeStats.status !== "Veri bulunamadı" && homeStats.matches?.length > 0) {
+            content += `
+                <div class="row mb-4">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header bg-primary text-white">
+                                <h5>${homeName} - Son ${homeStats.total_matches_analyzed} Maç İstatistikleri</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h6 class="mb-3">İlk Yarı Golleri</h6>
+                                        <p><strong>Toplam:</strong> ${homeStats.statistics.first_half.total_goals}</p>
+                                        <p><strong>Maç Başına:</strong> ${homeStats.statistics.first_half.avg_goals_per_match}</p>
+                                        <p><strong>Ev Sahibiyken:</strong> ${homeStats.statistics.first_half.home_goals}</p>
+                                        <p><strong>Deplasmanken:</strong> ${homeStats.statistics.first_half.away_goals}</p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h6 class="mb-3">İkinci Yarı Golleri</h6>
+                                        <p><strong>Toplam:</strong> ${homeStats.statistics.second_half.total_goals}</p>
+                                        <p><strong>Maç Başına:</strong> ${homeStats.statistics.second_half.avg_goals_per_match}</p>
+                                        <p><strong>Ev Sahibiyken:</strong> ${homeStats.statistics.second_half.home_goals}</p>
+                                        <p><strong>Deplasmanken:</strong> ${homeStats.statistics.second_half.away_goals}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Deplasman takımı istatistikleri
+        if (awayStats.status !== "Veri bulunamadı" && awayStats.matches?.length > 0) {
+            content += `
+                <div class="row mb-4">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header bg-danger text-white">
+                                <h5>${awayName} - Son ${awayStats.total_matches_analyzed} Maç İstatistikleri</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h6 class="mb-3">İlk Yarı Golleri</h6>
+                                        <p><strong>Toplam:</strong> ${awayStats.statistics.first_half.total_goals}</p>
+                                        <p><strong>Maç Başına:</strong> ${awayStats.statistics.first_half.avg_goals_per_match}</p>
+                                        <p><strong>Ev Sahibiyken:</strong> ${awayStats.statistics.first_half.home_goals}</p>
+                                        <p><strong>Deplasmanken:</strong> ${awayStats.statistics.first_half.away_goals}</p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h6 class="mb-3">İkinci Yarı Golleri</h6>
+                                        <p><strong>Toplam:</strong> ${awayStats.statistics.second_half.total_goals}</p>
+                                        <p><strong>Maç Başına:</strong> ${awayStats.statistics.second_half.avg_goals_per_match}</p>
+                                        <p><strong>Ev Sahibiyken:</strong> ${awayStats.statistics.second_half.home_goals}</p>
+                                        <p><strong>Deplasmanken:</strong> ${awayStats.statistics.second_half.away_goals}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // İstatistiklerden çıkarılabilecek analizler
+        const homeFirstHalfAvg = homeStats.statistics?.first_half.avg_goals_per_match || 0;
+        const homeSecondHalfAvg = homeStats.statistics?.second_half.avg_goals_per_match || 0;
+        const awayFirstHalfAvg = awayStats.statistics?.first_half.avg_goals_per_match || 0;
+        const awaySecondHalfAvg = awayStats.statistics?.second_half.avg_goals_per_match || 0;
+        
+        let analysisText = "<p>İstatistiklere dayanarak:</p><ul>";
+        
+        if (homeFirstHalfAvg > homeSecondHalfAvg) {
+            analysisText += `<li><strong>${homeName}</strong> ilk yarıda daha fazla gol atma eğiliminde (${homeFirstHalfAvg} vs ${homeSecondHalfAvg})</li>`;
+        } else if (homeFirstHalfAvg < homeSecondHalfAvg) {
+            analysisText += `<li><strong>${homeName}</strong> ikinci yarıda daha fazla gol atma eğiliminde (${homeSecondHalfAvg} vs ${homeFirstHalfAvg})</li>`;
+        }
+        
+        if (awayFirstHalfAvg > awaySecondHalfAvg) {
+            analysisText += `<li><strong>${awayName}</strong> ilk yarıda daha fazla gol atma eğiliminde (${awayFirstHalfAvg} vs ${awaySecondHalfAvg})</li>`;
+        } else if (awayFirstHalfAvg < awaySecondHalfAvg) {
+            analysisText += `<li><strong>${awayName}</strong> ikinci yarıda daha fazla gol atma eğiliminde (${awaySecondHalfAvg} vs ${awayFirstHalfAvg})</li>`;
+        }
+        
+        // İlk / ikinci yarılar karşılaştırma
+        const totalFirstHalfAvg = (homeFirstHalfAvg + awayFirstHalfAvg) / 2;
+        const totalSecondHalfAvg = (homeSecondHalfAvg + awaySecondHalfAvg) / 2;
+        
+        if (totalFirstHalfAvg > totalSecondHalfAvg) {
+            analysisText += `<li>Bu maçta ilk yarıda daha fazla gol olma olasılığı yüksek görünüyor</li>`;
+        } else if (totalFirstHalfAvg < totalSecondHalfAvg) {
+            analysisText += `<li>Bu maçta ikinci yarıda daha fazla gol olma olasılığı yüksek görünüyor</li>`;
+        }
+        
+        analysisText += "</ul>";
+        
+        // Analizleri ekle
+        content += `
+            <div class="row mt-3">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header bg-dark text-white">
+                            <h5>Analiz ve Öngörüler</h5>
+                        </div>
+                        <div class="card-body">
+                            ${analysisText}
+                            <div class="alert alert-secondary mt-3">
+                                <p class="mb-0"><strong>Not:</strong> Bu analizler sadece son 21 maçtaki ilk yarı (0-45 dk) ve ikinci yarı (46-90 dk) gol istatistiklerine dayanmaktadır ve garanti içermez.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        // İçeriği güncelle
+        $('#predictionContent').html(content);
+    })
+    .catch(function(error) {
+        console.error("Takım yarı istatistikleri alınırken hata:", error);
+        $('#predictionLoading').hide();
+        $('#predictionError').hide();
+        
+        // Hata ne olursa olsun kullanıcı dostu bir mesaj göster
+        $('#predictionContent').html(`
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="alert alert-warning">
+                        <h4>${homeName} vs ${awayName} - Veri Alınamadı</h4>
+                        <p>Takımların ilk yarı/ikinci yarı istatistikleri alınamadı. Bu durum şu nedenlerden kaynaklanabilir:</p>
+                        <ul>
+                            <li>Veri sağlayıcısına bağlantı sırasında sorun oluştu</li>
+                            <li>Takımların son dönemdeki maç verileri eksik olabilir</li>
+                            <li>Veri sağlayıcısı geçici olarak kullanılamıyor olabilir</li>
+                        </ul>
+                        <p>Lütfen daha sonra tekrar deneyin.</p>
+                    </div>
+                </div>
+            </div>
+        `);
+        $('#predictionContent').show();
+    });
+    
+    // Burada eski kod tamamen kaldırıldı - artık takımların son 21 maç istatistiğini kullanıyoruz
+}

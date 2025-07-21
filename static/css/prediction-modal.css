@@ -1,0 +1,327 @@
+
+/* Prediction modal */
+.modal-xl {
+    max-width: 95%;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+@media (min-width: 1400px) {
+    .modal-xl {
+        max-width: 1300px;
+    }
+}
+
+/* Sürpriz butonu popup içeriği için özel stiller */
+.htft-stats-container {
+    max-height: 75vh;
+    overflow-y: auto;
+    padding: 15px;
+    position: relative;
+    z-index: 999;
+    display: block;
+    width: 100%;
+}
+
+.htft-card {
+    margin-bottom: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.htft-heading {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.htft-subheading {
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+/* İY/MS kombinasyonları için kompakt tablo */
+.htft-combo-table {
+    font-size: 0.85rem;
+}
+
+.htft-combo-table td {
+    padding: 0.4rem;
+}
+
+/* İstatistik kartları için progress bar stilleri */
+.htft-progress {
+    height: 18px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+}
+
+.htft-result-1 {
+    background-color: #28a745; /* Yeşil */
+}
+
+.htft-result-X {
+    background-color: #ffc107; /* Sarı */
+}
+
+.htft-result-2 {
+    background-color: #dc3545; /* Kırmızı */
+}
+
+.form-badge {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin: 0 2px;
+}
+
+#predictionContent h4, #predictionContent h5, #predictionContent h6 {
+    font-weight: 600;
+}
+
+.prediction-card {
+    border: 1px solid rgba(0,0,0,.125);
+    border-radius: 0.25rem;
+    padding: 10px;
+    text-align: center;
+    height: 100%;
+    transition: all 0.3s ease;
+}
+
+.prediction-card:hover {
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+}
+
+.prediction-value {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+.prediction-probability {
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+.confidence-meter {
+    height: 10px;
+    background-color: #e9ecef;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    overflow: hidden;
+}
+
+.confidence-value {
+    height: 100%;
+    background-color: #28a745;
+}
+
+/* Daha temiz tablo görünümü */
+.table-sm {
+    font-size: 0.9rem;
+}
+
+.table-sm td:first-child {
+    font-weight: 500;
+}
+
+
+/* Tahmin Modalı için Stiller */
+.team-logo-container {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.team-logo {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.prediction-card {
+    margin-bottom: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    background-color: #212529;
+    color: #f8f9fa;
+    border: 1px solid #343a40;
+}
+
+.prediction-header {
+    background-color: #343a40;
+    padding: 10px 15px;
+    border-bottom: 1px solid #495057;
+    border-radius: 10px 10px 0 0;
+    color: #f8f9fa;
+}
+
+.prediction-body {
+    padding: 15px;
+    background-color: #212529;
+}
+
+.prediction-scoreboard {
+    background-color: #343a40;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    text-align: center;
+    color: #f8f9fa;
+    border: 1px solid #495057;
+}
+
+.prediction-score {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #ffffff;
+    text-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+}
+
+.prediction-progress {
+    height: 10px;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    background-color: #343a40;
+}
+
+.prediction-content {
+    overflow-y: auto;
+    max-height: 80vh;
+}
+
+.prediction-progress-home {
+    background-color: #007bff;
+}
+
+.prediction-progress-draw {
+    background-color: #6c757d;
+}
+
+.prediction-progress-away {
+    background-color: #28a745;
+}
+
+.h2h-section {
+    margin-top: 20px;
+}
+
+.h2h-match {
+    padding: 8px;
+    border-bottom: 1px solid #495057;
+    background-color: #343a40;
+    margin-bottom: 4px;
+    border-radius: 4px;
+}
+
+.h2h-match:last-child {
+    border-bottom: none;
+}
+
+.h2h-result-W {
+    color: #59e180; /* Daha parlak yeşil */
+}
+
+.h2h-result-D {
+    color: #b2b8be; /* Daha parlak gri */
+}
+
+.h2h-result-L {
+    color: #ff6b70; /* Daha parlak kırmızı */
+}
+
+.percentage-bar {
+    display: flex;
+    height: 24px;
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 10px 0;
+}
+
+.percentage-segment {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-weight: bold;
+    font-size: 0.8rem;
+}
+
+.player-form-indicator {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    margin-right: 5px;
+    font-size: 12px;
+    line-height: 20px;
+    text-align: center;
+    color: white;
+}
+
+.form-W {
+    background-color: #28a745;
+}
+
+.form-D {
+    background-color: #ffc107;
+}
+
+.form-L {
+    background-color: #dc3545;
+}
+
+.prediction-label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #d0d4d9; /* Açık renk metin */
+}
+
+.prediction-value {
+    font-size: 1.1rem;
+    color: #fff;
+}
+
+.betting-prediction {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.betting-icon {
+    width: 30px;
+    text-align: center;
+    margin-right: 10px;
+    font-size: 1.2rem;
+}
+
+.betting-text {
+    flex-grow: 1;
+}
+
+.confidence-indicator {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: white;
+}
+
+.high-confidence {
+    background-color: #28a745;
+}
+
+.medium-confidence {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+.low-confidence {
+    background-color: #dc3545;
+}

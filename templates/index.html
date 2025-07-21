@@ -1,0 +1,988 @@
+{% extends "base.html" %}
+
+{% block title %}Fikstür{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12 mb-3">
+        <div class="search-container card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12">
+                        <label for="searchInput" class="form-label">Lig veya Takım Ara</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-search"></i></span>
+                            <input type="text" class="form-control" id="searchInput" placeholder="Lig veya takım ismi girin...">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <form method="GET" class="card">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-auto">
+                        <label for="date" class="form-label">Tarih Seçin:</label>
+                        <input type="date" class="form-control" id="date" name="date" value="{{ selected_date }}" onchange="this.form.submit()">
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="h5 mb-0"><i class="fas fa-calendar"></i> Fikstür</h2>
+            </div>
+            <div class="card-body">
+                {% if matches and matches.leagues %}
+                    {% for league in matches.leagues %}
+                        <div class="league-section mb-4">
+                            <h3 class="h6 league-header mb-3 bg-light p-2 rounded">
+                                <i class="fas fa-trophy me-2"></i>
+                                {{ league.name }}
+                            </h3>
+                            {% for match in league.matches %}
+                                <div class="card mb-2 match-item {% if match.is_live %}bg-danger text-white{% endif %}" 
+                                     data-status="{{ match.status }}" 
+                                     data-home-team="{{ match.homeTeam.id }}" 
+                                     data-away-team="{{ match.awayTeam.id }}"
+                                     data-home-name="{{ match.homeTeam.name }}"
+                                     data-away-name="{{ match.awayTeam.name }}"
+                                     style="cursor: pointer;">
+                                    <div class="card-body py-2">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div class="team-home text-end" style="width: 40%;" onclick="event.stopPropagation(); window.showTeamStats('{{ match.homeTeam.id }}', '{{ match.awayTeam.id }}', '{{ match.homeTeam.name }}', '{{ match.awayTeam.name }}')">
+                                                {{ match.homeTeam.name }}
+                                            </div>
+                                            <div class="score text-center" style="width: 20%;" onclick="event.stopPropagation();">
+                                                {% if match.status == 'FINISHED' %}
+                                                    <strong>{{ match.score.fullTime.home }} - {{ match.score.fullTime.away }}</strong>
+                                                    <br>
+                                                    <small class="text-muted">(İY: {{ match.score.halfTime.home if match.score.halfTime and match.score.halfTime.home != None else '-' }} - {{ match.score.halfTime.away if match.score.halfTime and match.score.halfTime.away != None else '-' }})</small>
+                                                {% elif match.is_live %}
+                                                    <strong class="text-warning">{{ match.score.fullTime.home }} - {{ match.score.fullTime.away }}</strong>
+                                                    <div>
+                                                        <span class="badge bg-warning text-dark">CANLI</span>
+                                                        {% if match.live_minute %}
+                                                            <span class="badge bg-warning text-dark">{{ match.live_minute }}'</span>
+                                                        {% endif %}
+                                                    </div>
+                                                {% else %}
+                                                    {{ match.turkish_time }}
+                                                {% endif %}
+                                            </div>
+                                            <div class="team-away text-start" style="width: 40%;" onclick="event.stopPropagation(); window.showTeamStats('{{ match.homeTeam.id }}', '{{ match.awayTeam.id }}', '{{ match.homeTeam.name }}', '{{ match.awayTeam.name }}')">
+                                                {{ match.awayTeam.name }}
+                                            </div>
+                                        </div>
+
+                                        <div class="text-center mt-2">
+                                            <div class="btn-group">
+                                                <button class="btn btn-sm btn-primary" onclick="event.stopPropagation(); showPrediction('{{ match.homeTeam.id }}', '{{ match.awayTeam.id }}', '{{ match.homeTeam.name }}', '{{ match.awayTeam.name }}', false)">
+                                                    <i class="fas fa-chart-line"></i> Tahmin
+                                                </button>
+<!-- Sürpriz butonu kaldırıldı -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i> Seçilen tarihte görüntülenecek maç bulunmuyor.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Team Stats Modal artık team_stats.js tarafından dinamik olarak oluşturuluyor -->
+
+<!-- Prediction Modal -->
+<div class="modal fade" id="predictionModal" tabindex="-1" aria-labelledby="predictionModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="predictionModalLabel">Maç Tahmini</h5>
+                <button type="button" class="btn-close" aria-label="Close" onclick="closePredictionModal()"></button>
+            </div>
+            <div class="modal-body">
+                <div id="predictionLoading" class="text-center">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Yükleniyor...</span>
+                    </div>
+                    <p class="mt-2">Tahmin yükleniyor...</p>
+                </div>
+                <div id="predictionError" class="alert alert-danger" style="display: none;">
+                    <i class="fas fa-exclamation-circle me-2"></i>
+                    <span id="errorMessage"></span>
+                </div>
+                <div id="predictionContent" class="htft-stats-container" style="display: none;">
+                    <!-- Tahmin içeriği buraya gelecek -->
+                </div>
+                <div id="predictionSummary">
+                    <!-- En yüksek olasılıklı tahmin burada gösterilecek -->
+                </div>
+                <div class="text-center mt-3">
+                    <button id="refreshPredictionBtn" class="btn btn-primary">
+                        <i class="fas fa-sync-alt"></i> Tahmini Yenile
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Half-Time Stats Modal için artık predictionModal kullanılıyor (team-halfTime-stats.js) -->
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Auto refresh every minute for live scores
+    setInterval(function() {
+        if (document.querySelectorAll('.bg-danger.text-white').length > 0) {
+            location.reload();
+        }
+    }, 60000);
+});
+
+// team-halfTime-stats.js dosyasında tanımlanan fonksiyon kullanılıyor
+
+// showPrediction fonksiyonu aşağıda tanımlanacak (satır 832)
+
+// Tahmin verilerine göre UI'ı güncelle
+function updatePredictionUI(data) {
+    console.log("updatePredictionUI çağrıldı");
+    
+    // Yeni template fonksiyonunu kullan
+    if (typeof window.generatePredictionHTML === 'function') {
+        const predictionContent = document.getElementById('predictionContent');
+        predictionContent.innerHTML = window.generatePredictionHTML(data);
+        return;
+    }
+    
+    // Eski kod (fallback)
+    const predictions = data.predictions;
+    const homeTeam = data.match_info?.home_team || data.home_team;
+    const awayTeam = data.match_info?.away_team || data.away_team;
+
+    // Tahmin içeriğini oluştur
+    let html = `
+        <div class="row mb-4">
+            <div class="col-md-4 text-center">
+                <h4>${homeTeam.name}</h4>
+                <img src="/static/img/team.png" alt="${homeTeam.name}" class="img-fluid mb-2" style="max-height: 80px;">
+            </div>
+            <div class="col-md-4 text-center">
+                <h5 class="mt-4">VS</h5>
+            </div>
+            <div class="col-md-4 text-center">
+                <h4>${awayTeam.name}</h4>
+                <img src="/static/img/team.png" alt="${awayTeam.name}" class="img-fluid mb-2" style="max-height: 80px;">
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header bg-success text-white">
+                <h5>Tahmin Özeti</h5>
+            </div>
+            <div class="card-body">
+                <p class="lead">
+                    ${(function() {
+                        if (predictions.most_likely_outcome === 'HOME_WIN') {
+                            return homeTeam.name + ' kazanması bekleniyor.';
+                        } else if (predictions.most_likely_outcome === 'AWAY_WIN') {
+                            return awayTeam.name + ' kazanması bekleniyor.';
+                        } else {
+                            return 'Beraberlik bekleniyor.';
+                        }
+                    })()}
+                </p>
+
+                <p><strong>En yüksek olasılıklı tahmin:</strong> `;
+
+    // Turkish translation for all prediction types
+    let highestProbabilityText = '';
+    const allBets = predictions.betting_predictions;
+    const over35Bet = allBets.over_3_5_goals;
+
+    // En yüksek olasılıklı tahmini belirleyelim (3.5 ALT değilse)
+    const mostConfidentBet = findMostConfidentBet(predictions);
+
+    // Eğer en yüksek olasılıklı tahmin bulunmuşsa ve bu 3.5 ALT değilse göster
+    if (mostConfidentBet && mostConfidentBet.market) {
+        let marketName = '';
+
+        // Bahis türü adını Türkçe'ye çevir
+        if (mostConfidentBet.market === 'over_2_5_goals') {
+            marketName = '2.5 Alt/Üst';
+        } else if (mostConfidentBet.market === 'both_teams_to_score') {
+            marketName = 'KG Var/Yok';
+        } else if (mostConfidentBet.market === 'match_result') {
+            marketName = 'Maç Sonucu';
+        } else if (mostConfidentBet.market === 'exact_score') {
+            marketName = 'Kesin Skor';
+        } else if (mostConfidentBet.market === 'half_time_full_time') {
+            marketName = 'İlk Yarı/Maç Sonu';
+        } else if (mostConfidentBet.market === 'first_goal_team') {
+            marketName = 'İlk Gol';
+        } else {
+            marketName = mostConfidentBet.market;
+        }
+
+        highestProbabilityText = `${marketName} - ${mostConfidentBet.prediction} (${mostConfidentBet.probability}%)`;
+    }
+    // Eğer 3.5 üst tahmini varsa onu göster
+    else if (over35Bet && over35Bet.prediction === 'YES' || over35Bet.prediction === '3.5 ÜST') {
+        highestProbabilityText = `3.5 Alt/Üst - 3.5 ÜST (${over35Bet.probability}%)`;
+    }
+
+
+    html += `${highestProbabilityText}</p>
+
+                <div class="progress mb-3">
+                    <div class="progress-bar" role="progressbar" style="width: ${predictions.confidence}%" aria-valuenow="${predictions.confidence}" aria-valuemin="0" aria-valuemax="100">
+                        Güven: ${predictions.confidence}%
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Kazanma olasılıkları -->
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h5>Kazanma Olasılıkları</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-4 text-center">
+                                <strong>Ev:</strong> ${predictions.home_win_probability}%
+                                <div class="progress">
+                                    <div class="progress-bar bg-success" role="progressbar" style="width: ${predictions.home_win_probability}%" aria-valuenow="${predictions.home_win_probability}" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                            </div>
+                            <div class="col-4 text-center">
+                                <strong>Beraberlik:</strong> ${predictions.draw_probability}%
+                                <div class="progress">
+                                    <div class="progress-bar bg-warning" role="progressbar" style="width: ${predictions.draw_probability}%" aria-valuenow="${predictions.draw_probability}" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                            </div>
+                            <div class="col-4 text-center">
+                                <strong>Deplasman:</strong> ${predictions.away_win_probability}%
+                                <div class="progress">
+                                    <div class="progress-bar bg-danger" role="progressbar" style="width: ${predictions.away_win_probability}%" aria-valuenow="${predictions.away_win_probability}" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Beklenen gol sayısı -->
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h5>Beklenen Gol Sayısı</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-6 text-center">
+                                <h4>${predictions.expected_goals.home}</h4>
+                                <p>Ev Sahibi</p>
+                            </div>
+                            <div class="col-6 text-center">
+                                <h4>${predictions.expected_goals.away}</h4>
+                                <p>Deplasman</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bahis tahminleri -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5>Bahis Tahminleri</h5>
+            </div>
+            <div class="card-body">
+                <div class="row" id="bettingPredictions">
+    `;
+
+    // Bahis tahminlerini ekle
+    const betting = predictions.betting_predictions;
+
+    html += `
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100">
+                            <div class="card-header text-center">KG Var/Yok</div>
+                            <div class="card-body text-center">
+                                <h4>${betting.both_teams_to_score.prediction}</h4>
+                                <div class="progress">
+                                    <div class="progress-bar bg-info" role="progressbar" style="width: ${betting.both_teams_to_score.probability}%" aria-valuenow="${betting.both_teams_to_score.probability}" aria-valuemin="0" aria-valuemax="100">${betting.both_teams_to_score.probability}%</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100">
+                            <div class="card-header text-center">2.5 Üst/Alt</div>
+                            <div class="card-body text-center">
+                                <h4>${betting.over_2_5_goals.prediction}</h4>
+                                <div class="progress">
+                                    <div class="progress-bar bg-info" role="progressbar" style="width: ${betting.over_2_5_goals.probability}%" aria-valuenow="${betting.over_2_5_goals.probability}" aria-valuemin="0" aria-valuemax="100">${betting.over_2_5_goals.probability}%</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100">
+                            <div class="card-header text-center">3.5 Üst/Alt</div>
+                            <div class="card-body text-center">
+                                <h4>${betting.over_3_5_goals.prediction}</h4>
+                                <div class="progress">
+                                    <div class="progress-bar bg-info" role="progressbar" style="width: ${betting.over_3_5_goals.probability}%" aria-valuenow="${betting.over_3_5_goals.probability}" aria-valuemin="0" aria-valuemax="100">${betting.over_3_5_goals.probability}%</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100">
+                            <div class="card-header text-center">Kesin Skor</div>
+                            <div class="card-body text-center">
+                                <h4>${betting.exact_score.prediction}</h4>
+                                <div class="progress">
+                                    <div class="progress-bar bg-info" role="progressbar" style="width: ${betting.exact_score.probability}%" aria-valuenow="${betting.exact_score.probability}" aria-valuemin="0" aria-valuemax="100">${betting.exact_score.probability}%</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- İlk Yarı/Maç Sonu bölümü kullanıcı talebi üzerine gizlendi -->
+
+
+    `;
+
+    // Form verileri ekle
+    html += `
+                </div>
+            </div>
+        </div>
+
+        <!-- Form verileri -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5>Takım Formları</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h4 class="text-center">${homeTeam.name}</h4>
+                        <h6>Son Maçlar:</h6>
+                        <div class="d-flex justify-content-center mb-3">
+    `;
+
+    // Ev sahibi son maçlar
+    if (homeTeam.form && homeTeam.form.recent_match_data && homeTeam.form.recent_match_data.length > 0) {
+        const recentMatches = homeTeam.form.recent_match_data.slice(0, 5);
+        recentMatches.forEach(match => {
+            let resultClass = '';
+            switch (match.result) {
+                case 'W': resultClass = 'bg-success'; break;
+                case 'D': resultClass = 'bg-warning'; break;
+                case 'L': resultClass = 'bg-danger'; break;
+            }
+
+            html += `
+                <div class="form-badge ${resultClass} text-white p-2 mx-1" title="${match.date}: ${match.opponent} (${match.is_home ? 'Ev' : 'Dep'}) ${match.goals_scored}-${match.goals_conceded}">${match.result}</div>
+            `;
+        });
+    } else {
+        html += `<p>Form verisi bulunamadı</p>`;
+    }
+
+    html += `
+                        </div>
+                        <div class="mt-3">
+                            <h6>Performans İstatistikleri:</h6>
+                            <table class="table table-sm">
+                                <tr>
+                                    <td>Ortalama Atılan Gol:</td>
+                                    <td>${homeTeam.form ? homeTeam.form.avg_goals_scored.toFixed(2) : 'N/A'}</td>
+                                </tr>
+                                <tr>
+                                    <td>Ortalama Yenilen Gol:</td>
+                                    <td>${homeTeam.form ? homeTeam.form.avg_goals_conceded.toFixed(2) : 'N/A'}</td>
+                                </tr>
+                                <tr>
+                                    <td>Evdeki Ortalama Gol:</td>
+                                    <td>${homeTeam.form && homeTeam.form.home_performance ? homeTeam.form.home_performance.avg_goals_scored.toFixed(2) : 'N/A'}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <h4 class="text-center">${awayTeam.name}</h4>
+                        <h6>Son Maçlar:</h6>
+                        <div class="d-flex justify-content-center mb-3">
+    `;
+
+    // Deplasman son maçlar
+    if (awayTeam.form && awayTeam.form.recent_match_data && awayTeam.form.recent_match_data.length > 0) {
+        const recentMatches = awayTeam.form.recent_match_data.slice(0, 5);
+        recentMatches.forEach(match => {
+            let resultClass = '';
+            switch (match.result) {
+                case 'W': resultClass = 'bg-success'; break;
+                case 'D': resultClass = 'bg-warning'; break;
+                case 'L': resultClass = 'bg-danger'; break;
+            }
+
+            html += `
+                <div class="form-badge ${resultClass} text-white p-2 mx-1" title="${match.date}: ${match.opponent} (${match.is_home ? 'Ev' : 'Dep'}) ${match.goals_scored}-${match.goals_conceded}">${match.result}</div>
+            `;
+        });
+    } else {
+        html += `<p>Form verisi bulunamadı</p>`;
+    }
+
+    html += `
+                        </div>
+                        <div class="mt-3">
+                            <h6>Performans İstatistikleri:</h6>
+                            <table class="table table-sm">
+                                <tr>
+                                    <td>Ortalama Atılan Gol:</td>
+                                    <td>${awayTeam.form ? awayTeam.form.avg_goals_scored.toFixed(2) : 'N/A'}</td>
+                                </tr>
+                                <tr>
+                                    <td>Ortalama Yenilen Gol:</td>
+                                    <td>${awayTeam.form ? awayTeam.form.avg_goals_conceded.toFixed(2) : 'N/A'}</td>
+                                </tr>
+                                <tr>
+                                    <td>Deplasmandaki Ortalama Gol:</td>
+                                    <td>${awayTeam.form && awayTeam.form.away_performance ? awayTeam.form.away_performance.avg_goals_scored.toFixed(2) : 'N/A'}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Karşılıklı maçlar (H2H) -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5>Karşılıklı Maçlar (H2H)</h5>
+            </div>
+            <div class="card-body">
+    `;
+
+    // H2H verileri ekle
+    if (data.head_to_head && data.head_to_head.total_matches > 0) {
+        html += `
+                <div class="row mb-3">
+                    <div class="col-md-4 text-center">
+                        <h6>${homeTeam.name} Galibiyeti</h6>
+                        <h4>${data.head_to_head.home_wins}</h4>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <h6>Beraberlik</h6>
+                        <h4>${data.head_to_head.draws}</h4>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <h6>${awayTeam.name} Galibiyeti</h6>
+                        <h4>${data.head_to_head.away_wins}</h4>
+                    </div>
+                </div>
+
+                <h6>Son Karşılaşmalar:</h6>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Tarih</th>
+                                <th>Lig</th>
+                                <th>Skor</th>
+                                <th>Sonuç</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+        `;
+
+        data.head_to_head.recent_matches.forEach(match => {
+            let resultClass = '';
+            switch (match.result) {
+                case 'W': resultClass = 'text-success'; break;
+                case 'D': resultClass = 'text-warning'; break;
+                case 'L': resultClass = 'text-danger'; break;
+            }
+
+            html += `
+                            <tr>
+                                <td>${match.date}</td>
+                                <td>${match.league}</td>
+                                <td>${match.home_score} - ${match.away_score}</td>
+                                <td class="${resultClass}">${match.result === 'W' ? homeTeam.name + ' Kazandı' : match.result === 'L' ? awayTeam.name + ' Kazandı' : 'Beraberlik'}</td>
+                            </tr>
+        `;
+        });
+
+        html += `
+                        </tbody>
+                    </table>
+                </div>
+        `;
+    } else {
+        html += `<p>Bu iki takım arasında yakın zamanda oynanan maç bulunamadı.</p>`;
+    }
+
+    html += `
+            </div>
+        </div>
+
+        <!-- Tahmin açıklamaları ve yorumlar -->
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+                <h5>Tahmin Analizi ve Yorumlar</h5>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <p><strong>Kesin Skor Analizi:</strong> ${predictions.explanation.exact_score}</p>
+                </div>
+                <div class="alert alert-info">
+                    <p><strong>Maç Sonucu Analizi:</strong> ${predictions.explanation.match_result}</p>
+                </div>
+                <div class="alert alert-info">
+                    <p><strong>Takım Güç Analizi:</strong> ${predictions.explanation.relative_strength}</p>
+                </div>
+                <div class="alert alert-info">
+                    <p><strong>H2H Analizi:</strong> ${predictions.explanation.head_to_head}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mb-3">
+            <button class="btn btn-warning" onclick="showPrediction('${homeTeam.id}', '${awayTeam.id}', '${homeTeam.name}', '${awayTeam.name}', true)">
+                <i class="fas fa-redo"></i> Tahmini Yenile
+            </button>
+        </div>
+    `;
+    // Yeni template fonksiyonunu kullan
+    if (typeof window.generatePredictionHTML === 'function') {
+        predictionContent.innerHTML = window.generatePredictionHTML(data);
+    } else {
+        predictionContent.innerHTML = html;
+    }
+}
+
+
+$(document).on('prediction:loaded', function(e, data) {
+    if (data && data.predictions) {
+        displayPredictionSummary(data.predictions);
+    }
+});
+
+function displayPredictionSummary(predictions) {
+    let summaryText = '';
+    if (predictions.most_likely_outcome === 'HOME_WIN') {
+        summaryText = `${predictions.home_team.name} kazanması bekleniyor.`;
+    } else if (predictions.most_likely_outcome === 'AWAY_WIN') {
+        summaryText = `${predictions.away_team.name} kazanması bekleniyor.`;
+    } else {
+        summaryText = 'Beraberlik bekleniyor.';
+    }
+
+    let highestProbabilityText = '';
+    const allBets = predictions.betting_predictions;
+    const over35Bet = allBets.over_3_5_goals;
+
+    // En yüksek olasılıklı tahmini belirleyelim (3.5 ALT değilse)
+    const mostConfidentBet = findMostConfidentBet(predictions);
+
+    // Eğer en yüksek olasılıklı tahmin bulunmuşsa ve bu 3.5 ALT değilse göster
+    if (mostConfidentBet && mostConfidentBet.market) {
+        let marketName ='';
+
+        // Bahis türü adını Türkçe'ye çevir
+        if (mostConfidentBet.market === 'over_2_5_goals') {
+            marketName = '2.5 Alt/Üst';
+        } else if (mostConfidentBet.market === 'both_teams_to_score') {
+            marketName = 'KG Var/Yok';
+        } else if (mostConfidentBet.market === 'match_result') {
+            marketName = 'Maç Sonucu';
+        } else if (mostConfidentBet.market === 'exact_score') {
+            marketName = 'Kesin Skor';
+        } else if (mostConfidentBet.market === 'half_time_full_time') {
+            marketName = 'İlk Yarı/Maç Sonu';
+        } else if (mostConfidentBet.market === 'first_goal_team') {
+            marketName = 'İlk Gol';
+        } else {
+            marketName = mostConfidentBet.market;
+        }
+
+        highestProbabilityText = `${marketName} - ${mostConfidentBet.prediction} (${mostConfidentBet.probability}%)`;
+    }
+    // Eğer 3.5 üst tahmini varsa onu göster
+    else if (over35Bet && over35Bet.prediction === 'YES' || over35Bet.prediction === '3.5 ÜST') {
+        highestProbabilityText = `3.5 Alt/Üst - 3.5 ÜST (${over35Bet.probability}%)`;
+    }
+
+
+    $('#predictionSummary').html(`
+        <h3>Tahmin Özeti</h3>
+        <p>${summaryText}</p>
+        <p>En yüksek olasılıklı tahmin: ${highestProbabilityText}</p>
+    `);
+}
+
+// Tahmin yenileme (güncelleme) fonksiyonu - global olarak tanımlanmış
+window.refreshPrediction = function(homeTeamId, awayTeamId, homeTeamName, awayTeamName) {
+    console.log("refreshPrediction fonksiyonu çalıştırıldı");
+    
+    // Daha önce showPrediction ile modal zaten gösterilmiş olmalı
+    const predictionLoading = document.getElementById('predictionLoading');
+    const predictionContent = document.getElementById('predictionContent');
+    const predictionError = document.getElementById('predictionError');
+    
+    // Modal içeriğini yükleniyor durumuna getir
+    predictionLoading.style.display = 'block';
+    predictionContent.style.display = 'none';
+    predictionError.style.display = 'none';
+    
+    // API çağrısı - force_update=true parametresi ile önbellek yenileme zorla
+    fetch(`/api/predict-match/${homeTeamId}/${awayTeamId}?home_name=${encodeURIComponent(homeTeamName)}&away_name=${encodeURIComponent(awayTeamName)}&force_update=true`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log("Tahmin verileri yenilendi:", data);
+            predictionLoading.style.display = 'none';
+            predictionContent.style.display = 'block';
+            updatePredictionUI(data);
+            // Trigger custom event to update prediction summary
+            const event = new CustomEvent('prediction:loaded', { detail: data });
+            document.dispatchEvent(event);
+        })
+        .catch(error => {
+            console.error("Tahmin güncellenirken hata:", error);
+            predictionLoading.style.display = 'none';
+            predictionError.style.display = 'block';
+            document.getElementById('errorMessage').textContent = `Tahmin güncellenirken hata oluştu: ${error.message}`;
+        });
+};
+
+function findMostConfidentBet(predictions) {
+    const allBets = predictions.betting_predictions;
+    let mostConfident = null;
+
+    for (const market in allBets) {
+        const bet = allBets[market];
+        if (market !== 'over_3_5_goals' && (!mostConfident || bet.probability > mostConfident.probability)) {
+            mostConfident = {
+                market: market,
+                prediction: bet.prediction,
+                probability: bet.probability
+            };
+        }
+    }
+    return mostConfident;
+}
+
+function getMostConfidentBet(betting) {
+                let highest = { market: '', prediction: '', probability: 0 };
+
+                // Tüm bahisleri kontrol et (3.5 Alt/Üst hariç)
+                for (const market in betting) {
+                    // 3.5 ALT/ÜST tahminini atla
+                    if (market === 'over_3_5_goals') {
+                        // continue yerine bu kod bloğunda hiçbir şey yapmadan bir sonraki iterasyona geç
+                    } else {
+                        if (betting[market] && betting[market].probability > highest.probability) {
+                            highest = {
+                                market: market,
+                                prediction: betting[market].prediction,
+                                probability: betting[market].probability
+                            };
+                        }
+                    }
+
+
+                }
+
+                // Türkçeleştir ve döndür
+                let result = '';
+                if (highest.market === 'match_result') {
+                    result = `Maç Sonucu: ${formatPrediction('match_result', highest.prediction)}`;
+                } else if (highest.market === 'both_teams_to_score') {
+                    result = `KG: ${formatPrediction('both_teams_to_score', highest.prediction)}`;
+                } else if (highest.market === 'over_2_5_goals') {
+                    result = `2.5 Gol: ${formatOverUnder(highest.prediction)}`;
+                } else if (highest.market === 'exact_score') {
+                    result = `Skor: ${highest.prediction}`;
+                }
+
+                return `${result} (${highest.probability}%)`;
+            }
+
+function getMarketNameTurkish(market) {
+    switch (market) {
+        case 'over_2_5_goals': return '2.5 Alt/Üst';
+        case 'both_teams_to_score': return 'KG Var/Yok';
+        case 'match_result': return 'Maç Sonucu';
+        case 'exact_score': return 'Kesin Skor';
+        case 'half_time_full_time': return 'İlk Yarı/Maç Sonu';
+        case 'first_goal_team': return 'İlk Gol';
+        case 'cards_over_3_5': return 'Kartlar 3.5 Üst/Alt';
+        case 'corners_over_9_5': return 'Köşeler 9.5 Üst/Alt';
+        default: return market;
+    }
+}
+
+function formatPrediction(market, prediction) {
+    if (market === 'match_result') {
+        if (prediction === 'HOME_WIN') return 'Ev Sahibi Kazanır';
+        if (prediction === 'AWAY_WIN') return 'Deplasman Kazanır';
+        if (prediction === 'DRAW') return 'Beraberlik';
+    } else if (market === 'both_teams_to_score') {
+        if (prediction === 'YES') return 'EVET';
+        if (prediction === 'NO') return 'HAYIR';
+    } else if (market === 'over_2_5_goals') {
+        if (prediction === 'YES') return '2.5 ÜST';
+        if (prediction === 'NO') return '2.5 ALT';
+    } else if (market === 'over_3_5_goals') {
+        if (prediction === 'YES') return '3.5 ÜST';
+        if (prediction === 'NO') return '3.5 ALT';
+    }
+    return prediction;
+}
+
+function formatOverUnder(prediction) {
+    if (prediction === 'YES' || prediction === '2.5 ÜST') return '2.5 ÜST';
+    if (prediction === 'NO' || prediction === '2.5 ALT') return '2.5 ALT';
+    return prediction;
+}
+
+// GLOBAL FUNCTIONS
+// Modal'ı hemen kapat
+window.closePredictionModal = function() {
+    console.log("Kapatma butonu tıklandı");
+    
+    // Modal kontrollerini temizle
+    if (window.modalCheckInterval) {
+        clearInterval(window.modalCheckInterval);
+        window.modalCheckInterval = null;
+    }
+    
+    // Tüm event listener'ları kaldır
+    $('#predictionModal').off('hide.bs.modal');
+    
+    // Modal'ı hemen kapat
+    const modalElement = document.getElementById('predictionModal');
+    if (modalElement) {
+        const modal = bootstrap.Modal.getInstance(modalElement);
+        if (modal) {
+            // Config'i resetle
+            modal._config.backdrop = true;
+            modal._config.keyboard = true;
+            // Direkt kapat
+            modal.hide();
+        } else {
+            // Fallback: jQuery ile kapat
+            $('#predictionModal').modal('hide');
+        }
+    }
+    
+    // Bootstrap backdrop'ı manuel olarak kaldır
+    $('.modal-backdrop').remove();
+    
+    // Body class'larını temizle
+    $('body').removeClass('modal-open');
+    
+    // Body style'larını temizle
+    document.body.style.filter = 'none';
+    document.body.style.overflow = '';
+    document.body.style.paddingRight = '';
+    
+    console.log("Modal kapandı, arka plan filtreleri temizlendi");
+};
+
+// Tüm sayfalardan erişilebilmesi için global tahmin göster fonksiyonu
+window.showPrediction = function(homeTeamId, awayTeamId, homeTeamName, awayTeamName, forceUpdate = false) {
+    console.log("Global showPrediction çağrıldı:", homeTeamId, awayTeamId, homeTeamName, awayTeamName, forceUpdate);
+
+    // Tahmin modalını göster
+    $('#predictionModal').modal('show');
+    
+    // Modal otomatik kapanmasını engelle
+    setTimeout(function() {
+        window.preventModalAutoClose();
+    }, 100);
+    
+    // Modal kapanma olaylarını dinle ve engellenebilir yap
+    $('#predictionModal').off('hide.bs.modal').on('hide.bs.modal', function(e) {
+        console.log('Modal kapanma tetiklendi!');
+        console.log('Event tipi:', e.type);
+        console.log('Event target:', e.target);
+        console.log('Event currentTarget:', e.currentTarget);
+        console.log('Modal kapanma zamanı:', new Date().toLocaleTimeString());
+        console.log('Modal açılma süresi:', (new Date() - window.modalOpenTime) / 1000, 'saniye');
+        
+        // 30 saniyeden fazla açık kaldıysa otomatik kapanmayı engelle
+        const openDuration = (new Date() - window.modalOpenTime) / 1000;
+        if (openDuration > 30 && openDuration < 40) {
+            console.log('Otomatik kapanma algılandı ve engellendi!');
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        }
+    });
+    
+    // Modal açılma zamanını kaydet
+    window.modalOpenTime = new Date();
+    
+    // Her 5 saniyede bir modal durumunu kontrol et
+    window.modalCheckInterval = setInterval(function() {
+        const modal = $('#predictionModal');
+        const isVisible = modal.is(':visible');
+        const hasShowClass = modal.hasClass('show');
+        console.log('Modal durumu kontrolü:', {
+            visible: isVisible,
+            hasShowClass: hasShowClass,
+            duration: ((new Date() - window.modalOpenTime) / 1000).toFixed(1) + ' saniye'
+        });
+        
+        // Modal kapandıysa interval'i temizle
+        if (!isVisible || !hasShowClass) {
+            clearInterval(window.modalCheckInterval);
+            console.log('Modal kapandı, interval temizlendi');
+        }
+    }, 5000);
+
+    // Modal başlığını güncelle
+    $('#matchTitle').text(`${homeTeamName} vs ${awayTeamName}`);
+
+    // Takım adlarını form bölümleri için de güncelle
+    $('#homeTeamNameForm').text(homeTeamName);
+    $('#awayTeamNameForm').text(awayTeamName);
+
+    // Yükleniyor göster, içeriği gizle
+    $('#predictionLoading').show();
+    $('#predictionContent').hide();
+    $('#predictionError').hide();
+
+    // Refresh butonu için veri ekle
+    $('#refreshPredictionBtn').data('home-id', homeTeamId)
+                         .data('away-id', awayTeamId)
+                         .data('home-name', homeTeamName)
+                         .data('away-name', awayTeamName)
+                         .off('click')
+                         .on('click', function() {
+                             refreshPrediction(homeTeamId, awayTeamId, homeTeamName, awayTeamName);
+                         });
+
+    // API isteği yap
+    const url = `/api/predict-match/${homeTeamId}/${awayTeamId}?home_name=${encodeURIComponent(homeTeamName)}&away_name=${encodeURIComponent(awayTeamName)}&force_update=${forceUpdate}`;
+    console.log("API isteği yapılıyor:", url);
+
+    $.ajax({
+        url: url,
+        type: 'GET',
+        dataType: 'json',
+        success: function(data) {
+            console.log("API yanıtı alındı, durum kodu:", 200);
+            console.log("Tahmin verisi alındı, uzunluk:", JSON.stringify(data).length);
+            $('#predictionLoading').hide();
+            $('#predictionContent').show();
+            
+            // Tahmin sonuçlarını göster
+            const formattedBothTeamsToScore = formatPrediction('both_teams_to_score', data.predictions.betting_predictions.both_teams_to_score.prediction);
+            // "YES" -> "2.5 ÜST", "NO" -> "2.5 ALT" olarak formatla
+            const formattedOver25 = formatOverUnder(data.predictions.betting_predictions.over_2_5_goals.prediction);
+            const formattedOver35 = formatPrediction('over_3_5_goals', data.predictions.betting_predictions.over_3_5_goals.prediction);
+
+            $('#predictionContent').html(`
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="alert alert-info">
+                            <h4>${homeTeamName} vs ${awayTeamName} Tahmini</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>KG Var/Yok:</strong> ${formattedBothTeamsToScore}</p>
+                        <p><strong>2.5 Üst/Alt:</strong> ${formattedOver25}</p>
+                        <p><strong>3.5 Üst/Alt:</strong> ${formattedOver35}</p>
+                    </div>
+                    <div class="col-md-6">
+                        </div>
+                </div>
+            `);
+            updatePredictionUI(data);
+        },
+        error: function(error) {
+            console.error("Tahmin alınırken hata:", error);
+            $('#predictionLoading').hide();
+            $('#predictionContent').show();
+            $('#predictionError').text('Tahmin alınırken hata oluştu: ' + error.responseJSON?.error || 'Sunucu hatası').show();
+        }
+    });
+};
+
+// Modal otomatik kapanmasını engelle
+window.preventModalAutoClose = function() {
+    // Bootstrap modal instance'ını al
+    const modalElement = document.getElementById('predictionModal');
+    if (modalElement) {
+        const modal = bootstrap.Modal.getInstance(modalElement);
+        if (modal) {
+            // Modal'ın otomatik kapanmasını engelle
+            modal._config.backdrop = 'static';
+            modal._config.keyboard = false;
+            
+            // Modal'ın _hideModal metodunu override et
+            const originalHideModal = modal._hideModal;
+            modal._hideModal = function() {
+                const duration = (new Date() - window.modalOpenTime) / 1000;
+                if (duration > 30 && duration < 40) {
+                    console.log('Modal otomatik kapanma engellendi!');
+                    return;
+                }
+                originalHideModal.call(this);
+            };
+        }
+    }
+};
+
+// Modal kapandığında arka plan filtrelerini temizleme
+document.addEventListener('DOMContentLoaded', function() {
+    // Modal kapandığında
+    document.querySelectorAll('.modal').forEach(function(modal) {
+        modal.addEventListener('hidden.bs.modal', function() {
+            // Modal kapandığında arka plan filtresini temizle
+            document.body.classList.remove('modal-open');
+            document.querySelectorAll('.modal-backdrop').forEach(function(element) {
+                element.remove();
+            });
+            console.log('Modal kapandı, arka plan filtreleri temizlendi');
+        });
+    });
+});
+</script>
+<!-- İçgörüler özelliği kaldırıldı -->
+
+{% endblock %}

@@ -1,0 +1,255 @@
+### Mantık Hataları Raporu
+
+Aşağıda, verdiğiniz algoritmik kod dosyanızda (`MatchPredictor` sınıfı) tespit edilen mantık hatalarını ve potansiyel sorunları detaylı bir şekilde açıklıyorum. Kod karmaşık bir yapıya sahip olduğundan, analiz belirli bölümlere odaklanarak yapılmıştır. Her hata veya sorun için bir başlık, açıklama, etkileri ve çözüm önerisi sunulmuştur. Türkçeye uygun bir şekilde, açık ve teknik bir dil kullanılarak rapor hazırlanmıştır.
+
+---
+
+#### 1. **Kesin Skor ve Maç Sonucu Tutarsızlığı**
+**Açıklama:**
+`predict_match` metodunda, kesin skor (`exact_score`) ve maç sonucu (`match_result`) tahminleri bazen birbirine uyumsuz olabiliyor. Örneğin, kesin skor "1-1" olarak belirlenmişken, `match_result` "MS1" (ev sahibi galibiyeti) olarak kalabiliyor. `_check_prediction_consistency` metodu bu tutarsızlığı düzeltmeye çalışıyor, ancak kesin skor güncellemeleri her zaman tüm bahis tahminlerine (örneğin KG VAR/YOK veya ÜST/ALT) tam olarak yansımıyor.
+
+**Etkiler:**
+- Kullanıcıya sunulan tahminlerde mantıksal çelişkiler ortaya çıkıyor (örneğin, "1-1 skor, ama MS1 tahmini").
+- Bahis önerileri güvenilirliğini kaybediyor.
+
+**Çözüm Önerisi:**
+- Kesin skoru belirledikten sonra, tüm bahis tahminlerini (`match_result`, `both_teams_to_score`, `over_2_5_goals`, vb.) bu skora göre zorla güncelleyin. `_check_prediction_consistency` metodunda, skor değiştikten sonra tüm bağımlı tahminlerin yeniden hesaplanmasını sağlayacak bir kontrol döngüsü ekleyin:
+  ```python
+  def _check_prediction_consistency(self, prediction):
+      exact_score = prediction['predictions']['exact_score']
+      home_score, away_score = map(int, exact_score.split('-'))
+      total_goals = home_score + away_score
+      
+      # Maç sonucu güncellemesi
+      if home_score > away_score:
+          prediction['predictions']['match_outcome'] = "HOME_WIN"
+      elif home_score < away_score:
+          prediction['predictions']['match_outcome'] = "AWAY_WIN"
+      else:
+          prediction['predictions']['match_outcome'] = "DRAW"
+      
+      # KG VAR/YOK güncellemesi
+      btts_pred = 'KG VAR' if home_score > 0 and away_score > 0 else 'KG YOK'
+      prediction['predictions']['betting_predictions']['both_teams_to_score']['prediction'] = btts_pred
+      
+      # 2.5 ÜST/ALT güncellemesi
+      over_25_pred = '2.5 ÜST' if total_goals > 2 else '2.5 ALT'
+      prediction['predictions']['betting_predictions']['over_2_5_goals']['prediction'] = over_25_pred
+      
+      # 3.5 ÜST/ALT güncellemesi
+      over_35_pred = '3.5 ÜST' if total_goals > 3 else '3.5 ALT'
+      prediction['predictions']['betting_predictions']['over_3_5_goals']['prediction'] = over_35_pred
+      
+      return prediction
+  ```
+- Bu, kesin skoru merkezi bir referans noktası yaparak tüm tahminlerin tutarlılığını garanti eder.
+
+---
+
+#### 2. **Düşük Gol Beklentili Maçlarda KG VAR/YOK Yanlış Ayarlaması**
+**Açıklama:**
+`_calculate_kg_var_probability` metodunda, düşük gol beklentili maçlar (örneğin, her iki takımın beklenen golü 1.0'ın altındaysa) için KG VAR olasılığı azaltılıyor. Ancak, bu azaltma sabit oranlarla (`reduction_factor`) yapılıyor ve takımların son maçlardaki gol atma/yeme istatistikleri yeterince dikkate alınmıyor. Örneğin, bir takım son 5 maçta sürekli gol attıysa, düşük gol beklentisine rağmen KG VAR olasılığı daha yüksek olmalı.
+
+**Etkiler:**
+- Düşük skorlu maçlarda KG VAR/YOK tahminleri gerçek performansa dayalı olmaktan ziyade genellemelerle yanlış yönlenebilir.
+- Özellikle savunma gücü yüksek ama hücumda istikrarlı takımlarda hatalı tahminler üretilebilir.
+
+**Çözüm Önerisi:**
+- KG VAR/YOK olasılığını hesaplarken, son maçlardaki gol atma ve yeme oranlarını dinamik olarak dahil edin:
+  ```python
+  def _calculate_kg_var_probability(self, all_home_goals, all_away_goals, home_goals_lambda, away_goals_lambda, home_form=None, away_form=None):
+      kg_var_count = sum(1 for h, a in zip(all_home_goals, all_away_goals) if h > 0 and a > 0)
+      kg_var_probability = kg_var_count / len(all_home_goals) if len(all_home_goals) > 0 else 0.5
+      
+      if home_goals_lambda <= self.DUSUK_GOL_BEKLENTI_KARAR_ESIGI and away_goals_lambda <= self.DUSUK_GOL_BEKLENTI_KARAR_ESIGI:
+          total_expected_goals = home_goals_lambda + away_goals_lambda
+          
+          # Son maçlardaki KG VAR oranını hesapla
+          home_btts_rate = 0
+          away_btts_rate = 0
+          if home_form and 'recent_match_data' in home_form:
+              recent_matches = home_form['recent_match_data'][:5]
+              home_btts_rate = sum(1 for m in recent_matches if m.get('goals_scored', 0) > 0 and m.get('goals_conceded', 0) > 0) / len(recent_matches) if recent_matches else 0.5
+          if away_form and 'recent_match_data' in away_form:
+              recent_matches = away_form['recent_match_data'][:5]
+              away_btts_rate = sum(1 for m in recent_matches if m.get('goals_scored', 0) > 0 and m.get('goals_conceded', 0) > 0) / len(recent_matches) if recent_matches else 0.5
+          
+          # Ortalama KG VAR oranını al ve olasılığı buna göre ayarla
+          historical_btts_rate = (home_btts_rate + away_btts_rate) / 2
+          reduction_factor = max(0.1, 0.35 - historical_btts_rate * 0.25)  # Dinamik azaltma faktörü
+          
+          if total_expected_goals < self.TOPLAM_GOL_DUSUK_ESIK:
+              kg_var_probability = max(0.1, kg_var_probability * (1 - reduction_factor * 1.2))
+          elif total_expected_goals < self.TOPLAM_GOL_ORTA_ESIK:
+              kg_var_probability = max(0.1, kg_var_probability * (1 - reduction_factor))
+          else:
+              kg_var_probability = max(0.1, kg_var_probability * (1 - reduction_factor * 0.8))
+          
+          logger.info(f"Düşük gol beklentisi: KG VAR olasılığı {kg_var_probability:.2f} (tarihi BTTS oranı: {historical_btts_rate:.2f})")
+      
+      return kg_var_probability
+  ```
+- Bu, takımların gerçek performansını yansıtarak daha doğru tahminler sağlar.
+
+---
+
+#### 3. **Monte Carlo Simülasyonunda Aşırı Sınırlandırma**
+**Açıklama:**
+`monte_carlo_simulation` metodunda, düşük gol beklentili maçlar için maksimum skor sınırları (`max_home_score`, `max_away_score`) çok katı bir şekilde belirleniyor (örneğin, beklenti 0.6'dan azsa maksimum 1 gol). Ancak, bu sınırlandırma, takımların nadiren de olsa beklenenden yüksek skorlar üretebileceği gerçeğini göz ardı ediyor. Ayrıca, form farkı büyük olduğunda bu sınırlar beraberlik olasılığını artırıyor, bu da mantıksız sonuçlara yol açabiliyor.
+
+**Etkiler:**
+- Düşük gol beklentili maçlarda gerçekçi olmayan derecede düşük skorlar (örneğin, sürekli 0-0 veya 1-0) tahmin ediliyor.
+- Güçlü takımların zayıf rakiplere karşı fark atma olasılığı yeterince yansıtılmıyor.
+
+**Çözüm Önerisi:**
+- Maksimum skor sınırlarını daha esnek hale getirin ve form farkını dikkate alarak sınırları dinamik olarak ayarlayın:
+  ```python
+  def monte_carlo_simulation(self, home_goals_lambda, away_goals_lambda, simulations=10000, home_form=None, away_form=None, specialized_params=None, kg_var_prediction=None):
+      # ... (mevcut kodun üst kısmı)
+
+      # Form farkını hesapla
+      form_diff = 0
+      if home_form and away_form:
+          home_form_points = home_form.get('form', {}).get('weighted_form_points', 0)
+          away_form_points = away_form.get('form', {}).get('weighted_form_points', 0)
+          form_diff = home_form_points - away_form_points
+
+      # Dinamik maksimum skor sınırları
+      max_home_score = 1
+      max_away_score = 1
+      
+      if specialized_params and 'max_score' in specialized_params:
+          max_home_score = max_away_score = specialized_params['max_score']
+      else:
+          # Ev sahibi için dinamik sınır
+          if home_goals_lambda < 0.5:
+              max_home_score = 1 + (1 if form_diff > 0.3 else 0)  # Güçlü form farkı varsa +1
+          elif home_goals_lambda < 1.0:
+              max_home_score = 2 + (1 if form_diff > 0.5 else 0)
+          elif home_goals_lambda < 2.0:
+              max_home_score = 3
+          else:
+              max_home_score = 4 + (1 if form_diff > 0.7 else 0)  # Çok güçlü form farkı
+
+          # Deplasman için dinamik sınır
+          if away_goals_lambda < 0.5:
+              max_away_score = 1 + (1 if form_diff < -0.3 else 0)
+          elif away_goals_lambda < 1.0:
+              max_away_score = 2 + (1 if form_diff < -0.5 else 0)
+          elif away_goals_lambda < 2.0:
+              max_away_score = 3
+          else:
+              max_away_score = 4 + (1 if form_diff < -0.7 else 0)
+
+      # Simülasyon içinde kullanım
+      home_score = min(np.random.poisson(home_goals_lambda), max_home_score)
+      away_score = min(np.random.poisson(away_goals_lambda), max_away_score)
+
+      # ... (mevcut kodun devamı)
+  ```
+- Bu, güçlü takımların zayıf rakiplere karşı daha yüksek skorlar üretme olasılığını artırır.
+
+---
+
+#### 4. **H2H Verilerinin Yetersiz Kullanımı**
+**Açıklama:**
+`analyze_head_to_head` metodu, geçmiş maç verilerini topluyor ve analiz ediyor, ancak bu veriler `predict_match` metodunda yalnızca sınırlı bir şekilde (olasılıkların %20’si kadar) etkili oluyor. Güçlü bir H2H geçmişi (örneğin, bir takım diğerine karşı sürekli kazanıyorsa) tahminlerde yeterince ağırlık kazanmıyor.
+
+**Etkiler:**
+- Takımlar arasındaki tarihsel üstünlükler yeterince yansıtılmıyor.
+- Özellikle derbi maçlarında veya sıkı rekabetlerde yanlış tahminler üretilebiliyor.
+
+**Çözüm Önerisi:**
+- H2H verilerinin ağırlığını artırın ve maç sayısına göre dinamik bir ağırlık uygulayın:
+  ```python
+  def predict_match(self, home_team_id, away_team_id, home_team_name, away_team_name, force_update=False, use_specialized_models=True, use_goal_trend_analysis=True):
+      # ... (mevcut kodun üst kısmı)
+
+      h2h_analysis = self.analyze_head_to_head(home_team_id, away_team_id, home_team_name, away_team_name)
+      if h2h_analysis and h2h_analysis['total_matches'] > 0:
+          h2h_weight = min(0.5, 0.1 + (h2h_analysis['total_matches'] * 0.05))  # 1 maç = %10, 5 maç = %35, max %50
+          h2h_home_win_rate = h2h_analysis['home_wins'] / h2h_analysis['total_matches']
+          h2h_draw_rate = h2h_analysis['draws'] / h2h_analysis['total_matches']
+          h2h_away_win_rate = h2h_analysis['away_wins'] / h2h_analysis['total_matches']
+
+          home_win_prob = home_win_prob * (1 - h2h_weight) + h2h_home_win_rate * h2h_weight
+          draw_prob = draw_prob * (1 - h2h_weight) + h2h_draw_rate * h2h_weight
+          away_win_prob = away_win_prob * (1 - h2h_weight) + h2h_away_win_rate * h2h_weight
+
+          logger.info(f"H2H ağırlığı: {h2h_weight:.2f}, Olasılıklar güncellendi: MS1={home_win_prob:.2f}, X={draw_prob:.2f}, MS2={away_win_prob:.2f}")
+
+      # ... (mevcut kodun devamı)
+  ```
+- Bu, H2H verilerinin daha belirleyici olmasını sağlar, özellikle maç sayısı fazla olduğunda.
+
+---
+
+#### 5. **Sinir Ağı Eğitim Verisinin Eksik Kullanımı**
+**Açıklama:**
+`collect_training_data` metodu, sinir ağlarını eğitmek için önbellekteki tahmin verilerini kullanıyor, ancak gerçek maç sonuçlarını (örneğin, API’den gelen gerçek skorlar) değil, yalnızca modelin kendi ürettiği beklenen gol değerlerini (`expected_goals`) hedef olarak alıyor. Bu, modelin kendi hatalarını öğrenmesine ve bir "kendi kendine öğrenme döngüsü" (self-reinforcement bias) oluşmasına neden oluyor.
+
+**Etkiler:**
+- Sinir ağı modelleri, gerçek maç sonuçlarından ziyade kendi tahminlerine dayalı olarak eğitildiği için doğrulukları sınırlı kalıyor.
+- Gerçek dünya verilerinden kopuk tahminler üretilebiliyor.
+
+**Çözüm Önerisi:**
+- Gerçek maç sonuçlarını hedef olarak kullanmak için `get_team_form` metodundan veya API’den gerçek skorları çekin:
+  ```python
+  def collect_training_data(self):
+      home_features = []
+      home_targets = []
+      away_features = []
+      away_targets = []
+
+      for match_key, prediction in self.predictions_cache.items():
+          try:
+              home_form = prediction['home_team'].get('form')
+              away_form = prediction['away_team'].get('form')
+              
+              if not home_form or not away_form:
+                  continue
+
+              # Gerçek maç sonuçlarını al (eğer önbellekte varsa, yoksa API'den çek)
+              home_id = prediction['home_team']['id']
+              away_id = prediction['away_team']['id']
+              recent_home_matches = home_form.get('recent_match_data', [])
+              recent_away_matches = away_form.get('recent_match_data', [])
+
+              # Son maçlardan gerçek gol sayılarını al
+              home_goals = sum(m.get('goals_scored', 0) for m in recent_home_matches[:5]) / min(5, len(recent_home_matches)) if recent_home_matches else 0
+              away_goals = sum(m.get('goals_scored', 0) for m in recent_away_matches[:5]) / min(5, len(recent_away_matches)) if recent_away_matches else 0
+
+              home_data = self.prepare_data_for_neural_network(home_form, is_home=True)
+              away_data = self.prepare_data_for_neural_network(away_form, is_home=False)
+
+              if home_data is not None and away_data is not None:
+                  home_features.append(home_data[0])
+                  home_targets.append(home_goals)
+                  away_features.append(away_data[0])
+                  away_targets.append(away_goals)
+          except Exception as e:
+              logger.error(f"Maç verisi işlenirken hata: {str(e)}")
+              continue
+
+      if len(home_features) >= 2 and len(away_features) >= 2:
+          X_home = np.array(home_features)
+          y_home = np.array(home_targets)
+          X_away = np.array(away_features)
+          y_away = np.array(away_targets)
+
+          self.model_home = self.train_neural_network(X_home, y_home, is_home=True)
+          self.model_away = self.train_neural_network(X_away, y_away, is_home=False)
+          return True
+      return False
+  ```
+- Bu, sinir ağlarının gerçek maç sonuçlarına dayalı olarak eğitilmesini sağlar ve tahmin doğruluğunu artırır.
+
+---
+
+### Genel Değerlendirme
+Kod, oldukça karmaşık bir tahmin sistemi içeriyor ve birçok gelişmiş özellik barındırıyor (Monte Carlo simülasyonu, sinir ağları, H2H analizi vb.). Ancak, yukarıdaki mantık hataları nedeniyle tahminlerin tutarlılığı ve doğruluğu zaman zaman tehlikeye giriyor. Önerilen çözümler uygulanırsa:
+- Kesin skor ve diğer bahis tahminleri arasında tam tutarlılık sağlanır.
+- Düşük skorlu maçlarda daha gerçekçi tahminler üretilir.
+- Tarihsel veriler ve gerçek maç sonuçları daha etkili bir şekilde kullanılır.
+
+Bu raporda belirtilen hatalar, kodun temel işlevselliğini bozmuyor ancak tahmin kalitesini ve kullanıcı güvenini olumsuz etkileyebilir. Önerilen düzeltmelerle bu sorunların giderilebileceğini düşünüyorum. Ek sorularınız olursa, detaylı bir şekilde yardımcı olmaktan mutluluk duyarım!

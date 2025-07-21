@@ -1,0 +1,106 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Tahmin Önbelleği Tablosu{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Tahmin Önbelleği Tablosu</h1>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Tahmin İstatistikleri</h5>
+                </div>
+                <div class="card-body">
+                    {% if error %}
+                        <div class="alert alert-danger">{{ error }}</div>
+                    {% else %}
+                        <div class="row">
+                            <div class="col-md-3 text-center mb-3">
+                                <div class="card bg-light">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Toplam Karşılaşma</h5>
+                                        <h2 class="text-primary">{{ total_matches }}</h2>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 text-center mb-3">
+                                <div class="card bg-light">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Sonuçlanan Karşılaşma</h5>
+                                        <h2 class="text-info">{{ completed_count }}</h2>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 text-center mb-3">
+                                <div class="card bg-light">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Doğru Tahmin</h5>
+                                        <h2 class="text-success">{{ correct_count }}</h2>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 text-center mb-3">
+                                <div class="card bg-light">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Doğruluk Oranı</h5>
+                                        <h2 class="text-warning">%{{ correct_ratio }}</h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="table-responsive mt-4">
+                            <table class="table table-striped table-bordered">
+                                <thead class="bg-dark text-white">
+                                    <tr>
+                                        <th>Karşılaşma</th>
+                                        <th>Tahmin Edilen Skor</th>
+                                        <th>Gerçek Skor</th>
+                                        <th>Beklenen Goller</th>
+                                        <th>Tahmin Doğruluğu</th>
+                                        <th>Tahmin Tarihi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for result in results %}
+                                        <tr>
+                                            <td>{{ result[0] }}</td>
+                                            <td class="text-center font-weight-bold">{{ result[1] }}</td>
+                                            <td class="text-center">
+                                                {% if result[2] == 'Henüz oynanmadı' %}
+                                                    <span class="badge badge-secondary">{{ result[2] }}</span>
+                                                {% else %}
+                                                    <span class="badge badge-info">{{ result[2] }}</span>
+                                                {% endif %}
+                                            </td>
+                                            <td class="text-center">{{ result[3] }}</td>
+                                            <td class="text-center">
+                                                {% if result[4] == 'Doğru' %}
+                                                    <span class="badge badge-success">{{ result[4] }}</span>
+                                                {% elif result[4] == 'Yanlış' %}
+                                                    <span class="badge badge-danger">{{ result[4] }}</span>
+                                                {% else %}
+                                                    <span class="badge badge-secondary">{{ result[4] }}</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ result[5] }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="text-center mt-3">
+                            <a href="/predictions" class="btn btn-primary mr-2">Tahmin Sayfasına Dön</a>
+                            <a href="/" class="btn btn-secondary">Ana Sayfaya Dön</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

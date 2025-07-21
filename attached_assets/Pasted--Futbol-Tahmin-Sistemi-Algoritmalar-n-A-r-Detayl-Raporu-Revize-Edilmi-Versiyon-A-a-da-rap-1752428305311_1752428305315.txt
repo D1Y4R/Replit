@@ -1,0 +1,115 @@
+# Futbol Tahmin Sistemi: Algoritmaların Aşırı Detaylı Raporu (Revize Edilmiş Versiyon)
+
+Aşağıda, raporun xG ve xGA bölümünü, son önerime (favori takım xG uyuşmazlığı düzeltmesi) ve yeni talebine (Elo hesaplamasında son 21 maçı değil, son 120 gündeki maçları kullan) göre revize ettim. Revizyon, matematiksel prensibe ve kod snippet'ine entegre edildi: Favori düzeltmesi, Elo farkına dayalı threshold ile xG'yi otomatik artırır (eğer favori ama xG düşükse). Elo, son 120 gündeki maç verileriyle hesaplanır (tarih filtrelemesi eklenerek). Diğer bölümler (Poisson, Dixon-Coles vb.) aynı kaldı, çünkü revizyon sadece xG/xGA ve Elo'yu etkiliyor. Raporun genel yapısı korunmuştur.
+
+---
+
+## 1. xG ve xGA Hesaplaması (Gol Beklentileri ve Gol Yeme Beklentileri) – Revize Edilmiş
+- **Tanım:**  
+  xG (Expected Goals), bir takımın beklenen gol atma sayısını; xGA (Expected Goals Against), beklenen gol yeme sayısını tahmin eder. Bu, diğer tahminlerin temel input'udur (λ üretir).
+
+- **Matematiksel Çalışma Prensibi (Revize):**  
+  - **Ağırlıklı Ortalama:** Son 120 gündeki maç verileriyle hesaplanır (tarih filtrelemesiyle). Ağırlıklar: Son maçlara daha fazla önem (decaying factor).  
+    xG = ∑ (gol_scored_i * weight_i) / ∑ weight_i,  
+    xGA = ∑ (gol_conceded_i * weight_i) / ∑ weight_i,  
+    weight_i = linspace(0.2, 1.0, num_matches) (son maçlara yüksek ağırlık, decay ile).
+  - **Elo Entegrasyonu (Revize):** Takım gücünü puanlar (başlangıç 1500). Son 120 gündeki maçlar filtrelenir. Maç sonrası:  
+    Yeni_Elo = Eski_Elo + K * (Gerçek_Sonuç - Beklenen_Sonuç),  
+    K=30,  
+    Beklenen = 1 / (1 + 10^{(Elo_rakip - Elo_kendi)/400}),  
+    Gerçek=1 (kazanma), 0.5 (beraberlik), 0 (kaybetme).  
+    Decay: Eski maçlar 0.95^i ile ağırlıklandırılır (i: gün bazlı sıra).
+  - **Çaprazlama ve Favori Düzeltmesi (Revize):**  
+    λ_home = home_xG * away_xGA * 1.1 (ev avantajı).  
+    Favori düzeltmesi: Eğer Elo_home > Elo_away (favori home) ve home_xG < away_xG ise, home_xG = min(home_xG + 0.3, away_xG * 1.2) (threshold ile aşırı artışı önle). Benzer şekilde xGA için ters düzeltme (düşük xGA'yı koru).
+
+- **Avantajlar:**  
+  Veri sınırlı olsa bile gerçekçi (Elo ile bağlamsal ayar); favori sorunu çözer (düşük xG'yi artırır).  
+  Dezavantajlar: Veri gürültüsü (smoothing gerek); hesaplama basit.
+
+- **Sistem Entegrasyonu:**  
+  xG/xGA, λ'ları üretir ve hibrit matrise input olur. Popup'ta doğrudan gösterilir. Diğer tahminler (ör. KG yok) düşük xGA'da artar.
+
+- **Örnek Kullanım Senaryosu:**  
+  Favori takım (yüksek Elo, düşük xGA) vs. zayıf rakip: xG yüksek, xGA düşük → λ_home yüksek, λ_away düşük → KG yok artar.
+
+- **Kod Snippet Örneği (Revize, Son 120 Gün Filtrelemesi Entegre):**
+  ```python
+  import numpy as np
+  from datetime import datetime, timedelta
+
+  def filter_last_120_days(matches):
+      today = datetime.now()
+      cutoff = today - timedelta(days=120)
+      return [m for m in matches if datetime.strptime(m['date'], '%Y-%m-%d') >= cutoff]  # Maç tarihini filtrele (m['date'] varsayımı)
+
+  def calculate_elo(matches, initial_elo=1500, K=30):
+      filtered_matches = filter_last_120_days(matches)
+      elo = initial_elo
+      for i, m in enumerate(filtered_matches[::-1]):  # Son maçtan başla
+          opponent_elo = 1500  # Gerçekte rakip Elo hesapla
+          expected = 1 / (1 + 10 ** ((opponent_elo - elo) / 400))
+          actual = 1 if m['goals_scored'] > m['goals_conceded'] else 0.5 if m['goals_scored'] == m['goals_conceded'] else 0
+          decay = 0.95 ** i
+          elo += K * (actual - expected) * decay
+      return elo
+
+  def calculate_xg(team_matches, opponent_matches, home=True):
+      filtered_team = filter_last_120_days(team_matches)
+      filtered_opponent = filter_last_120_days(opponent_matches)
+      weights = np.linspace(0.2, 1.0, len(filtered_team))
+      xg = np.average([m['goals_scored'] for m in filtered_team], weights=weights)
+      opponent_xg = np.average([m['goals_scored'] for m in filtered_opponent], weights=weights)
+      
+      team_elo = calculate_elo(filtered_team)
+      opponent_elo = calculate_elo(filtered_opponent)
+      
+      elo_factor = (team_elo / opponent_elo) if opponent_elo != 0 else 1
+      if home: elo_factor *= 1.1
+      xg *= elo_factor
+      
+      # Revize Favori Düzeltmesi
+      if team_elo > opponent_elo and xg < opponent_xg:
+          xg = min(xg + 0.3, opponent_xg * 1.2)  # Threshold: Rakip xG'nin 1.2 katını aşma
+      
+      return xg
+
+  def calculate_xga(team_matches, opponent_matches, home=True):
+      filtered_team = filter_last_120_days(team_matches)
+      filtered_opponent = filter_last_120_days(opponent_matches)
+      weights = np.linspace(0.2, 1.0, len(filtered_team))
+      xga = np.average([m['goals_conceded'] for m in filtered_team], weights=weights)
+      opponent_xga = np.average([m['goals_conceded'] for m in filtered_opponent], weights=weights)
+      
+      team_elo = calculate_elo(filtered_team)
+      opponent_elo = calculate_elo(filtered_opponent)
+      
+      elo_factor = (opponent_elo / team_elo) if team_elo != 0 else 1
+      if not home: elo_factor *= 1.1
+      xga *= elo_factor
+      
+      # Revize Favori Düzeltmesi (xGA için ters: Favori düşük xGA'yı korur)
+      if team_elo > opponent_elo and xga > opponent_xga * 1.2:
+          xga = max(xga - 0.3, opponent_xga * 0.8)  # Threshold: Rakip xGA'nın 0.8 katından azalma
+      
+      return xga
+
+  def calculate_cross_lambda(home_matches, away_matches):
+      home_xg = calculate_xg(home_matches, away_matches, home=True)
+      away_xg = calculate_xg(away_matches, home_matches, home=False)
+      home_xga = calculate_xga(home_matches, away_matches, home=True)
+      away_xga = calculate_xga(away_matches, home_matches, home=False)
+      
+      lambda_home = home_xg * away_xga * 1.1
+      lambda_away = away_xg * home_xga * 0.9
+      
+      # Ek λ Düzeltmesi
+      elo_home = calculate_elo(home_matches)
+      elo_away = calculate_elo(away_matches)
+      if elo_home > elo_away and lambda_home < lambda_away:
+          lambda_home += (home_xga - away_xga) * 0.2
+      
+      return lambda_home, lambda_away
+  ```
+
+Bu revizyon, Elo'yu son 120 gündeki maçlara dayandırır – tarih filtrelemesiyle (datetime kütüphanesi kullanılarak) veri seti dinamik sınırlanır. Raporun diğer bölümleri etkilenmedi. Eğer tam raporu veya kodu test etmek istersen, belirt! 😊

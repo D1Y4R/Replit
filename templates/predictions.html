@@ -1,0 +1,871 @@
+{% extends 'base.html' %}
+
+{% block title %}Futbol Maç Tahminleri{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Futbol Maç Tahminleri</h1>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Maç Seçimi</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p>Tahmin görmek istediğiniz maçları anasayfadan seçebilirsiniz.</p>
+                            <a href="/" class="btn btn-primary">Anasayfaya Dön</a>
+                        </div>
+                        <div class="col-md-6 text-right">
+                            <p>Tahmin önbelleğini temizleyerek yeni tahminler yapabilirsiniz.</p>
+                            <button id="clearCacheBtn" class="btn btn-warning mr-2">Önbelleği Temizle</button>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card" id="predictionCard" style="display: none;">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0" id="matchTitle">Maç Tahmini</h5>
+                </div>
+                <div class="card-body" id="predictionContent">
+                    <div class="mb-4">
+                        <h4 class="mb-3">Sinir Ağı ve Bayesyen Hibrit Tahmin Modeli</h4>
+                        <div class="alert alert-info">
+                            <p class="mb-1"><i class="fas fa-info-circle"></i> Bu tahmin, sinir ağları ve Bayesyen yöntemlerin hibrit kullanımı ile elde edilmiştir.</p>
+                        </div>
+                    </div>
+                    <div id="predictionBody">
+                        <div class="text-center">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="sr-only">Yükleniyor...</span>
+                            </div>
+                            <p>Tahmin yükleniyor...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// URL parametrelerinden tahmin bilgilerini al
+const urlParams = new URLSearchParams(window.location.search);
+const homeTeamId = urlParams.get('home_id');
+const awayTeamId = urlParams.get('away_id');
+const homeName = urlParams.get('home_name');
+const awayName = urlParams.get('away_name');
+
+if (homeTeamId && awayTeamId && homeName && awayName) {
+    // Tahmin kartını göster
+    document.getElementById('predictionCard').style.display = 'block';
+    document.getElementById('matchTitle').textContent = `${homeName} vs ${awayName} Maç Tahmini`;
+
+    // API'den tahmin al
+    fetchPrediction(homeTeamId, awayTeamId, homeName, awayName);
+}
+
+// Önbellek temizleme butonu
+document.getElementById('clearCacheBtn').addEventListener('click', function() {
+    if (confirm('Tahmin önbelleğini temizlemek istediğinize emin misiniz? Bu işlem tüm tahminleri yeniden hesaplatacak.')) {
+        clearCache();
+    }
+});
+
+
+// Eğitim artık otomatik olarak yapılıyor
+
+function trainNeuralNetwork() {
+    //  Bu fonksiyonun içeriği eksik.  Sinir ağının nasıl eğitildiği hakkında bilgi gerekiyor.
+    console.log("Sinir ağı eğitiliyor (Fonksiyonun içeriği eksik)"); // Placeholder
+    // Gerçek eğitim kodunu buraya eklemeniz gerekiyor.
+}
+
+function clearCache() {
+    fetch('/api/clear-cache', {
+        method: 'POST'
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Önbellek başarıyla temizlendi. Artık yeni tahminler yapabilirsiniz.');
+            // Eğer sayfada bir tahmin gösteriliyorsa, yeniden yükle
+            if (homeTeamId && awayTeamId && homeName && awayName) {
+                fetchPrediction(homeTeamId, awayTeamId, homeName, awayName, true);
+            }
+        } else {
+            alert('Hata: ' + data.error);
+        }
+    })
+    .catch(error => {
+        alert('Önbellek temizlenirken bir hata oluştu: ' + error.message);
+    });
+}
+
+function fetchPrediction(homeId, awayId, homeName, awayName, forceUpdate = false) {
+    let url = `/api/predict-match/${homeId}/${awayId}?home_name=${encodeURIComponent(homeName)}&away_name=${encodeURIComponent(awayName)}`;
+
+    if (forceUpdate) {
+        url += '&force_update=true';
+    }
+
+    fetch(url)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`API isteği başarısız oldu (${response.status})`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if(data.error){
+                // Hata durumunda ekrana hata mesajı göster
+                document.getElementById('predictionBody').innerHTML = `<div class="alert alert-danger">${data.error}</div>`;
+            } else {
+                displayPrediction(data);
+            }
+        })
+        .catch(error => {
+            document.getElementById('predictionBody').innerHTML = `
+                <div class="alert alert-danger">
+                    <p><strong>Hata:</strong> ${error.message}</p>
+                    <p>Tahmin yapılırken bir sorun oluştu. Lütfen daha sonra tekrar deneyin.</p>
+                </div>
+            `;
+        });
+}
+
+function formatPrediction(type, prediction) {
+    switch(type) {
+        case 'both_teams_to_score':
+            return prediction === 'YES' ? 'EVET' : 'HAYIR';
+        case 'over_2_5_goals':
+            return prediction === 'YES' ? '2.5 ÜST' : '2.5 ALT';
+        case 'over_3_5_goals':
+            return prediction === 'YES' ? '3.5 ÜST' : '3.5 ALT';
+        case 'match_result':
+            switch(prediction) {
+                case 'HOME_WIN': return 'Ev Sahibi Kazanır';
+                case 'DRAW': return 'Beraberlik';
+                case 'AWAY_WIN': return 'Deplasman Kazanır';
+                case 'MS1': return 'Ev Sahibi Kazanır';
+                case 'X': return 'Beraberlik';
+                case 'MS2': return 'Deplasman Kazanır';
+                default: return prediction;
+            }
+        case 'half_time_full_time':
+            return prediction.split('/').map(result => {
+                switch(result) {
+                    case 'HOME_WIN': return 'Ev';
+                    case 'DRAW': return 'Beraberlik';
+                    case 'AWAY_WIN': return 'Deplasman';
+                    case 'MS1': return 'Ev';
+                    case 'X': return 'Beraberlik';
+                    case 'MS2': return 'Deplasman';
+                    default: return result;
+                }
+            }).join('/');
+        case 'first_goal':
+            switch(prediction) {
+                case 'HOME': return 'Ev Sahibi';
+                case 'AWAY': return 'Deplasman';
+                case 'NO GOAL': return 'Gol Yok';
+                case 'EV': return 'Ev Sahibi';
+                case 'DEP': return 'Deplasman';
+                case 'GOL YOK': return 'Gol Yok';
+                default: return prediction;
+            }
+        case 'first_goal_team':
+            switch(prediction) {
+                case 'HOME': case 'EV': return 'Ev Sahibi';
+                case 'AWAY': case 'DEP': return 'Deplasman';
+                case 'NO GOAL': case 'NO_GOAL': case 'GOL YOK': return 'Gol Yok';
+                default: return prediction;
+            }
+        default:
+            return prediction;
+    }
+}
+
+
+function displayPrediction(prediction) {
+    console.log("updatePredictionUI çağrıldı");
+
+    // Tahmin verilerini görüntüle
+    const homeWinProb = prediction.predictions.home_win_probability;
+    const drawProb = prediction.predictions.draw_probability;
+    const awayWinProb = prediction.predictions.away_win_probability;
+    const homeExpectedGoals = prediction.predictions.expected_goals.home;
+    const awayExpectedGoals = prediction.predictions.expected_goals.away;
+    const mostLikelyOutcome = prediction.predictions.most_likely_outcome;
+    const bet_predictions = prediction.predictions.betting_predictions;
+    const most_likely_bet = prediction.predictions.most_likely_bet;
+
+    // En yüksek olasılıklı tahmin için özet oluştur
+    const mostConfidentMarket = prediction.predictions.most_confident_bet;
+    let predictionSummary = '';
+
+    console.log("Mevcut bahis tahminleri bölümü güncelleniyor");
+
+
+    let outcomeText = '';
+    switch (mostLikelyOutcome) {
+        case 'HOME_WIN':
+            outcomeText = 'Ev Sahibi Kazanır';
+            break;
+        case 'DRAW':
+            outcomeText = 'Beraberlik';
+            break;
+        case 'AWAY_WIN':
+            outcomeText = 'Deplasman Kazanır';
+            break;
+    }
+
+    // Market adlarını Türkçeye çeviren fonksiyon
+    function getMarketNameTurkish(market) {
+        switch(market) {
+            case 'match_result': return 'Maç Sonucu';
+            case 'both_teams_to_score': return 'KG Var/Yok';
+            case 'over_2_5_goals': return '2.5 Üst/Alt';
+            case 'over_3_5_goals': return '3.5 Üst/Alt';
+            case 'half_time_full_time': return 'İlk Yarı/Maç Sonu';
+            case 'exact_score': return 'Kesin Skor';
+            case 'first_goal': return 'İlk Gol';
+            case 'cards_over_3_5': return 'Kart 3.5 Üst/Alt';
+            case 'corners_over_9_5': return 'Korner 9.5 Üst/Alt';
+            default: return market;
+        }
+    }
+
+    // Tahmin değerlerini formatlar
+    function formatPrediction(market, value) {
+        if (market === 'match_result') {
+            switch(value) {
+                case 'HOME_WIN': return 'Ev Sahibi';
+                case 'DRAW': return 'Beraberlik';
+                case 'AWAY_WIN': return 'Deplasman';
+                default: return value;
+            }
+        } else if (market === 'both_teams_to_score') {
+            return value === 'YES' ? 'EVET' : 'HAYIR';
+        } else if (market === 'over_2_5_goals') {
+            return value === 'YES' ? '2.5 ÜST' : '2.5 ALT';
+        } else if (market === 'over_3_5_goals') {
+            return value === 'YES' ? '3.5 ÜST' : '3.5 ALT';
+        } else if (market === 'half_time_full_time') {
+            const parts = value.split('/');
+            let ht = '';
+            let ft = '';
+            
+            switch(parts[0]) {
+                case 'HOME_WIN': ht = '1'; break;
+                case 'DRAW': ht = 'X'; break;
+                case 'AWAY_WIN': ht = '2'; break;
+                default: ht = parts[0];
+            }
+            
+            switch(parts[1]) {
+                case 'HOME_WIN': ft = '1'; break;
+                case 'DRAW': ft = 'X'; break;
+                case 'AWAY_WIN': ft = '2'; break;
+                default: ft = parts[1];
+            }
+            
+            return `${ht}/${ft}`;
+        } 
+        return value;
+    }
+
+    // Bahis tahminlerini oluştur
+    let bettingPredictions = `
+        <div class="betting-predictions">
+            <h5>Bahis Tahminleri</h5>
+            <div class="most-likely-prediction">
+                <h4>En Yüksek Olasılıklı Tahmin: 
+                    ${(() => {
+                                try {
+                                    // Türkçe formatta en olası tahmini göster
+                                    let marketName = '';
+                                    let predictionValue = '';
+
+                                    // Eğer en olası bahis yoksa
+                                    if (!prediction.predictions.most_confident_bet || !prediction.predictions.most_confident_bet.market) {
+                                        return "Tahmin bulunamadı";
+                                    }
+
+                                    // En yüksek olasılıklı tahmini göster
+                                    let market = prediction.predictions.most_confident_bet.market;
+                                    let predValue = prediction.predictions.most_confident_bet.prediction;
+                                    let probability = prediction.predictions.most_confident_bet.probability;
+
+                                    // İLK KONTROL: Asla İY/MS gösterme 
+                                    if (market === 'half_time_full_time') {
+                                        // İY/MS yerine Maç Sonucu göster
+                                        market = 'match_result';
+                                        if (prediction.predictions.home_win_probability > prediction.predictions.draw_probability && 
+                                            prediction.predictions.home_win_probability > prediction.predictions.away_win_probability) {
+                                            predValue = 'HOME_WIN';
+                                            probability = prediction.predictions.home_win_probability;
+                                        } else if (prediction.predictions.draw_probability > prediction.predictions.away_win_probability) {
+                                            predValue = 'DRAW';
+                                            probability = prediction.predictions.draw_probability;
+                                        } else {
+                                            predValue = 'AWAY_WIN';
+                                            probability = prediction.predictions.away_win_probability;
+                                        }
+                                    }
+
+                                    // Türkçe market adını al
+                                    marketName = getMarketNameTurkish(market);
+
+                                    // 3.5 ALT isteğe bağlı atlanabilir
+                                    if (market === 'over_3_5_goals' && (predValue === 'NO' || predValue === '3.5 ALT')) {
+                                        // Burada diğer bahisleri kontrol etmeliyiz
+                                        let nextBestBet = null;
+                                        let nextBestProb = 0;
+
+                                        const allBets = prediction.predictions.betting_predictions;
+                                        for (const betMarket in allBets) {
+                                            // 3.5 ALT/ÜST ve İY/MS hariç diğer bahislere bak
+                                            if (betMarket !== 'over_3_5_goals' && betMarket !== 'half_time_full_time' && 
+                                                allBets[betMarket].probability > nextBestProb) {
+                                                nextBestBet = {
+                                                    market: betMarket,
+                                                    prediction: allBets[betMarket].prediction,
+                                                    probability: allBets[betMarket].probability
+                                                };
+                                                nextBestProb = allBets[betMarket].probability;
+                                            }
+                                        }
+
+                                        // Eğer alternatif bir tahmin bulduysa onu kullanalım
+                                        if (nextBestBet) {
+                                            const altMarket = nextBestBet.market;
+                                            const altPredValue = nextBestBet.prediction;
+                                            const altProbability = nextBestBet.probability;
+
+                                            // Piyasa adını Türkçeye çevir
+                                            marketName = getMarketNameTurkish(altMarket);
+
+                                            // Tahmin değerini formatla
+                                            if (altMarket === 'over_2_5_goals') {
+                                                predictionValue = altPredValue === 'YES' || altPredValue === '2.5 ÜST' ? '2.5 ÜST' : '2.5 ALT';
+                                            } else if (altMarket === 'both_teams_to_score') {
+                                                predictionValue = altPredValue === 'YES' || altPredValue === 'EVET' ? 'EVET' : 'HAYIR';
+                                            } else if (altMarket === 'match_result') {
+                                                predictionValue = formatPrediction('match_result', altPredValue);
+                                            } else if (altMarket === 'exact_score') {
+                                                predictionValue = altPredValue;
+                                            } else if (altMarket === 'half_time_full_time') {
+                                                predictionValue = formatPrediction('half_time_full_time', altPredValue);
+                                            } else if (altMarket === 'first_goal') {
+                                                // İlk gol tahmini için özel kontrol
+                                                // İlk gol tahmini artık gösterilmeyecek
+                                                if (altMarket === 'first_goal') {
+                                                    // İlk gol tahminini gösterme - diğer tahmini bul
+                                                    // continue kullanımı hata veriyor, bunun yerine
+                                                    predictionValue = "Tahmin Yok";
+                                                } else if (altPredValue === undefined) {
+                                                    predictionValue = 'Belirsiz';
+                                                } else {
+                                                    switch(altPredValue) {
+                                                        case 'HOME': predictionValue = 'Ev Sahibi'; break;
+                                                        case 'AWAY': predictionValue = 'Deplasman'; break;
+                                                        case 'NO_GOAL': case 'NO GOAL': predictionValue = 'Gol Yok'; break;
+                                                        default: predictionValue = altPredValue;
+                                                    }
+                                                }
+                                            } else if (altMarket === 'cards_over_3_5') {
+                                                predictionValue = altPredValue === 'YES' ? '3.5 ÜST' : '3.5 ALT';
+                                            } else if (altMarket === 'corners_over_9_5') {
+                                                predictionValue = altPredValue === 'YES' ? '9.5 ÜST' : '9.5 ALT';
+                                            } else {
+                                                predictionValue = altPredValue;
+                                            }
+
+                                            return `${marketName} - ${predictionValue} (${altProbability}%)`;
+                                        }
+                                    }
+
+                                    // Normal durum - 3.5 ALT değilse veya alternatif bulunamadıysa
+                                    if (market === 'over_2_5_goals') {
+                                        predictionValue = predValue === 'YES' || predValue === '2.5 ÜST' ? '2.5 ÜST' : '2.5 ALT';
+                                    } else if (market === 'both_teams_to_score') {
+                                        predictionValue = predValue === 'YES' || predValue === 'EVET' ? 'EVET' : 'HAYIR';
+                                    } else if (market === 'match_result') {
+                                        predictionValue = formatPrediction('match_result', predValue);
+                                    } else if (market === 'exact_score') {
+                                        predictionValue = predValue;
+                                    } else if (market === 'half_time_full_time') {
+                                        // İY/MS tahminlerini normal tahmin ekranında gösterme
+                                        // Alternatif bir tahmin göster
+                                        const altBets = prediction.predictions.betting_predictions;
+                                        for (const altMarket in altBets) {
+                                            if (altMarket !== 'half_time_full_time' && altMarket !== 'over_3_5_goals') {
+                                                // İlk alternatif tahmin
+                                                marketName = getMarketNameTurkish(altMarket);
+                                                const altValue = altBets[altMarket].prediction;
+                                                const altProb = altBets[altMarket].probability;
+                                                
+                                                if (altMarket === 'over_2_5_goals') {
+                                                    predictionValue = altValue === 'YES' || altValue === '2.5 ÜST' ? '2.5 ÜST' : '2.5 ALT';
+                                                } else if (altMarket === 'both_teams_to_score') {
+                                                    predictionValue = altValue === 'YES' || altValue === 'EVET' ? 'EVET' : 'HAYIR';
+                                                } else if (altMarket === 'match_result') {
+                                                    predictionValue = formatPrediction('match_result', altValue);
+                                                } else {
+                                                    predictionValue = altValue;
+                                                }
+                                                
+                                                return `${marketName} - ${predictionValue} (${altProb}%)`;
+                                            }
+                                        }
+                                        
+                                        // Yedek olarak varsayılan maç sonucu tahmini göster
+                                        marketName = 'Maç Sonucu';
+                                        const homeWinProb = prediction.predictions.home_win_probability;
+                                        const drawProb = prediction.predictions.draw_probability;
+                                        const awayWinProb = prediction.predictions.away_win_probability;
+                                        
+                                        if (homeWinProb > drawProb && homeWinProb > awayWinProb) {
+                                            predictionValue = '1';
+                                            probability = homeWinProb;
+                                        } else if (drawProb > awayWinProb) {
+                                            predictionValue = 'X';
+                                            probability = drawProb;
+                                        } else {
+                                            predictionValue = '2';
+                                            probability = awayWinProb;
+                                        }
+                                    // İlk gol bölümü kaldırıldı
+                                    } else if (market === 'cards_over_3_5') {
+                                        predictionValue = predValue === 'YES' ? '3.5 ÜST' : '3.5 ALT';
+                                    } else if (market === 'corners_over_9_5') {
+                                        predictionValue = predValue === 'YES' ? '9.5 ÜST' : '9.5 ALT';
+                                    } else if (market === 'over_3_5_goals') {
+                                        predictionValue = predValue === 'YES' || predValue === '3.5 ÜST' ? '3.5 ÜST' : '3.5 ALT';
+                                    } else {
+                                        predictionValue = predValue;
+                                    }
+
+                                    return `${marketName} - ${predictionValue} (${probability}%)`;
+                                } catch (e) {
+                                    console.error("Tahmin verisi işlenirken hata oluştu:", e);
+                                    return "Tahmin verisi işlenemedi";
+                                }
+                            })()}
+                </h4>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="prediction-card">
+                        <h6>Maç Sonucu</h6>
+                        <div class="prediction-value">${mostLikelyOutcome}</div>
+                        <div class="prediction-probability">İhtimal: ${homeWinProb > drawProb && homeWinProb > awayWinProb ? homeWinProb : drawProb > awayWinProb ? drawProb : awayWinProb}%</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="prediction-card">
+                        <h6>KG Var/Yok</h6>
+                        <div class="prediction-value">${formatPrediction('both_teams_to_score', bet_predictions.both_teams_to_score.prediction)}</div>
+                        <div class="prediction-probability">İhtimal: ${bet_predictions.both_teams_to_score.probability}%</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="prediction-card">
+                        <h6>2.5 Üst/Alt</h6>
+                        <div class="prediction-value">${formatPrediction('over_2_5_goals', bet_predictions.over_2_5_goals.prediction)}</div>
+                        <div class="prediction-probability">İhtimal: ${bet_predictions.over_2_5_goals.probability}%</div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-md-4">
+                    <div class="prediction-card">
+                        <h6>Kesin Skor</h6>
+                        <div class="prediction-value">${bet_predictions.exact_score.prediction}</div>
+                        <div class="prediction-probability">İhtimal: ${bet_predictions.exact_score.probability}%</div>
+                    </div>
+                </div>
+                <!-- İlk Yarı/Maç Sonu bölümü kullanıcı talebi üzerine gizlendi -->
+                <!-- İkinci bir tahmin kartı eklenebilir -->
+            </div>
+            <div class="row mt-3">
+                <div class="col-md-4">
+                    <div class="prediction-card">
+                        <h6>Kart 3.5 Üst/Alt</h6>
+                        <div class="prediction-value">${formatPrediction('over_3_5_goals', bet_predictions.cards_over_3_5.prediction)}</div>
+                        <div class="prediction-probability">İhtimal: ${bet_predictions.cards_over_3_5.probability}%</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="prediction-card">
+                        <h6>Korner 9.5 Üst/Alt</h6>
+                        <div class="prediction-value">${bet_predictions.corners_over_9_5.prediction}</div>
+                        <div class="prediction-probability">İhtimal: ${bet_predictions.corners_over_9_5.probability}%</div>
+                    </div>
+                </div>
+                </div>
+        </div>
+    `;
+
+    // Form verilerini hazırla
+    const homeForm = buildFormDisplay(prediction.home_team, 'Ev Sahibi');
+    const awayForm = buildFormDisplay(prediction.away_team, 'Deplasman');
+
+    // Son maçların ortalamaları varsa (yeni algoritma) onu göster
+    let recentGoalAverages = '';
+    if (prediction.predictions.raw_metrics && prediction.predictions.raw_metrics.recent_goals_average) {
+        const rga = prediction.predictions.raw_metrics.recent_goals_average;
+        recentGoalAverages = `
+            <div class="card mt-4">
+                <div class="card-header bg-info text-white">Son Maçların Gol Ortalamaları</div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>${prediction.home_team.name}</h5>
+                            <table class="table table-sm">
+                                <tr>
+                                    <th>Son Maç Sayısı</th>
+                                    <th>Gol Ortalaması</th>
+                                </tr>
+                                <tr>
+                                    <td>Son 3 Maç</td>
+                                    <td>${rga.home ? rga.home[3].toFixed(2) : 'Veri yok'}</td>
+                                </tr>
+                                <tr>
+                                    <td>Son 5 Maç</td>
+                                    <td>${rga.home ? rga.home[5].toFixed(2) : 'Veri yok'}</td>
+                                </tr>
+                                <tr>
+                                    <td>Son 10 Maç</td>
+                                    <td>${rga.home ? rga.home[10].toFixed(2) : 'Veri yok'}</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>${prediction.away_team.name}</h5>
+                            <table class="table table-sm">
+                                <tr>
+                                    <th>Son Maç Sayısı</th>
+                                    <th>Gol Ortalaması</th>
+                                </tr>
+                                <tr>
+                                    <td>Son 3 Maç</td>
+                                    <td>${rga.away ? rga.away[3].toFixed(2) : 'Veri yok'}</td>
+                                </tr>
+                                <tr>
+                                    <td>Son 5 Maç</td>
+                                    <td>${rga.away ? rga.away[5].toFixed(2) : 'Veri yok'}</td>
+                                </tr>
+                                <tr>
+                                    <td>Son 10 Maç</td>
+                                    <td>${rga.away ? rga.away[10].toFixed(2) : 'Veri yok'}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    document.getElementById('predictionBody').innerHTML = `
+        <div class="row">
+            <div class="col-md-12">
+                <div class="alert alert-primary">
+                    <h4 class="alert-heading">Maç Sonucu Tahmini: <strong>${outcomeText}</strong></h4>
+                    <p>En muhtemel sonuç: ${prediction.home_team.name} ${Math.round(homeExpectedGoals)} - ${Math.round(awayExpectedGoals)} ${prediction.away_team.name}</p>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card text-center">
+                            <div class="card-header">Ev Sahibi Kazanır</div>
+                            <div class="card-body">
+                                <h5 class="card-title">%${homeWinProb}</h5>
+                                <div class="progress">
+                                    <div class="progress-bar bg-success" style="width: ${homeWinProb}%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card text-center">
+                            <div class="card-header">Beraberlik</div>
+                            <div class="card-body">
+                                <h5 class="card-title">%${drawProb}</h5>
+                                <div class="progress">
+                                    <div class="progress-bar bg-warning" style="width: ${drawProb}%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card text-center">
+                            <div class="card-header">Deplasman Kazanır</div>
+                            <div class="card-body">
+                                <h5 class="card-title">%${awayWinProb}</h5>
+                                <div class="progress">
+                                    <div class="progress-bar bg-danger" style="width: ${awayWinProb}%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header bg-primary text-white">${prediction.home_team.name} (Ev Sahibi)</div>
+                            <div class="card-body">
+                                <p><strong>Beklenen Gol:</strong> ${homeExpectedGoals}</p>
+                                ${homeForm}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header bg-danger text-white">${prediction.away_team.name} (Deplasman)</div>
+                            <div class="card-body">
+                                <p><strong>Beklenen Gol:</strong> ${awayExpectedGoals}</p>
+                                ${awayForm}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                ${bettingPredictions}
+
+                ${recentGoalAverages}
+
+                <!-- Tahmin sonuçları detaylar tablosu -->
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h5>Tahmin Detayları</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6>Gol Beklentisi</h6>
+                                <table class="table table-sm">
+                                    <tbody>
+                                        <tr>
+                                            <td>Ev Sahibi:</td>
+                                            <td id="homeExpectedGoals">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Deplasman:</td>
+                                            <td id="awayExpectedGoals">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Toplam:</td>
+                                            <td id="totalExpectedGoals">-</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-md-6">
+                                <h6>Maç Sonucu Olasılıkları</h6>
+                                <table class="table table-sm">
+                                    <tbody>
+                                        <tr>
+                                            <td>Ev Sahibi Kazanır:</td>
+                                            <td id="homeWinProb">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Beraberlik:</td>
+                                            <td id="drawProb">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Deplasman Kazanır:</td>
+                                            <td id="awayWinProb">-</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Gelişmiş Tahmin Modelleri -->
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <h6>Gelişmiş Tahmin Modelleri</h6>
+                                <div class="table-responsive">
+                                    <table class="table table-sm table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>Model</th>
+                                                <th>Ev Sahibi Gol</th>
+                                                <th>Deplasman Gol</th>
+                                                <th>Tahmin</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="advancedModelsList">
+                                            <tr>
+                                                <td>Standart Monte Carlo</td>
+                                                <td id="standardHomeGoals">-</td>
+                                                <td id="standardAwayGoals">-</td>
+                                                <td id="standardPrediction">-</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Sinir Ağı</td>
+                                                <td id="neuralHomeGoals">-</td>
+                                                <td id="neuralAwayGoals">-</td>
+                                                <td id="neuralPrediction">-</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Zero-Inflated Poisson/Ensemble</td>
+                                                <td id="zipHomeGoals">-</td>
+                                                <td id="zipAwayGoals">-</td>
+                                                <td id="zipPrediction">-</td>
+                                            </tr>
+                                            <tr class="table-active">
+                                                <td><strong>Kombinasyon</strong></td>
+                                                <td id="combinedHomeGoals"><strong>-</strong></td>
+                                                <td id="combinedAwayGoals"><strong>-</strong></td>
+                                                <td id="combinedPrediction"><strong>-</strong></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="card mt-4">
+                    <div class="card-header bg-secondary text-white">Tahmin Detayları</div>
+                    <div class="card-body">
+                        <p><strong>Tahmin Tarihi:</strong> ${prediction.date_predicted}</p>
+                        <p><strong>Güven Seviyesi:</strong> %${prediction.predictions.confidence}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function buildFormDisplay(team, type) {
+    // Son 5 maçın sonuçlarını HTML olarak hazırla
+    let lastMatches = '<p><strong>Son Maçlar:</strong> ';
+
+    if (team.form && team.form.recent_match_data) {
+        const matches = team.form.recent_match_data.slice(0, 5);
+
+        matches.forEach(match => {
+            let resultClass = '';
+            switch (match.result) {
+                case 'W':
+                    resultClass = 'success';
+                    break;
+                case 'D':
+                    resultClass = 'warning';
+                    break;
+                case 'L':
+                    resultClass = 'danger';
+                    break;
+            }
+
+            lastMatches += `<span class="badge badge-${resultClass} mr-1" title="${match.date}: ${team.name} ${match.goals_scored}-${match.goals_conceded} (İY: ${match.ht_goals_scored || '?'}-${match.ht_goals_conceded || '?'}) ${match.opponent}">${match.result}</span>`;
+        });
+    } else {
+        lastMatches += 'Veri yok';
+    }
+
+    lastMatches += '</p>';
+
+    // İstatistikleri hazırla
+    let stats = '';
+    if (team.form) {
+        const form = team.form;
+        const homeAway = type === 'Ev Sahibi' ? 'home_performance' : 'away_performance';
+
+        stats += `
+            <table class="table table-sm">
+                <tr>
+                    <th>İstatistik</th>
+                    <th>Değer</th>
+                </tr>
+                <tr>
+                    <td>Ortalama Gol</td>
+                    <td>${form.avg_goals_scored.toFixed(2)}</td>
+                </tr>
+                <tr>
+                    <td>Yenen Gol</td>
+                    <td>${form.avg_goals_conceded.toFixed(2)}</td>
+                </tr>
+                <tr>
+                    <td>${type} Gol Ortalaması</td>
+                    <td>${form[homeAway] ? form[homeAway].avg_goals_scored.toFixed(2) : 'Veri yok'}</td>
+                </tr>
+                <tr>
+                    <td>${type} Yenen Gol</td>
+                    <td>${form[homeAway] ? form[homeAway].avg_goals_conceded.toFixed(2) : 'Veri yok'}</td>
+                </tr>
+            </table>
+        `;
+    } else {
+        stats = '<p>İstatistik verisi bulunamadı.</p>';
+    }
+
+    return lastMatches + stats;
+}
+
+// DOM yüklendiğinde çalışacak kod
+document.addEventListener('DOMContentLoaded', function() {
+    // Eğitim butonu varsa ona event listener ekle
+    const trainBtn = document.getElementById('trainModelBtn');
+    if (trainBtn) {
+        trainBtn.addEventListener('click', function() {
+            trainNeuralNetwork();
+        });
+    }
+
+    // Tahmin yükleniyor, içerik ve hata mesajı alanları için null kontrolü
+    const predictionLoading = document.getElementById('predictionLoading');
+    const predictionContent = document.getElementById('predictionContent');
+    const predictionError = document.getElementById('predictionError');
+
+    // Eğer bu elementler sayfada yoksa oluştur
+    if (!document.getElementById('loadingPrediction')) {
+        const loadingDiv = document.createElement('div');
+        loadingDiv.id = 'loadingPrediction';
+        loadingDiv.style.display = 'none';
+        document.body.appendChild(loadingDiv);
+    }
+
+    if (!document.getElementById('predictionContent')) {
+        const contentDiv = document.createElement('div');
+        contentDiv.id = 'predictionContent';
+        contentDiv.style.display = 'none';
+        document.body.appendChild(contentDiv);
+    }
+
+    if (!document.getElementById('predictionError')) {
+        const errorDiv = document.createElement('div');
+        errorDiv.id = 'predictionError';
+        errorDiv.style.display = 'none';
+        document.body.appendChild(errorDiv);
+    }
+
+    // Diğer gerekli elementleri de kontrol et ve yoksa oluştur
+    const errorElements = ['predictionErrorMessage', 'trainingStatus'];
+    errorElements.forEach(id=> {
+        if (!document.getElementById(id)) {
+            const div = document.createElement('div');
+            div.id = id;
+            div.style.display = 'none';
+            document.body.appendChild(div);
+        }
+    });
+});
+</script>
+{% endblock %}

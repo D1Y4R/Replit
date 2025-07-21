@@ -1,0 +1,53 @@
+{
+  "match": "Galatasaray vs Fenerbahce",
+  "home_team": {
+    "id": 610,
+    "name": "Galatasaray",
+    "form": {
+      "avg_goals_scored": 2.1,
+      "avg_goals_conceded": 1.0,
+      "weighted_avg_goals_scored": 2.2,
+      "weighted_avg_goals_conceded": 0.9
+    }
+  },
+  "away_team": {
+    "id": 1005,
+    "name": "Fenerbahce",
+    "form": {
+      "avg_goals_scored": 1.9,
+      "avg_goals_conceded": 0.8,
+      "weighted_avg_goals_scored": 2.0,
+      "weighted_avg_goals_conceded": 0.7
+    }
+  },
+  "predictions": {
+    "home_win_probability": 45.1,
+    "draw_probability": 25.4,
+    "away_win_probability": 29.5,
+    "expected_goals": {
+      "home": 1.8,
+      "away": 1.5
+    },
+    "exact_score": "2-1"
+  },
+  "enhanced_factors": {
+    "match_importance": {
+      "home_importance": 0.85,
+      "away_importance": 0.83,
+      "description": "Derby maçı, her iki takım için yüksek önemde",
+      "factor": 1.15
+    },
+    "historical_pattern": {
+      "pattern_strength": 0.75,
+      "common_score": "2-1",
+      "description": "Son karşılaşmalarda Galatasaray ev sahibi olduğunda genellikle 2-1 kazanıyor",
+      "factor": 1.2
+    },
+    "momentum": {
+      "home_momentum": 0.8,
+      "away_momentum": 0.75,
+      "description": "Galatasaray son 5 maçta 4 galibiyet aldı, momentum ev sahibinde",
+      "factor": 1.05
+    }
+  }
+}

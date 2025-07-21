@@ -1,0 +1,1534 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2 class="mb-4"><i class="fas fa-calendar"></i> Fixtures</h2>
+
+        <!-- Date Selector -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <label for="fixtureDate" class="form-label">Select Date</label>
+                        <input type="date" class="form-control" id="fixtureDate">
+                    </div>
+                    <div class="col-md-6 mt-3 mt-md-0">
+                        <button class="btn btn-secondary" id="todayBtn">
+                            <i class="fas fa-calendar-day"></i> Today
+                        </button>
+                        <button class="btn btn-secondary" id="tomorrowBtn">
+                            <i class="fas fa-calendar-plus"></i> Tomorrow
+                        </button>
+                        <button class="btn btn-secondary" id="yesterdayBtn">
+                            <i class="fas fa-calendar-minus"></i> Yesterday
+                        </button>
+                    </div>
+                </div>
+                <div class="search-container">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="leagueSearch" class="form-label">Lig Ara</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-search"></i></span>
+                                <input type="text" class="form-control" id="leagueSearch" placeholder="Lig ismi girin...">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="teamSearch" class="form-label">Takım Ara</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-search"></i></span>
+                                <input type="text" class="form-control" id="teamSearch" placeholder="Takım ismi girin...">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- API-Football Fixtures Widget -->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="h5 mb-0">Matches for <span id="selectedDateDisplay"></span></h3>
+            </div>
+            <div class="card-body">
+                <!-- Widget Containers -->
+                <div id="widgetCountries"></div>
+                <div id="widgetLeague"></div>
+                <div id="widgetLiveScore"></div>
+
+                <!-- Initialize Widget -->
+                <script>
+                $(document).ready(function() {
+                    $('#widgetCountries').widgetCountries({
+                        widgetLeagueLocation: '#widgetLeague',
+                        widgetLiveScoreLocation: '#widgetLiveScore', 
+                        widgetWidth: '100%',
+                        preferentialLeagues: ['2', '3', '4', '5', '39'], // Top 5 leagues and UEFA tournaments
+                        apiKey: '013856bafc4f8aa6387fceb53d7a9c91ea1d575f10c32865d9f8a75f60dac3bc'
+                    });
+                });
+                </script>
+
+                <!-- Fallback API-Football Widget -->
+                <div id="wg-api-football-games"
+                     data-host="v3.football.api-sports.io" 
+                     data-key="013856bafc4f8aa6387fceb53d7a9c91ea1d575f10c32865d9f8a75f60dac3bc"
+                     data-date=""
+                     data-league=""
+                     data-season="2024"
+                     data-timezone="Europe/Istanbul"
+                     data-theme="dark"
+                     data-refresh="15"
+                     data-show-toolbar="true" 
+                     data-show-errors="true"
+                     data-show-logos="true"
+                     data-modal-game="true"
+                     data-modal-standings="true"
+                     data-modal-show-logos="true"
+                     class="api_football_loader">
+                     <div class="text-center my-4">
+                         <div class="spinner-border text-primary" role="status"></div>
+                         <p class="mt-2">Yükleniyor...</p>
+                     </div>
+                </div>
+
+                <!-- API Widget Yükleme Hatası Kontrol Scripti -->
+                <script>
+                    // 5 saniye sonra widget yüklenemediyse alternatif API'yi kullan
+                    setTimeout(function() {
+                        const widget = document.getElementById('wg-api-football-games');
+                        // Widget içeriğindeki yükleme animasyonunu kontrol et
+                        if (widget && widget.innerHTML.includes('spinner-border')) {
+                            console.log('Widget yüklenemedi, alternatif API kullanılıyor...');
+                            document.getElementById('api-v3-fixtures').style.display = 'block';
+                            // Seçili tarih için alternatif API'den veri çek
+                            const urlParams = new URLSearchParams(window.location.search);
+                            const date = urlParams.get('date') || new Date().toISOString().split('T')[0];
+                            loadMatchesFromAPI(date);
+                        }
+                    }, 5000);
+                </script>
+
+                <!-- API v3 Direct Implementation (as fallback) -->
+                <div id="api-v3-fixtures" class="mt-4" style="display: none;">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i> Using direct API v3 implementation
+                    </div>
+                    <div id="matches-container" class="row">
+                        <div class="col-12 text-center my-4">
+                            <div class="spinner-border text-primary" role="status"></div>
+                            <p class="mt-2">Maç verileri yükleniyor...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const datePicker = document.getElementById('fixtureDate');
+    const todayBtn = document.getElementById('todayBtn');
+    const tomorrowBtn = document.getElementById('tomorrowBtn');
+    const yesterdayBtn = document.getElementById('yesterdayBtn'); // Added yesterday button
+    const fixturesWidget = document.getElementById('wg-api-football-games');
+    const selectedDateDisplay = document.getElementById('selectedDateDisplay');
+
+    // Format date as YYYY-MM-DD
+    function formatDate(date) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
+    // Format date for display
+    function formatDateForDisplay(dateStr) {
+        const date = new Date(dateStr);
+        return date.toLocaleDateString('en-US', {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+        });
+    }
+
+    // Update widget function
+    function updateWidget(date) {
+        console.log("Updating widget with date:", date);
+        // Update date display
+        selectedDateDisplay.textContent = formatDateForDisplay(date);
+
+        // Show loading indicator
+        fixturesWidget.innerHTML = '<div class="text-center my-4"><div class="spinner-border text-primary" role="status"></div><p class="mt-2">Loading data...</p></div>';
+
+        // Update widget
+        fixturesWidget.setAttribute('data-date', date);
+
+        //This section is crucial for forcing a widget reload.  The original code had issues here.
+        if (window.WgGames) {
+            window.WgGames.destroy(); //added to destroy the existing widget before recreating it.
+            window.WgGames = null;
+        }
+
+        // Remove old widget script (more robust removal)
+        const oldScripts = Array.from(document.querySelectorAll('script[src*="widgets.js"]'));
+        oldScripts.forEach(script => script.remove());
+
+
+        // Add new script with a short delay (to let DOM update)
+        setTimeout(() => {
+            // Add new widget script with cache buster
+            const script = document.createElement('script');
+            script.type = 'module';
+            script.src = 'https://widgets.api-sports.io/2.0.3/widgets.js?_=' + new Date().getTime();
+            script.onload = function() {
+                console.log('Widget script loaded and executed - Date:', date);
+                // Added to ensure the widget fully initializes
+                setTimeout(() => {
+                    if (window.WgGames) {
+                        window.WgGames.init();
+                    } else {
+                        console.error('Widget failed to initialize after load.');
+                        loadDirectAPIV3(date); // Fallback if widget still fails
+                    }
+                }, 2000);
+            };
+            script.onerror = function(e) {
+                console.error('Error loading widget script:', e);
+                fixturesWidget.innerHTML = '<div class="alert alert-danger">Widget failed to load. Please refresh the page.</div>';
+                loadDirectAPIV3(date); // Fallback if script loading fails
+            };
+            document.body.appendChild(script);
+        }, 500);
+
+        // Debug message
+        console.log('Widget update request sent, date:', date);
+    }
+
+    // Get the current date based on user's timezone
+    const today = new Date();
+    const todayFormatted = formatDate(today);
+    console.log("Setting default date to today:", todayFormatted);
+    datePicker.value = todayFormatted;
+
+    // Debug to confirm we're using the actual current date
+    console.log("Current date object:", today);
+    console.log("Formatted for API:", todayFormatted);
+    updateWidget(todayFormatted);
+
+    // Load direct API implementation if widget doesn't work
+    setTimeout(() => {
+        const widgetLoaded = document.querySelector('#wg-api-football-games .match') || 
+                            document.querySelector('#wg-api-football-games .no-match');
+        if (!widgetLoaded) {
+            console.log("Widget not loaded after timeout, switching to direct API");
+            loadDirectAPIV3(todayFormatted); // Pass the date to the fallback function
+        }
+    }, 3000);
+
+    // Update widget when date changes
+    datePicker.addEventListener('change', function() {
+        updateWidget(this.value);
+    });
+
+    // Today button handler
+    todayBtn.addEventListener('click', function() {
+        const today = new Date();
+        datePicker.value = formatDate(today);
+        updateWidget(formatDate(today));
+    });
+
+    // Tomorrow button handler
+    tomorrowBtn.addEventListener('click', function() {
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        datePicker.value = formatDate(tomorrow);
+        updateWidget(formatDate(tomorrow));
+    });
+
+    // Yesterday button handler
+    yesterdayBtn.addEventListener('click', function() {
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        datePicker.value = formatDate(yesterday);
+        updateWidget(formatDate(yesterday));
+    });
+});
+</script>
+<!-- Widget loading script -->
+<script>
+    // Declare loadDirectAPIV3 in global scope first to avoid reference errors
+    function loadDirectAPIV3(date) {
+        console.log("Loading direct API v3 implementation");
+        const apiV3Container = document.getElementById('api-v3-fixtures');
+        const widgetContainer = document.getElementById('wg-api-football-games');
+        const matchesContainer = document.getElementById('matches-container');
+
+        // Show API v3 container, hide widget
+        apiV3Container.style.display = 'block';
+        widgetContainer.style.display = 'none';
+
+
+        const formattedDisplayDate = new Date(date).toLocaleDateString('tr-TR', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long', 
+            day: 'numeric'
+        });
+
+        // Show loading
+        matchesContainer.innerHTML = `
+            <div class="col-12 text-center my-4">
+                <div class="spinner-border text-primary" role="status"></div>
+                <p class="mt-2">Maç verileri yükleniyor...</p>
+            </div>
+        `;
+
+        // Fetch fixtures using our API
+        fetch(`/api/v3/fixtures?date=${date}&extra=true&standings=true&league=203&season=2023`)
+            .then(response => {
+                if (!response.ok) {
+                    const errorMessage = `HTTP error! Status: ${response.status} - ${response.statusText}`;
+                    console.error(errorMessage);
+                    matchesContainer.innerHTML = `
+                        <div class="alert alert-danger">
+                            <i class="fas fa-exclamation-circle"></i> ${errorMessage}
+                        </div>
+                        <div class="alert alert-info mt-3">
+                            <i class="fas fa-info-circle"></i> API Football günlük limiti aşıldı, alternatif kaynaklara geçiliyor...
+                        </div>
+                    `;
+                    // Try alternative API immediately
+                    useFallbackAPI(date);
+                    return;
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (!data) return; // If data is undefined (HTTP error case)
+
+                console.log("API v3 data received:", data);
+
+                // Check if the API returned an error about request limits
+                if (data.errors && ((data.errors.requests && data.errors.requests.includes("request limit")) || data.errors.token)) {
+                    console.error("API Football error:", data.errors);
+                    matchesContainer.innerHTML = `
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle"></i> API Football veri alınamadı: ${data.errors.token || data.errors.requests}
+                        </div>
+                        <div class="alert alert-info mt-2">
+                            <i class="fas fa-info-circle"></i> Alternatif veri kaynakları kontrol ediliyor...
+                        </div>
+                    `;
+                    // Try using the football-data.org API as a fallback
+                    useFallbackAPI(date);
+                    return;
+                }
+
+                if ((data.response && data.response.length > 0) || (data.matches && data.matches.length > 0)) {
+                    // API Football veya Football-Data API'den gelenleri kontrol et
+                    const matches = data.response || data.matches;
+                    let html = '';
+                    let isFootballDataAPI = !!data.matches;
+
+                    // Group matches by league
+                    const leagueMatches = {};
+                    matches.forEach(match => {
+                        const leagueId = match.league.id;
+                        if (!leagueMatches[leagueId]) {
+                            leagueMatches[leagueId] = {
+                                league: match.league,
+                                matches: []
+                            };
+                        }
+                        leagueMatches[leagueId].matches.push(match);
+                    });
+
+                    // Create HTML for each league
+                    Object.values(leagueMatches).forEach(league => {
+                        html += `
+                            <div class="col-12 mb-4">
+                                <div class="card">
+                                    <div class="card-header d-flex align-items-center">
+                                        <img src="${league.league.logo || '/static/img/default-league.png'}" alt="${league.league.name}" class="me-2" style="height: 24px;" onerror="this.src='/static/img/default-league.png'">
+                                        <span>${league.league.name} - ${league.league.country}</span>
+                                    </div>
+                                    <div class="card-body p-0">
+                                        <ul class="list-group list-group-flush">
+                        `;
+
+                        league.matches.forEach(match => {
+                            const status = match.fixture.status.short;
+                            const isLive = status === 'LIVE' || status === '1H' || status === '2H' || status === 'HT' || status === 'ET' || status === 'P' || status === 'BT';
+                            const isFinished = status === 'FT' || status === 'AET' || status === 'PEN' || status === 'Finished'; // Added 'Finished'
+
+                            html += `
+                                <li class="list-group-item">
+                                    <div class="row align-items-center">
+                                        <div class="col-12 col-md-4">
+                                            <div class="d-flex justify-content-start align-items-center">
+                                                <div class="team-logo me-2">
+                                                    <img src="${match.teams.home.logo || '/static/img/default-team.png'}" alt="${match.teams.home.name}" style="height: 30px;" onerror="this.src='/static/img/default-team.png'">
+                                                </div>
+                                                <div class="team-name">
+                                                    <a href="#" class="team-link" data-team-id="${match.teams.home.id}" data-team-name="${match.teams.home.name}">${match.teams.home.name}</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-md-4 text-center">
+                                            <div class="match-info">
+                                                <!-- Tahmin butonu ekleme -->
+                                                <button type="button" class="btn btn-sm btn-outline-primary mt-1" 
+                                                        onclick="showPrediction('${match.teams.home.id}', '${match.teams.away.id}', '${match.teams.home.name}', '${match.teams.away.name}')">
+                                                    <i class="fas fa-chart-line"></i> Tahmin
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-md-4">
+                                            <div class="d-flex justify-content-end align-items-center">
+                                                <div class="team-name">
+                                                    <a href="#" class="team-link" data-team-id="${match.teams.away.id}" data-team-name="${match.teams.away.name}">${match.teams.away.name}</a>
+                                                </div>
+                                                <div class="team-logo ms-2">
+                                                    <img src="${match.teams.away.logo || '/static/img/default-team.png'}" alt="${match.teams.away.name}" style="height: 30px;" onerror="this.src='/static/img/default-team.png'">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            `;
+                        });
+
+                        html += `
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+
+                    matchesContainer.innerHTML = html;
+                } else {
+                    // Try using the football-data.org API as a fallback
+                    useFallbackAPI(date);
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching API v3 data:', error);
+                matchesContainer.innerHTML = `
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-circle me-2"></i> Maç verileri alınamadı: ${error.message}
+                    </div>
+                    <div class="alert alert-info mt-3">
+                        <i class="fas fa-info-circle me-2"></i> Alternatif veri kaynakları kullanılıyor...
+                    </div>
+                `;
+                // Try using the football-data.org API as a fallback
+                useFallbackAPI(date); 
+            });
+    }
+
+    // Fallback to football-data.org API
+    function useFallbackAPI(date) {
+        console.log("Using Football-Data.org API as fallback for date:", date);
+        const matchesContainer = document.getElementById('matches-container');
+
+        matchesContainer.innerHTML = `
+            <div class="col-12 text-center my-4">
+                <div class="spinner-border text-primary" role="status"></div>
+                <p class="mt-2">Maç verileri yükleniyor...</p>
+            </div>
+        `;
+
+        fetch(`/api/v4/matches?date=${date}`)
+            .then(response => {
+                if (!response.ok) {
+                    const errorMessage = `HTTP error! Status: ${response.status} - ${response.statusText}`;
+                    console.error(errorMessage);
+                    matchesContainer.innerHTML = `<div class="alert alert-danger">${errorMessage}</div>`;
+                    return; // Stop further processing if there's an HTTP error
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (!data) return; // HTTP error case
+
+                console.log("Football-Data.org API response:", data);
+
+                if (data.matches && data.matches.length > 0) {
+                    const matches = data.matches;
+
+                    // Group matches by competition
+                    const competitionMatches = {};
+                    matches.forEach(match => {
+                        const competitionId = match.competition.id;
+                        if (!competitionMatches[competitionId]) {
+                            competitionMatches[competitionId] = {
+                                competition: match.competition,
+                                matches: []
+                            };
+                        }
+                        competitionMatches[competitionId].matches.push(match);
+                    });
+
+                    let html = '';
+
+                    // Create HTML for each competition
+                    Object.values(competitionMatches).forEach(comp => {
+                        html += `
+                            <div class="col-12 mb-4">
+                                <div class="card">
+                                    <div class="card-header d-flex align-items-center">
+                                        <img src="${comp.competition.emblem || '/static/img/default-league.png'}" alt="${comp.competition.name}" 
+                                             class="me-2" style="height: 24px;" onerror="this.src='/static/img/default-league.png'">
+                                        <span>${comp.competition.name} - ${comp.competition.area?.name || ''}</span>
+                                    </div>
+                                    <div class="card-body p-0">
+                                        <ul class="list-group list-group-flush">
+                        `;
+                        comp.matches.forEach(match => {
+                            const status = match.status;
+                            const isLive = ['IN_PLAY', 'PAUSED', 'EXTRA_TIME', 'PENALTY_SHOOTOUT'].includes(status);
+                            const isFinished = status === 'FINISHED';
+
+                            html += `
+                                <li class="list-group-item">
+                                    <div class="row align-items-center">
+                                        <div class="col-12 col-md-4">
+                                            <div class="d-flex justify-content-start align-items-center">
+                                                <div class="team-logo me-2">
+                                                    <img src="${match.homeTeam.crest || '/static/img/default-team.png'}" 
+                                                         alt="${match.homeTeam.name}" style="height: 30px;" 
+                                                         onerror="this.src='/static/img/default-team.png'">
+                                                </div>
+                                                <div class="team-name">
+                                                    <a href="#" class="team-link" data-team-id="${match.homeTeam.id}" data-team-name="${match.homeTeam.name || match.homeTeam.shortName}">${match.homeTeam.name || match.homeTeam.shortName}</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-md-4 text-center">
+                                            <div class="match-info">
+                            `;
+
+                            if (isLive) {
+                                // Football-Data API için maç dakikasını göster
+                                const minute = match.minute;
+                                let statusDisplay = '';
+
+                                // API'dan dakika bilgisinin kontrolü 
+                                console.log("Football-Data live match data:", match);
+
+                                if (status === 'PAUSED') {
+                                    statusDisplay = 'Devre Arası';
+                                } else if (status === 'EXTRA_TIME') {
+                                    statusDisplay = 'Uzatma';
+                                } else if (status === 'PENALTY_SHOOTOUT') {
+                                    statusDisplay = 'Penaltılar';
+                                } else {
+                                    // Sadece CANLI etiketi göster
+                                    statusDisplay = 'CANLI';
+                                }
+
+                                html += `
+                                    <div class="badge bg-danger mb-1">${statusDisplay}</div>
+                                    <div class="score fw-bold h4 mb-0">
+                                        ${match.score?.fullTime?.home !== null ? match.score.fullTime.home : 0} - 
+                                        ${match.score?.fullTime?.away !== null ? match.score.fullTime.away : 0}
+                                    </div>
+                                `;
+                            } else if (isFinished) {
+                                html += `
+                                    <div class="badge bg-secondary mb-1">Final</div>
+                                    <div class="score fw-bold h4 mb-0">
+                                        ${match.score?.fullTime?.home !== null ? match.score.fullTime.home : 0} - 
+                                        ${match.score?.fullTime?.away !== null ? match.score.fullTime.away : 0}
+                                    </div>
+                                `;
+                            } else {
+                                // Format time
+                                const matchTime = new Date(match.utcDate);
+                                const formattedTime = matchTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+
+                                html += `
+                                    <div class="time">${formattedTime}</div>
+                                    <div class="score fw-bold h4 mb-0">vs</div>
+                                `;
+                            }
+
+                            html += `
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-md-4">
+                                            <div class="d-flex justify-content-end align-items-center">
+                                                <div class="team-name">
+                                                    <a href="#" class="team-link" data-team-id="${match.awayTeam.id}" data-team-name="${match.awayTeam.name || match.awayTeam.shortName}">${match.awayTeam.name || match.awayTeam.shortName}</a>
+                                                </div>
+                                                <div class="team-logo ms-2">
+                                                    <img src="${match.awayTeam.crest || '/static/img/default-team.png'}" 
+                                                         alt="${match.awayTeam.name}" style="height: 30px;" 
+                                                         onerror="this.src='/static/img/default-team.png'">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            `;
+                        });
+
+                        html += `
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+
+                    matchesContainer.innerHTML = html;
+                } else {
+                    matchesContainer.innerHTML = `
+                        <div class="col-12">
+                            <div class="alert alert-warning">
+                                <i class="fas fa-exclamation-triangle me-2"></i> ${new Date(date).toLocaleDateString('tr-TR', {
+                                    day: 'numeric',
+                                    month: 'long',
+                                    year: 'numeric'
+                                })} tarihinde maç bulunamadı
+                            </div>
+                        </div>
+                    `;
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching fallback API data:', error);
+                matchesContainer.innerHTML = `
+                    <div class="col-12">
+                        <div class="alert alert-danger">
+                            <i class="fas fa-exclamation-circle me-2"></i> Maç verileri alınamadı: ${error.message}
+                        </div>
+                        <div class="alert alert-info mt-3">
+                            <i class="fas fa-info-circle me-2"></i> Seçilen tarih için maç verisi bulamadık. Başka bir tarih deneyebilirsiniz.
+                        </div>
+                    </div>
+                `;
+            });
+    }
+
+    // Alternatif API'den maç verilerini çekme işlevi
+    function useFallbackAPI(date) {
+        console.log("Using fallback Football-Data API for date:", date);
+
+        fetch(`/api/v3/fixtures?date=${date}&source=football-data`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log("Fallback API data:", data);
+                displayFallbackData(data);
+            })
+            .catch(error => {
+                console.error("Fallback API error:", error);
+                showErrorMessage("Tüm API kaynakları başarısız oldu. Lütfen daha sonra tekrar deneyin.");
+            });
+    }
+
+    // Alternatif API verilerini görüntüleme
+    function displayFallbackData(data) {
+        const matchesContainer = document.getElementById('matches-container');
+
+        if (!data || !data.response || data.response.length === 0) {
+            matchesContainer.innerHTML = `
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i> Seçilen tarih için maç bulunamadı.
+                </div>
+            `;
+            return;
+        }
+
+        // Maçları lig bazında grupla
+        const leagueMatches = {};
+        data.response.forEach(match => {
+            const leagueName = match.league.name;
+            if (!leagueMatches[leagueName]) {
+                leagueMatches[leagueName] = {
+                    league: match.league,
+                    matches: []
+                };
+            }
+            leagueMatches[leagueName].matches.push(match);
+        });
+
+        // Her lig için HTML oluştur
+        let html = '';
+
+        Object.values(leagueMatches).forEach(league => {
+            html += `
+                <div class="col-12 mb-4">
+                    <div class="card">
+                        <div class="card-header d-flex align-items-center">
+                            <img src="${league.league.logo || '/static/img/ball.png'}" alt="${league.league.name}" style="height: 30px; width: auto; margin-right: 10px;">
+                            <h5 class="mb-0">${league.league.name}</h5>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover mb-0">
+                                    <tbody>
+            `;
+
+            league.matches.forEach(match => {
+                // Maç durumu formatını belirle
+                let statusClass = 'text-muted';
+                let statusText = match.fixture.status.long;
+
+                if (match.fixture.status.short === 'NS') {
+                    statusText = match.fixture.date.split('T')[1].substring(0, 5);
+                } else if (match.fixture.status.short === 'FT') {
+                    statusClass = 'text-success';
+                    statusText = 'Tamamlandı';
+                } else if (match.fixture.status.short === '1H' || match.fixture.status.short === '2H' || match.fixture.status.short === 'HT') {
+                    statusClass = 'text-danger';
+                    statusText = match.fixture.status.long;
+                }
+
+                html += `
+                    <tr>
+                        <td class="text-center" style="width: 100px;">
+                            <span class="${statusClass}">${statusText}</span>
+                        </td>
+                        <td style="width: 40%;" class="text-end">
+                            <div class="d-flex align-items-center justify-content-end">
+                                <span class="me-2">${match.teams.home.name}</span>
+                                <img src="${match.teams.home.logo || '/static/img/team.png'}" alt="${match.teams.home.name}" style="height: 30px; width: auto;">
+                            </div>
+                        </td>
+                        <td class="text-center" style="width: 80px;">
+                            <span class="fw-bold">${match.goals.home !== null ? match.goals.home : '-'} - ${match.goals.away !== null ? match.goals.away : '-'}</span>
+                        </td>
+                        <td style="width: 40%;">
+                            <div class="d-flex align-items-center">
+                                <img src="${match.teams.away.logo || '/static/img/team.png'}" alt="${match.teams.away.name}" style="height: 30px; width: auto;">
+                                <span class="ms-2">${match.teams.away.name}</span>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            html += `
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+
+        matchesContainer.innerHTML = html;
+    }
+
+    // Hata mesajlarını gösterme
+    function showErrorMessage(message) {
+        const matchesContainer = document.getElementById('matches-container');
+        matchesContainer.innerHTML = `
+            <div class="alert alert-danger">
+                <i class="fas fa-exclamation-circle"></i> ${message}
+            </div>
+        `;
+    }
+</script>
+
+<script>
+    (function(w,d,s,o,f,js,fjs){
+        w['API-Football-Widget']=o;w[o]=w[o]||function(){(w[o].q=w[o.q||[]]).push(arguments)};
+        js=d.createElement(s),fjs=d.getElementsByTagName(s)[0];
+        js.id='API-Football-Widget-Script';
+        jsscript.src='https://widgets.api-sports.io/2.03/widgets.js';        js.onload = function() {
+            console.log('Widget script loaded successfully');
+        };
+        js.onerror = function() {
+            console.error('Failed to load widget script');
+        };
+        fjs.parentNode.insertBefore(js,fjs);
+    }(window,document,'script','APIF'));
+</script>
+
+<script src="/static/js/api_football_debug.js"></script>
+
+<div class="modal fade" id="teamLastMatchesModal" tabindex="-1" aria-labelledby="teamLastMatchesModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="teamLastMatchesModalLabel">Son 5 Maç</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="team-last-matches-container">
+                    <<div class="text-center">
+                        <div class="spinner-border text-primary role="status"></div>
+                        <p class="mt-2">Maç verileri yükleniyor...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('team-link') || e.target.closest('.team-link')) {
+            e.preventDefault();
+            const link = e.target.classList.contains('team-link') ? e.target : e.target.closest('.team-link');
+            const teamId = link.dataset.teamId;
+            const teamName = link.dataset.teamName;
+
+            document.getElementById('teamLastMatchesModalLabel').textContent = `${teamName} - Son 5 Maç`;
+
+            const teamModal = new bootstrap.Modal(document.getElementById('teamLastMatchesModal'));
+            teamModal.show();
+
+            fetchTeamLastMatches(teamId);
+        }
+    });
+
+    function fetchTeamLastMatches(teamId) {
+        const matchesContainer = document.getElementById('team-last-matches-container');
+
+        matchesContainer.innerHTML = `
+            <div class="text-center">
+                <div class="spinner-border text-primary" role="status"></div>
+                <p class="mt-2">Son maç verileri yükleniyor...</p>
+            </div>
+        `;
+
+        fetch(`/api/v3/fixtures?team=${teamId}&last=5`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log("Son 5 maç verileri:", data);
+
+                if (data.errors && data.errors.requests && data.errors.requests.includes("request limit")) {
+                    return fetch(`/api/v4/teams/${teamId}/matches?limit=5`)
+                        .then(res => res.json())
+                        .then(fallbackData => {
+                            console.log("Football-Data.org son 5 maç:", fallbackData);
+                            renderFootballDataMatches(fallbackData, matchesContainer);
+                        });
+                }
+
+                if (data.response && data.response.length > 0) {
+                    renderAPIFootballMatches(data.response, matchesContainer);
+                } else {
+                    return fetch(`/api/v4/teams/${teamId}/matches?limit=5`)
+                        .then(res => res.json())
+                        .then(fallbackData => {
+                            console.log("Football-Data.org son 5 maç:", fallbackData);
+                            renderFootballDataMatches(fallbackData, matchesContainer);
+                        });
+                }
+            })
+            .catch(error => {
+                console.error('Maç verileri alınamadı:', error);
+                matchesContainer.innerHTML = `
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-circle me-2"></i> Maç verileri alınamadı: ${error.message}
+                    </div>
+                `;
+
+                fetch(`/api/v4/teams/${teamId}/matches?limit=5`)
+                    .then(res => res.json())
+                    .then(fallbackData => {
+                        console.log("Football-Data.org son 5 maç:", fallbackData);
+                        renderFootballDataMatches(fallbackData, matchesContainer);
+                    })
+                    .catch(fallbackError => {
+                        console.error('Alternatif API isteği başarısız:', fallbackError);
+                        matchesContainer.innerHTML = `
+                            <div class="alert alert-danger">
+                                <i class="fas fa-exclamation-circle me-2"></i> Hiçbir maç verisi alınamadı
+                            </div>
+                        `;
+                    });
+            });
+    }
+
+    function renderAPIFootballMatches(matches, container) {
+        if (!matches || matches.length === 0) {
+            container.innerHTML = `
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i> Bu takım için son maç verisi bulunamadı
+                </div>
+            `;
+            return;
+        }
+
+        let html = '<div class="list-group">';
+
+        matches.forEach(match => {
+            const homeTeam = match.teams.home;
+            const awayTeam = match.teams.away;
+            const isFinished = match.fixture.status.short === 'FT' || match.fixture.status.short === 'AET' || match.fixture.status.short === 'PEN';
+            const matchDate = new Date(match.fixture.date);
+            const formattedDate = matchDate.toLocaleDateString('tr-TR', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+            });
+
+            html += `
+                <div class="list-group-item">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted">${formattedDate}</small>
+                        <span class="badge ${isFinished ? 'bg-secondary' : 'bg-warning'}">
+                            ${isFinished ? 'Tamamlandı' : 'Planlandı'}
+                        </span>
+                    </div>
+                    <div class="row align-items-center mt-2">
+                        <div class="col-4 text-end">
+                            <img src="${homeTeam.logo}" alt="${homeTeam.name}" style="height: 20px;" class="me-2">
+                            ${homeTeam.name}
+                        </div>
+                        <div class="col-4 text-center">
+                            <strong>${isFinished ? (match.goals.home + ' - ' + match.goals.away) : 'vs'}</strong>
+                        </div>
+                        <div class="col-4 text-start">
+                            ${awayTeam.name}
+                            <img src="${awayTeam.logo}" alt="${awayTeam.name}" style="height: 20px;" class="ms-2">
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+
+        html += '</div>';
+        container.innerHTML = html;
+    }
+
+    function renderFootballDataMatches(data, container) {
+        const matches = data.matches;
+
+        if (!matches || matches.length === 0) {
+            container.innerHTML = `
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i> Bu takım için son maç verisi bulunamadı
+                </div>
+            `;
+            return;
+        }
+
+        let html = '<div class="list-group">';
+
+        matches.forEach(match => {
+            const homeTeam = match.homeTeam;
+            const awayTeam = match.awayTeam;
+            const isFinished = match.status === 'FINISHED';
+            const matchDate = new Date(match.utcDate);
+            const formattedDate = matchDate.toLocaleDateString('tr-TR', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+            });
+
+            html += `
+                <div class="list-group-item">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted">${formattedDate}</small>
+                        <span class="badge ${isFinished ? 'bg-secondary' : 'bg-warning'}">
+                            ${isFinished ? 'Tamamlandı' : 'Planlandı'}
+                        </span>
+                    </div>
+                    <div class="row align-items-center mt-2">
+                        <div class="col-4 text-end">
+                            <img src="${homeTeam.crest}" alt="${homeTeam.name}" style="height: 20px;" class="me-2" onerror="this.src='/static/img/default-team.png'">
+                            ${homeTeam.name || homeTeam.shortName}
+                        </div>
+                        <div class="col-4 text-center">
+                            <strong>${isFinished ? (match.score.fullTime.home + ' - ' + match.score.fullTime.away) : 'vs'}</strong>
+                        </div>
+                        <div class="col-4 text-start">
+                            ${awayTeam.name || awayTeam.shortName}
+                            <img src="${awayTeam.crest}" alt="${awayTeam.name}" style="height: 20px;" class="ms-2" onerror="this.src='/static/img/default-team.png'">
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            `;
+        });
+
+        html += '</div>';
+        container.innerHTML = html;
+    }
+</script>
+
+<script src="/static/js/api_football_debug.js"></script>
+<!-- Prediction Modal -->
+<div class="modal fade" id="predictionModal" tabindex="-1" aria-labelledby="predictionModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="predictionModalLabel">Maç Tahmini</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="predictionLoading" class="text-center">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Yükleniyor...</span>
+                    </div>
+                    <p class="mt-2">Tahmin yükleniyor...</p>
+                </div>
+                <div id="predictionError" class="alert alert-danger" style="display: none;">
+                    <i class="fas fa-exclamation-circle me-2"></i>
+                    <span id="errorMessage"></span>
+                </div>
+                <div id="predictionContent" style="display: none;">
+                    <!-- Tahmin içeriği buraya gelecek -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Global tanımlanmış showPrediction fonksiyonunu kontrol et ve gerekirse tanımla
+    if (typeof window.showPrediction !== 'function') {
+        window.showPrediction = function(homeTeamId, awayTeamId, homeTeamName, awayTeamName, reload = false) {
+            console.log("fixtures.html içinde showPrediction fonksiyonu çalıştırıldı");
+        const predictionModal = new bootstrap.Modal(document.getElementById('predictionModal'));
+        const predictionLoading = document.getElementById('predictionLoading');
+        const predictionContent = document.getElementById('predictionContent');
+        const predictionError = document.getElementById('predictionError');
+        predictionModal.show();
+        predictionLoading.style.display = 'block';
+        predictionContent.style.display = 'none';
+        predictionError.style.display = 'none';
+
+        // API çağrısı
+        fetch(`/api/v3/predictions?home_id=${homeTeamId}&away_id=${awayTeamId}&home_name=${encodeURIComponent(homeTeamName)}&away_name=${encodeURIComponent(awayTeamName)}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log("Tahmin verileri:", data);
+                predictionLoading.style.display = 'none';
+                predictionContent.style.display = 'block';
+                updatePredictionUI(data);
+
+            })
+            .catch(error => {
+                predictionLoading.style.display = 'none';
+                predictionError.style.display = 'block';
+                document.getElementById('errorMessage').textContent = `Tahmin alınamadı: ${error.message}`;
+                console.error('Tahmin alınamadı:', error);
+            });
+    }
+
+    // Tahmin verilerine göre UI'ı güncelle
+    function updatePredictionUI(data) {
+        console.log("updatePredictionUI çağrıldı");
+        const predictions = data.predictions;
+        const homeTeam = data.home_team;
+        const awayTeam = data.away_team;
+
+        // Tahmin içeriğini oluştur
+        let html = `
+            <div class="row mb-4">
+                <div class="col-md-4 text-center">
+                    <h4>${homeTeam.name}</h4>
+                    <img src="/static/img/team.png" alt="${homeTeam.name}" class="img-fluid mb-2" style="max-height: 80px;">
+                </div>
+                <div class="col-md-4 text-center">
+                    <h5 class="mt-4">VS</h5>
+                </div>
+                <div class="col-md-4 text-center">
+                    <h4>${awayTeam.name}</h4>
+                    <img src="/static/img/team.png" alt="${awayTeam.name}" class="img-fluid mb-2" style="max-height: 80px;">
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5>Tahmin Özeti</h5>
+                </div>
+                <div class="card-body">
+                    <p class="lead">
+                        ${predictions.most_likely_outcome === 'HOME_WIN' ? homeTeam.name + ' kazanması bekleniyor.' : 
+                         predictions.most_likely_outcome === 'AWAY_WIN' ? awayTeam.name + ' kazanması bekleniyor.' : 
+                         'Beraberlik bekleniyor.'}
+                    </p>
+
+                    <p><strong>En yüksek olasılıklı tahmin:</strong> ${getMostConfidentBet(predictions.betting_predictions)}</p>
+
+                    <div class="progress mb-3">
+                        <div class="progress-bar" role="progressbar" style="width: ${predictions.confidence}%" aria-valuenow="${predictions.confidence}" aria-valuemin="0" aria-valuemax="100">
+                            Güven: ${predictions.confidence}%
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- Kazanma olasılıkları -->
+                <div class="col-md-6">
+                    <div class="card mb-4">
+                        <div class="card-header bg-primary text-white">
+                            <h5>Kazanma Olasılıkları</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-4 text-center">
+                                    <strong>Ev:</strong> ${predictions.home_win_probability}%
+                                    <div class="progress">
+                                        <div class="progress-bar bg-success" role="progressbar" style="width: ${predictions.home_win_probability}%" aria-valuenow="${predictions.home_win_probability}" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                                <div class="col-4 text-center">
+                                    <strong>Beraberlik:</strong> ${predictions.draw_probability}%
+                                    <div class="progress">
+                                        <div class="progress-bar bg-warning" role="progressbar" style="width: ${predictions.draw_probability}%" aria-valuenow="${predictions.draw_probability}" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                                <div class="col-4 text-center">
+                                    <strong>Deplasman:</strong> ${predictions.away_win_probability}%
+                                    <div class="progress">
+                                        <div class="progress-bar bg-danger" role="progressbar" style="width: ${predictions.away_win_probability}%" aria-valuenow="${predictions.away_win_probability}" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Beklenen gol sayısı -->
+                <div class="col-md-6">
+                    <div class="card mb-4">
+                        <div class="card-header bg-primary text-white">
+                            <h5>Beklenen Gol Sayısı</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-6 text-center">
+                                    <h4>${predictions.expected_goals.home}</h4>
+                                    <p>Ev Sahibi</p>
+                                </div>
+                                <div class="col-6 text-center">
+                                    <h4>${predictions.expected_goals.away}</h4>
+                                    <p>Deplasman</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bahis tahminleri -->
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5>Bahis Tahminleri</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row" id="bettingPredictions">
+        `;
+
+        console.log("Mevcut bahis tahminleri bölümü güncelleniyor");
+        // Bahis tahminlerini ekle
+        const betting = predictions.betting_predictions;
+
+        html += `
+                        <div class="col-md-4 mb-3">
+                            <div class="card h-100">
+                                <div class="card-header text-center">KG Var/Yok</div>
+                                <div class="card-body text-center">
+                                    <h4>${betting.both_teams_to_score.prediction}</h4>
+                                    <div class="progress">
+                                        <div class="progress-bar bg-info" role="progressbar" style="width: ${betting.both_teams_to_score.probability}%" aria-valuenow="${betting.both_teams_to_score.probability}" aria-valuemin="0" aria-valuemax="100">${betting.both_teams_to_score.probability}%</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <div class="card h-100">
+                                <div class="card-header text-center">2.5 Üst/Alt</div>
+                                <div class="card-body text-center">
+                                    <h4>${betting.over_2_5_goals.prediction}</h4>
+                                    <div class="progress">
+                                        <div class="progress-bar bg-info" role="progressbar" style="width: ${betting.over_2_5_goals.probability}%" aria-valuenow="${betting.over_2_5_goals.probability}" aria-valuemin="0" aria-valuemax="100">${betting.over_2_5_goals.probability}%</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <div class="card h-100">
+                                <div class="card-header text-center">3.5 Üst/Alt</div>
+                                <div class="card-body text-center">
+                                    <h4>${betting.over_3_5_goals.prediction}</h4>
+                                    <div class="progress">
+                                        <div class="progress-bar bg-info" role="progressbar" style="width: ${betting.over_3_5_goals.probability}%" aria-valuenow="${betting.over_3_5_goals.probability}" aria-valuemin="0" aria-valuemax="100">${betting.over_3_5_goals.probability}%</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <div class="card h-100">
+                                <div class="card-header text-center">Kesin Skor</div>
+                                <div class="card-body text-center">
+                                    <h4>${betting.exact_score.prediction}</h4>
+                                    <div class="progress">
+                                        <div class="progress-bar bg-info" role="progressbar" style="width: ${betting.exact_score.probability}%" aria-valuenow="${betting.exact_score.probability}" aria-valuemin="0" aria-valuemax="100">${betting.exact_score.probability}%</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- İlk Yarı/Maç Sonu bölümü kullanıcı talebi üzerine gizlendi -->
+
+                        <!-- İlk Gol bölümü kaldırıldı -->
+        `;
+
+        // Form verileri ekle
+        html += `
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form verileri -->
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5>Takım Formları</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h4 class="text-center">${homeTeam.name}</h4>
+                            <h6>Son Maçlar:</h6>
+                            <div class="d-flex justify-content-center mb-3">
+        `;
+
+        // Ev sahibi son maçlar
+        if (homeTeam.form && homeTeam.form.recent_match_data && homeTeam.form.recent_match_data.length > 0) {
+            const recentMatches = homeTeam.form.recent_match_data.slice(0, 5);
+            recentMatches.forEach(match => {
+                let resultClass = '';
+                switch (match.result) {
+                    case 'W': resultClass = 'bg-success'; break;
+                    case 'D': resultClass = 'bg-warning'; break;
+                    case 'L': resultClass = 'bg-danger'; break;
+                }
+
+                html += `
+                    <div class="form-badge ${resultClass} text-white p-2 mx-1" title="${match.date}: ${match.opponent} (${match.is_home ? 'Ev' : 'Dep'}) ${match.goals_scored}-${match.goals_conceded}">${match.result}</div>
+                `;
+            });
+        } else {
+            html += `<p>Form verisi bulunamadı</p>`;
+        }
+
+        html += `
+                            </div>
+                            <div class="mt-3">
+                                <h6>Performans İstatistikleri:</h6>
+                                <table class="table table-sm">
+                                    <tr>
+                                        <td>Ortalama Atılan Gol:</td>
+                                        <td>${homeTeam.form ? homeTeam.form.avg_goals_scored.toFixed(2) : 'N/A'}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Ortalama Yenilen Gol:</td>
+                                        <td>${homeTeam.form ? homeTeam.form.avg_goals_conceded.toFixed(2) : 'N/A'}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Evdeki Ortalama Gol:</td>
+                                        <td>${homeTeam.form && homeTeam.form.home_performance ? homeTeam.form.home_performance.avg_goals_scored.toFixed(2) : 'N/A'}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <h4 class="text-center">${awayTeam.name}</h4>
+                            <h6>Son Maçlar:</h6>
+                            <div class="d-flex justify-content-center mb-3">
+        `;
+
+        // Deplasman son maçlar
+        if (awayTeam.form && awayTeam.form.recent_match_data && awayTeam.form.recent_match_data.length > 0) {
+            const recentMatches = awayTeam.form.recent_match_data.slice(0, 5);
+            recentMatches.forEach(match => {
+                let resultClass = '';
+                switch (match.result) {
+                    case 'W': resultClass = 'bg-success'; break;
+                    case 'D': resultClass = 'bg-warning'; break;
+                    case 'L': resultClass = 'bg-danger'; break;
+                }
+
+                html += `
+                    <div class="form-badge ${resultClass} text-white p-2 mx-1" title="${match.date}: ${match.opponent} (${match.is_home ? 'Ev' : 'Dep'}) ${match.goals_scored}-${match.goals_conceded}">${match.result}</div>
+                `;
+            });
+        } else {
+            html += `<p>Form verisi bulunamadı</p>`;
+        }
+
+        html += `
+                            </div>
+                            <div class="mt-3">
+                                <h6>Performans İstatistikleri:</h6>
+                                <table class="table table-sm">
+                                    <tr>
+                                        <td>Ortalama Atılan Gol:</td>
+                                        <td>${awayTeam.form ? awayTeam.form.avg_goals_scored.toFixed(2) : 'N/A'}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Ortalama Yenilen Gol:</td>
+                                        <td>${awayTeam.form ? awayTeam.form.avg_goals_conceded.toFixed(2) : 'N/A'}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Deplasmandaki Ortalama Gol:</td>
+                                        <td>${awayTeam.form && awayTeam.form.away_performance ? awayTeam.form.away_performance.avg_goals_scored.toFixed(2) : 'N/A'}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Karşılıklı maçlar (H2H) -->
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5>Karşılıklı Maçlar (H2H)</h5>
+                </div>
+                <div class="card-body">
+        `;
+
+        // H2H verileri ekle
+        if (data.head_to_head && data.head_to_head.total_matches > 0) {
+            html += `
+                    <div class="row mb-3">
+                        <div class="col-md-4 text-center">
+                            <h6>${homeTeam.name} Galibiyeti</h6>
+                            <h4>${data.head_to_head.home_wins}</h4>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <h6>Beraberlik</h6>
+                            <h4>${data.head_to_head.draws}</h4>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <h6>${awayTeam.name} Galibiyeti</h6>
+                            <h4>${data.head_to_head.away_wins}</h4>
+                        </div>
+                    </div>
+
+                    <h6>Son Karşılaşmalar:</h6>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Tarih</th>
+                                    <th>Lig</th>
+                                    <th>Skor</th>
+                                    <th>Sonuç</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+            `;
+
+            data.head_to_head.recent_matches.forEach(match => {
+                let resultClass = '';
+                switch (match.result) {
+                    case 'W': resultClass = 'text-success'; break;
+                    case 'D': resultClass = 'bg-warning'; break;
+                    case 'L': resultClass = 'bg-danger'; break;
+                }
+
+                html += `
+                                <tr>
+                                    <td>${match.date}</td>
+                                    <td>${match.league}</td>
+                                    <td>${match.home_score} - ${match.away_score}</td>
+                                    <td class="${resultClass}">${match.result === 'W' ? homeTeam.name + ' Kazandı' : match.result === 'L' ? awayTeam.name + ' Kazandı' : 'Beraberlik'}</td>
+                                </tr>
+            `;
+            });
+
+            html += `
+                            </tbody>
+                        </table>
+                    </div>
+            `;
+        } else {
+            html += `<p>Bu iki takım arasında yakın zamanda oynanan maç bulunamadı.</p>`;
+        }
+
+        html += `
+                </div>
+            </div>
+
+            <!-- Tahmin açıklamaları ve yorumlar -->
+            <div class="card mb-4">
+                <div class="card-header bg-info text-white">
+                    <h5>Tahmin Analizi ve Yorumlar</h5>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <p><strong>Kesin Skor Analizi:</strong> ${predictions.explanation.exact_score}</p>
+                    </div>
+                    <div class="alert alert-info">
+                        <p><strong>Maç Sonucu Analizi:</strong> ${predictions.explanation.match_result}</p>
+                    </div>
+                    <div class="alert alert-info">
+                        <p><strong>Takım Güç Analizi:</strong> ${predictions.explanation.relative_strength}</p>
+                    </div>
+                    <div class="alert alert-info">
+                        <p><strong>H2H Analizi:</strong> ${predictions.explanation.head_to_head}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mb-3">
+                <button class="btn btn-warning" onclick="showPrediction('${homeTeam.id}', '${awayTeam.id}', '${homeTeam.name}', '${awayTeam.name}', true)">
+                    <i class="fas fa-redo"></i> Tahmini Yenile
+                </button>
+            </div>
+        `;
+        predictionContent.innerHTML = html;
+    }
+
+    function getMostConfidentBet(betting) {
+        let highest = { market: '', prediction: '', probability: 0 };
+
+        // Tüm bahisleri kontrol et (3.5 Alt/Üst hariç)
+        for (const market in betting) {
+            // 3.5 ALT/ÜST ve first_goal tahminlerini atla
+            if (market === 'over_3_5_goals' || market === 'first_goal') {
+                // continue yerine if-else bloğu kullan
+            } else {
+                if (betting[market] && betting[market].probability > highest.probability) {
+                    highest = {
+                        market: market,
+                        prediction: betting[market].prediction,
+                        probability: betting[market].probability
+                    };
+                }
+            }
+
+
+        }
+
+        // Eğer hiçbir tahmin bulunamazsa
+        if (!highest.market) {
+            return "Tahmin bulunamadı";
+        }
+
+        // Türkçeleştir ve döndür
+        const marketName = getMarketNameTurkish(highest.market);
+        const formattedPrediction = formatBetPrediction(highest.market, highest.prediction);
+
+        return `${marketName} - ${formattedPrediction} (${highest.probability}%)`;
+    }
+
+    function getMarketNameTurkish(market) {
+        switch (market) {
+            case 'match_result': return 'Maç Sonucu';
+            case 'both_teams_to_score': return 'KG Var/Yok';
+            case 'over_2_5_goals': return '2.5 Alt/Üst';
+            case 'over_3_5_goals': return '3.5 Alt/Üst';
+            case 'exact_score': return 'Kesin Skor';
+            case 'half_time_full_time': return 'İlk Yarı/Maç Sonu';
+            case 'first_goal': return 'İlk Gol';
+            case 'cards_over_3_5': return 'Kart 3.5 Alt/Üst';
+            case 'corners_over_9_5': return 'Korner 9.5 Alt/Üst';
+            default: return market;
+        }
+    }
+
+    function formatPrediction(prediction) {
+        switch (prediction) {
+            case 'HOME_WIN': return 'Ev Sahibi Kazanır';
+            case 'AWAY_WIN': return 'Deplasman Kazanır';
+            case 'DRAW': return 'Beraberlik';
+            default: return prediction;
+        }
+    }
+
+    function formatBetPrediction(marketType, prediction) {
+        switch (marketType) {
+            case 'match_result':
+                switch (prediction) {
+                    case 'HOME_WIN': return 'Ev Sahibi Kazanır';
+                    case 'AWAY_WIN': return 'Deplasman Kazanır';
+                    case 'DRAW': return 'Beraberlik';
+                    default: return prediction;
+                }
+            case 'both_teams_to_score':
+                return prediction === 'YES' ? 'KG VAR' : 'KG YOK';
+            case 'over_2_5_goals':
+                return prediction === 'YES' ? '2.5 ÜST' : '2.5 ALT';
+            case 'over_3_5_goals':
+                return prediction === 'YES' ? '3.5 ÜST' : '3.5 ALT';
+            case 'first_goal':
+                if (typeof prediction === 'object' && prediction !== null) {
+                    if (prediction.team) {
+                        return prediction.team === 'EV' ? 'Ev Sahibi' : 
+                                prediction.team === 'DEP' ? 'Deplasman' : 'Gol Yok';
+                    }
+                }
+                if (prediction === undefined) return 'Belirsiz';
+                switch (prediction) {
+                    case 'HOME': return 'Ev Sahibi';
+                    case 'AWAY': return 'Deplasman';
+                    case 'NO_GOAL': case 'NO GOAL': return 'Gol Yok';
+                    default: return 'İlk Gol';
+                }
+            case 'half_time_full_time':
+                return prediction.split('/').map(result => {
+                    switch(result) {
+                        case 'HOME_WIN': return 'Ev';
+                        case 'DRAW': return 'Beraberlik';
+                        case 'AWAY_WIN': return 'Deplasman';
+                        default: return result;
+                    }
+                }).join('/');
+            default:
+                return prediction;
+        }
+    }
+
+    function formatOverUnder(prediction) {
+        return prediction === 'OVER' ? 'Üst' : 'Alt';
+    }
+</script>
+
+<script src="/static/js/api_football_debug.js"></script>
+
+<script>
+// Sayfa yüklendiğinde modal açılması/kapanması için ek düzeltme kodları
+document.addEventListener('DOMContentLoaded', function() {
+    // Modal işlemleri için düzeltme
+    document.querySelectorAll('.modal').forEach(function(modal) {
+        modal.addEventListener('hidden.bs.modal', function() {
+            // Modal kapandığında arka plan filtresini temizle
+            document.body.classList.remove('modal-open');
+            document.querySelectorAll('.modal-backdrop').forEach(function(element) {
+                element.remove();
+            });
+            console.log('Modal kapandı, arka plan filtreleri temizlendi');
+        });
+    });
+});
+</script>

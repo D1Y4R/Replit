@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h2 class="h5 mb-0"><i class="fas fa-trophy"></i> Lig Puan Durumları</h2>
+                <form method="get" action="{{ url_for('leagues') }}" class="d-flex">
+                    <select name="league_id" class="form-select" onchange="this.form.submit()">
+                        <option value="">Lig Seçin</option>
+                        {% for league in available_leagues %}
+                        <option value="{{ league.id }}" {% if league.id == selected_league %}selected{% endif %}>
+                            {{ league.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </form>
+            </div>
+            <div class="card-body">
+                {% if standings %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Sıra</th>
+                                <th>Takım</th>
+                                <th>O</th>
+                                <th>G</th>
+                                <th>B</th>
+                                <th>M</th>
+                                <th>AG</th>
+                                <th>YG</th>
+                                <th>Av</th>
+                                <th>P</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for team in standings %}
+                            <tr>
+                                <td>{{ team.rank }}</td>
+                                <td>
+                                    {% if team.logo %}
+                                    <img src="{{ team.logo }}" alt="{{ team.name }}" height="20" class="me-2">
+                                    {% endif %}
+                                    {{ team.name }}
+                                </td>
+                                <td>{{ team.played }}</td>
+                                <td>{{ team.won }}</td>
+                                <td>{{ team.draw }}</td>
+                                <td>{{ team.lost }}</td>
+                                <td>{{ team.goals_for }}</td>
+                                <td>{{ team.goals_against }}</td>
+                                <td>{{ team.goal_diff }}</td>
+                                <td><strong>{{ team.points }}</strong></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i> 
+                    {% if not selected_league %}
+                        Lütfen puan durumunu görüntülemek için bir lig seçin.
+                    {% else %}
+                        Puan durumu verisi alınamadı. Lütfen daha sonra tekrar deneyin.
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
