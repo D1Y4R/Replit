@@ -5,7 +5,7 @@ Temel gol beklentisi hesaplamaları için kullanılır
 import numpy as np
 import logging
 from datetime import datetime, timedelta
-from math import log
+from math import log, exp, tanh
 
 logger = logging.getLogger(__name__)
 
@@ -133,9 +133,137 @@ class XGCalculator:
         logger.info(f"Elo entegrasyonlu xG/xGA - xG: {xg:.2f}, xGA: {xga:.2f}, Elo faktör: {elo_factor:.2f}")
         return xg, xga
         
+    def exponential_cross_lambda(self, home_xg, home_xga, away_xg, away_xga):
+        """
+        Üstel (exponential) çapraz lambda hesaplama
+        Güçlü takımları daha fazla destekler
+        """
+        # Üstel güçlendirme faktörü
+        strength_factor = 1.5
+        
+        # Takım güçlerini üstel olarak hesapla
+        home_strength = exp(home_xg / home_xga) if home_xga > 0 else exp(home_xg)
+        away_strength = exp(away_xg / away_xga) if away_xga > 0 else exp(away_xg)
+        
+        # Normalizedüstel faktör
+        exp_factor_home = home_strength / (home_strength + away_strength)
+        exp_factor_away = away_strength / (home_strength + away_strength)
+        
+        # Lambda hesaplama
+        lambda_home = (home_xg * away_xga) * (1 + strength_factor * exp_factor_home)
+        lambda_away = (away_xg * home_xga) * (1 + strength_factor * exp_factor_away)
+        
+        # Sınırları kontrol et
+        lambda_home = max(0.3, min(4.5, lambda_home))
+        lambda_away = max(0.3, min(4.5, lambda_away))
+        
+        logger.debug(f"Üstel lambda - Ev: {lambda_home:.2f}, Deplasman: {lambda_away:.2f}")
+        return lambda_home, lambda_away
+    
+    def sigmoid_cross_lambda(self, home_xg, home_xga, away_xg, away_xga):
+        """
+        Sigmoid çapraz lambda hesaplama
+        Aşırı uçları yumuşatır, dengeli tahminler yapar
+        """
+        # Sigmoid parametreleri
+        sigmoid_scale = 2.0
+        
+        # Takım performans oranları
+        home_ratio = home_xg / home_xga if home_xga > 0 else home_xg
+        away_ratio = away_xg / away_xga if away_xga > 0 else away_xg
+        
+        # Sigmoid dönüşümü (tanh kullanarak)
+        home_sigmoid = tanh(home_ratio / sigmoid_scale)
+        away_sigmoid = tanh(away_ratio / sigmoid_scale)
+        
+        # Lambda hesaplama
+        base_lambda_home = home_xg * away_xga
+        base_lambda_away = away_xg * home_xga
+        
+        lambda_home = base_lambda_home * (1 + 0.5 * home_sigmoid)
+        lambda_away = base_lambda_away * (1 + 0.5 * away_sigmoid)
+        
+        # Sınırları kontrol et
+        lambda_home = max(0.4, min(3.5, lambda_home))
+        lambda_away = max(0.4, min(3.5, lambda_away))
+        
+        logger.debug(f"Sigmoid lambda - Ev: {lambda_home:.2f}, Deplasman: {lambda_away:.2f}")
+        return lambda_home, lambda_away
+    
+    def adaptive_cross_lambda(self, home_xg, home_xga, away_xg, away_xga):
+        """
+        Adaptif çapraz lambda hesaplama
+        Maç bağlamına göre dinamik ayarlama yapar
+        """
+        # Toplam gol beklentisi
+        total_expected = home_xg + away_xg
+        
+        # Savunma kalitesi farkı
+        defense_diff = abs(home_xga - away_xga)
+        
+        # Adaptif faktörler
+        if total_expected > 3.0:  # Yüksek skorlu maç beklentisi
+            attack_boost = 1.2
+            defense_factor = 0.9
+        elif total_expected < 2.0:  # Düşük skorlu maç beklentisi
+            attack_boost = 0.8
+            defense_factor = 1.1
+        else:  # Normal maç
+            attack_boost = 1.0
+            defense_factor = 1.0
+        
+        # Savunma farkına göre ayarlama
+        if defense_diff > 0.5:  # Büyük savunma farkı
+            stronger_defense = min(home_xga, away_xga)
+            if home_xga < away_xga:  # Ev sahibi daha iyi savunma
+                defense_home_bonus = 1.1
+                defense_away_penalty = 0.9
+            else:  # Deplasman daha iyi savunma
+                defense_home_bonus = 0.9
+                defense_away_penalty = 1.1
+        else:  # Küçük savunma farkı
+            defense_home_bonus = 1.0
+            defense_away_penalty = 1.0
+        
+        # Lambda hesaplama
+        lambda_home = (home_xg * attack_boost * away_xga * defense_factor) * defense_home_bonus
+        lambda_away = (away_xg * attack_boost * home_xga * defense_factor) * defense_away_penalty
+        
+        # Sınırları kontrol et
+        lambda_home = max(0.5, min(4.0, lambda_home))
+        lambda_away = max(0.5, min(4.0, lambda_away))
+        
+        logger.debug(f"Adaptif lambda - Ev: {lambda_home:.2f}, Deplasman: {lambda_away:.2f}")
+        return lambda_home, lambda_away
+    
+    def ensemble_cross_lambda(self, home_xg, home_xga, away_xg, away_xga):
+        """
+        Ensemble Çapraz Lambda Formülü
+        Birden fazla formülün ağırlıklı ortalaması
+        """
+        # 1. Üstel formül
+        exp_lambda_h, exp_lambda_a = self.exponential_cross_lambda(home_xg, home_xga, away_xg, away_xga)
+        
+        # 2. Sigmoid formül
+        sig_lambda_h, sig_lambda_a = self.sigmoid_cross_lambda(home_xg, home_xga, away_xg, away_xga)
+        
+        # 3. Adaptif formül
+        adapt_lambda_h, adapt_lambda_a = self.adaptive_cross_lambda(home_xg, home_xga, away_xg, away_xga)
+        
+        # Ağırlıklı ortalama
+        lambda_home = 0.4 * exp_lambda_h + 0.3 * sig_lambda_h + 0.3 * adapt_lambda_h
+        lambda_away = 0.4 * exp_lambda_a + 0.3 * sig_lambda_a + 0.3 * adapt_lambda_a
+        
+        logger.info(f"Ensemble Lambda - Ev: {lambda_home:.2f}, Deplasman: {lambda_away:.2f}")
+        logger.debug(f"Ensemble detay - Üstel: ({exp_lambda_h:.2f}, {exp_lambda_a:.2f}), "
+                    f"Sigmoid: ({sig_lambda_h:.2f}, {sig_lambda_a:.2f}), "
+                    f"Adaptif: ({adapt_lambda_h:.2f}, {adapt_lambda_a:.2f})")
+        
+        return lambda_home, lambda_away
+        
     def calculate_lambda_cross(self, home_xg, home_xga, away_xg, away_xga, elo_diff=0):
         """
-        Çapraz lambda hesaplama - Poisson için gol beklentileri
+        Çapraz lambda hesaplama - Ensemble yaklaşımı ile Poisson için gol beklentileri
         
         Args:
             home_xg: Ev sahibi xG
@@ -147,8 +275,7 @@ class XGCalculator:
         Returns:
             tuple: (lambda_home, lambda_away)
         """
-        # Rapordaki revize favori düzeltmesi
-        # Favori takım xG düzeltmesi
+        # Elo bazlı ön düzeltmeler (favoriler için)
         if elo_diff > 0 and home_xg < away_xg:
             # Ev sahibi favori ama düşük xG - düzelt
             home_xg = min(home_xg + 0.3, away_xg * 1.2)
@@ -166,16 +293,8 @@ class XGCalculator:
             away_xga = max(away_xga - 0.3, home_xga * 0.8)
             logger.info(f"Favori deplasman xGA düzeltmesi: {away_xga:.2f}")
         
-        # Logaritmik düzeltme ile çapraz lambda hesaplama
-        # log(home_xg/away_xg + 1) formülü ile güç farkına duyarlı ayarlama
-        strength_ratio = home_xg / away_xg if away_xg > 0 else 2.0
-        log_adjustment = log(strength_ratio + 1)
-        
-        # Lambda hesaplama - logaritmik düzeltme ile
-        lambda_home = home_xg * away_xga * (1 + 0.1 * log_adjustment)
-        lambda_away = away_xg * home_xga * (1 - 0.1 * log_adjustment)
-        
-        logger.info(f"Logaritmik düzeltme - Güç oranı: {strength_ratio:.2f}, Log düzeltme: {log_adjustment:.3f}")
+        # Ensemble lambda hesaplama
+        lambda_home, lambda_away = self.ensemble_cross_lambda(home_xg, home_xga, away_xg, away_xga)
         
         # Ek lambda düzeltmesi (elo bazlı - sadece anormal durumlarda)
         if elo_diff > 50 and lambda_home < lambda_away:
@@ -185,19 +304,24 @@ class XGCalculator:
             logger.info(f"Elo bazlı düzeltme uygulandı: Ev +{adjustment:.2f}, Dep -{adjustment*0.5:.2f}")
             
         # Lambda sınırları - Ekstrem maç kontrolü
-        from algorithms.extreme_detector import ExtremeMatchDetector
-        detector = ExtremeMatchDetector()
+        try:
+            from algorithms.extreme_detector import ExtremeMatchDetector
+            detector = ExtremeMatchDetector()
+            
+            # Ekstrem maç kontrolü için istatistikler
+            home_stats = {'xg': home_xg, 'xga': home_xga}
+            away_stats = {'xg': away_xg, 'xga': away_xga}
+            
+            is_extreme, _ = detector.is_extreme_match(home_stats, away_stats)
+            lambda_cap = detector.get_lambda_cap(is_extreme, home_stats)
+            
+            # Lambda sınırları (0.5 - lambda_cap arası)
+            lambda_home = max(0.5, min(lambda_cap, lambda_home))
+            lambda_away = max(0.5, min(lambda_cap, lambda_away))
+        except ImportError:
+            # Extreme detector yoksa varsayılan sınırlar
+            lambda_home = max(0.5, min(4.0, lambda_home))
+            lambda_away = max(0.5, min(4.0, lambda_away))
         
-        # Ekstrem maç kontrolü için istatistikler
-        home_stats = {'xg': home_xg, 'xga': home_xga}
-        away_stats = {'xg': away_xg, 'xga': away_xga}
-        
-        is_extreme, _ = detector.is_extreme_match(home_stats, away_stats)
-        lambda_cap = detector.get_lambda_cap(is_extreme, home_stats)
-        
-        # Lambda sınırları (0.5 - lambda_cap arası)
-        lambda_home = max(0.5, min(lambda_cap, lambda_home))
-        lambda_away = max(0.5, min(lambda_cap, lambda_away))
-        
-        logger.info(f"Lambda değerleri - Ev: {lambda_home:.2f}, Deplasman: {lambda_away:.2f}")
+        logger.info(f"Final Lambda değerleri - Ev: {lambda_home:.2f}, Deplasman: {lambda_away:.2f}")
         return lambda_home, lambda_away
