@@ -1,0 +1,11 @@
+{
+  "environment": "python",
+  "cpu": 1,
+  "memory": 2048,
+  "ports": [5000],
+  "start": "python3 main.py",
+  "setup": [
+    "python3 -m pip install --upgrade pip",
+    "python3 -m pip install Flask==3.1.1 requests==2.32.4 pytz==2025.2 numpy==2.3.1 pandas==2.3.1 scikit-learn==1.7.0 --no-cache-dir"
+  ]
+}

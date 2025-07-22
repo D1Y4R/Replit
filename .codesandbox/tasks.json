@@ -1,0 +1,73 @@
+{
+  "setupTasks": [
+    {
+      "command": "python3 -m pip install --upgrade pip --break-system-packages",
+      "name": "Upgrading pip"
+    },
+    {
+      "command": "python3 -m pip install Flask==3.1.1 requests==2.32.4 pytz==2025.2 numpy==2.3.1 pandas==2.3.1 scikit-learn==1.7.0 --no-cache-dir --break-system-packages",
+      "name": "Installing Core Dependencies"
+    },
+    {
+      "command": "python3 -c 'import flask, requests, numpy, pandas, sklearn; print(\"✅ All dependencies installed successfully\")'",
+      "name": "Verifying Dependencies"
+    },
+    {
+      "command": "python3 -c 'import main; print(\"✅ FootballHub system imported successfully\")'",
+      "name": "Testing System Import"
+    }
+  ],
+  "tasks": {
+    "start": {
+      "name": "Start Server",
+      "command": "python3 main.py",
+      "runAtStart": true,
+      "preview": {
+        "port": 5000,
+        "prLink": "direct",
+        "url": "http://localhost:5000"
+      }
+    },
+    "dev": {
+      "name": "Development Server",
+      "command": "python3 main.py --debug",
+      "preview": {
+        "port": 5000,
+        "prLink": "direct",
+        "url": "http://localhost:5000"
+      }
+    },
+    "install": {
+      "name": "Install Dependencies",
+      "command": "python3 -m pip install -r requirements-minimal.txt --no-cache-dir --break-system-packages"
+    },
+    "install-full": {
+      "name": "Install Full Dependencies",
+      "command": "python3 -m pip install -r requirements-full.txt --no-cache-dir --break-system-packages"
+    },
+    "test": {
+      "name": "Test System",
+      "command": "python3 -c 'import main; print(\"✅ System test successful\")'"
+    },
+    "health": {
+      "name": "Health Check",
+      "command": "python3 -c 'import requests; print(requests.get(\"http://localhost:5000/api/health\").text)'"
+    },
+    "logs": {
+      "name": "View Logs",
+      "command": "tail -f *.log 2>/dev/null || echo 'No log files found'"
+    },
+    "clean": {
+      "name": "Clean Cache",
+      "command": "rm -rf __pycache__ *.pyc .pytest_cache"
+    },
+    "deps": {
+      "name": "List Dependencies",
+      "command": "python3 -m pip list | grep -E '(Flask|requests|numpy|pandas|scikit-learn)'"
+    },
+    "update": {
+      "name": "Update Dependencies",
+      "command": "python3 -m pip install --upgrade -r requirements-minimal.txt --break-system-packages"
+    }
+  }
+}
