@@ -1,0 +1,25 @@
+# CodeSandbox için minimal dependencies
+# Temel web framework
+Flask==3.1.1
+
+# HTTP istekleri için
+requests==2.32.4
+
+# Zaman dilimi işlemleri
+pytz==2025.2
+
+# Veri işleme
+numpy==2.3.1
+pandas==2.3.1
+
+# Makine öğrenmesi
+scikit-learn==1.7.0
+
+# JSON işleme (Python built-in)
+# json
+
+# Logging (Python built-in)
+# logging
+
+# DateTime (Python built-in)
+# datetime

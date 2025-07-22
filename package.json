@@ -1,0 +1,39 @@
+{
+  "name": "footballhub",
+  "version": "1.0.0",
+  "description": "Advanced Football Match Prediction System - Optimized for CodeSandbox",
+  "main": "main.py",
+  "type": "python",
+  "scripts": {
+    "start": "python3 main.py",
+    "dev": "python3 main.py --debug",
+    "production": "python3 main.py --production",
+    "install": "python3 -m pip install -r requirements-minimal.txt --no-cache-dir --break-system-packages",
+    "install-full": "python3 -m pip install -r requirements-full.txt --no-cache-dir --break-system-packages",
+    "install-minimal": "python3 -m pip install Flask==3.1.1 requests==2.32.4 pytz==2025.2 numpy==2.3.1 pandas==2.3.1 scikit-learn==1.7.0 --no-cache-dir --break-system-packages",
+    "test": "python3 -c 'import main; print(\"✅ Import test passed\")'",
+    "clean": "rm -rf __pycache__ *.pyc .pytest_cache",
+    "deps": "python3 -m pip list | grep -E '(Flask|requests|numpy|pandas|scikit-learn)'",
+    "health": "python3 -c 'import requests; print(requests.get(\"http://localhost:5000/api/health\").text)'",
+    "logs": "tail -f *.log 2>/dev/null || echo 'No log files found'",
+    "update": "python3 -m pip install --upgrade -r requirements-minimal.txt --break-system-packages"
+  },
+  "keywords": [
+    "football",
+    "prediction",
+    "machine-learning",
+    "sports",
+    "analytics",
+    "python",
+    "flask"
+  ],
+  "author": "D1Y4R",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/D1Y4R/FootballHub"
+  },
+  "engines": {
+    "python": ">=3.8"
+  }
+}
